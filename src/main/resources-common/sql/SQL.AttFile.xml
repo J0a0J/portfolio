@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+	<mapper namespace="com.lhs.dao.AttFileDao"> 
+		
+	<insert id ="addAttFile" parameterType="HashMap" >
+	
+	</insert>
+	
+ 	<select id="readAttFiles" parameterType="HashMap" resultType="HashMap">
+ 	
+	</select>
+ 	
+ 	<select id="readAttFileByPk" parameterType="int" resultType="HashMap">
+ 	</select>
+ 	
+ 	<delete id ="deleteAttFile" parameterType="HashMap">
+ 	</delete>
+ 	
+ 	<delete id ="deleteAttFileByBoard" parameterType="HashMap">
+ 	</delete>
+ 	
+ 	<select id="readAllAttFiles" resultType="HashMap">
+ 	</select>
+ 	
+ 	<update id="updateLinkedInfo" parameterType="int" >
+ 	</update>
+ 	
+ 	<update id="updateLinkedInfos" parameterType="List" >
+ 	</update>		
+</mapper>

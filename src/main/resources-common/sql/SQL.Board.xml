@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lhs.dao.BoardDao">
+	<!-- resultType은 반드시 있어야 함 -->
+	<select id="list" parameterType="HashMap" resultType="HashMap">
+	
+	</select>
+		
+	<select id="getTotalArticleCnt" parameterType="HashMap" resultType="int">
+	
+	</select>
+	
+	<insert id ="write" parameterType="HashMap" useGeneratedKeys="true" keyProperty="boardSeq" >
+		
+	</insert>
+	
+	<select id="read" parameterType="HashMap" resultType = "HashMap">
+	</select>
+
+	<update id="updateHits" parameterType="HashMap" >
+	</update>
+
+	<update id="update" parameterType="HashMap">
+	
+	</update>
+	
+	<update id="updateHasFileToZero" parameterType="HashMap" >
+	 	 
+	 </update>
+	
+	<delete id="delete" parameterType="HashMap">
+		
+	</delete>
+
+
+</mapper>
