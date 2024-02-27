@@ -125,7 +125,7 @@ $(document).ready(function(){
 									<label for="register:pass2">Password Again *</label>
 									<label class="input mb-10">
 										<i class="ico-append fa fa-lock"></i>
-										<input required="" type="password" id="pwAgain" class="err">
+										<input required="" type="password" id="pwAgain" class="err" name="pwAgain">
 										<b class="tooltip tooltip-bottom-right">Type the password again</b>
 									</label>
 								</div>

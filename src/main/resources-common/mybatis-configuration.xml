@@ -8,6 +8,7 @@
 	<!-- 쿼리 수행 결과를 DTO에 자동 매핑하기 위해 DTO 검색 -->
 	<typeAliases>
 		<package name="com.lhs.dto" />
+		<package name="com.lhs.entity" />
 	</typeAliases>
 
 	<!--  개별로 setting 하는 방법

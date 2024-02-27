@@ -1,13 +1,33 @@
 package com.lhs.dto;
 
+import org.apache.ibatis.type.Alias;
+
 public class MemberDto {
 	
-	String memberId;
-	String memberPw;
-	String memberName;
-	String memberNick;
-	String email;
+	Integer memberIdx;
+	private Integer typeSeq;
+	private String memberId;
+	private String memberPw;
+	private String memberName;
+	private String memberNick;
+	private String email;
+	private String createDtm;
+	private String updateDtm;
+	private String membercol;
 	
+	
+	public Integer getMemberIdx() {
+		return memberIdx;
+	}
+	public void setMemberIdx(Integer memberIdx) {
+		this.memberIdx = memberIdx;
+	}
+	public Integer getTypeSeq() {
+		return typeSeq;
+	}
+	public void setTypeSeq(Integer typeSeq) {
+		this.typeSeq = typeSeq;
+	}
 	public String getMemberId() {
 		return memberId;
 	}
@@ -38,11 +58,32 @@ public class MemberDto {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public String getCreateDtm() {
+		return createDtm;
+	}
+	public void setCreateDtm(String createDtm) {
+		this.createDtm = createDtm;
+	}
+	public String getUpdateDtm() {
+		return updateDtm;
+	}
+	public void setUpdateDtm(String updateDtm) {
+		this.updateDtm = updateDtm;
+	}
+	public String getMembercol() {
+		return membercol;
+	}
+	public void setMembercol(String membercol) {
+		this.membercol = membercol;
+	}
 	
 	@Override
 	public String toString() {
-		return "MemberDto [memberId=" + memberId + ", memberPw=" + memberPw + ", memberName=" + memberName
-				+ ", memberNick=" + memberNick + ", email=" + email + "]";
+		return "MemberDto [memberIdx=" + memberIdx + ", typeSeq=" + typeSeq + ", memberId=" + memberId + ", memberPw="
+				+ memberPw + ", memberName=" + memberName + ", memberNick=" + memberNick + ", email=" + email
+				+ ", createDtm=" + createDtm + ", updateDtm=" + updateDtm + ", membercol=" + membercol + "]";
 	}
+	
+	
 	
 }

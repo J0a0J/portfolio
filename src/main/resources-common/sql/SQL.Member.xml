@@ -14,9 +14,9 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	
 	</select>
 	
-	<select id="getMemberById" parameterType="HashMap" resultType="HashMap">
+	<select id="getMemberById" parameterType="MemberDto" resultType="MemberDto">
 	SELECT member_id, member_pw
-	FROM S_J0a0J
+	FROM S_J0a0J.member
 	WHERE member_id = #{memberId}
 	</select>
 	
@@ -31,9 +31,13 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<insert id="join" parameterType="map">
+		<selectKey resultType="int" keyProperty="memberIdx" order="BEFORE">
+		    <!-- MariaDB -->
+		    SELECT LAST_INSERT_ID() + 1 AS memberIdx;
+		</selectKey>
 		INSERT INTO S_J0a0J.`member`
-		(member_id, member_pw, member_name, member_nick, email, create_dtm, update_dtm, membercol, type_seq)
-		VALUES(#{memberId}, #{memberPw}, #{memberName}, #{memberNick}, #{email}, DATE_FORMAT(now(), '%Y%m%d%H%i%s'), DATE_FORMAT(now(), '%Y%m%d%H%i%s'), NULL, 1);
+		(member_idx, member_id, member_pw, member_name, member_nick, email, create_dtm, update_dtm, membercol, type_seq)
+		VALUES(#{member_idx}, #{memberId}, #{memberPw}, #{memberName}, #{memberNick}, #{email}, DATE_FORMAT(now(), '%Y%m%d%H%i%s'), DATE_FORMAT(now(), '%Y%m%d%H%i%s'), NULL, 1);
 	</insert>
 	<delete id = "delMember" parameterType="HashMap">
 		

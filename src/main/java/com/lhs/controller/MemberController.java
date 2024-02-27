@@ -1,6 +1,5 @@
 package com.lhs.controller;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,8 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.lhs.dto.MemberDto;
 import com.lhs.service.MemberService;
-import com.lhs.util.AES256Util;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,6 +45,7 @@ public class MemberController {
 	public HashMap<String, Object> checkId(@RequestParam HashMap<String, String> params){
 		int cnt = 0;
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		// 아이디 중복 체크 
 		cnt = mService.checkId(params);
 		map.put("cnt", cnt);
 		map.put("msg", cnt==1? "중복된 ID 입니다.":"중복 ㄴ");
@@ -68,9 +68,12 @@ public class MemberController {
 
 	@RequestMapping("/member/logout.do")
 	public ModelAndView logout(HttpSession session){
+		// 세션 삭
+		session.removeAttribute("memberId");
 		session.invalidate();
+		
 		ModelAndView mv = new ModelAndView();
-		RedirectView rv = new RedirectView(ctx+"/index.do");
+		RedirectView rv = new RedirectView("/pf/index.do");
 		mv.setView(rv);		
 		return mv;
 	}
@@ -78,16 +81,30 @@ public class MemberController {
 	@RequestMapping("/member/login.do")
 	@ResponseBody
 	public HashMap<String, Object> login(@RequestParam HashMap<String, String> params, HttpSession session){
+		System.out.println("Sibalsibal");
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		try {			
-			map = mService.login(params);
-			map.put("nextPage", "/index.do");
+		try {
+			MemberDto m = new MemberDto();
+			// 입력한 아이디, 비밀번호 객체에 넣어주기 
+			m.setMemberId(params.get("memberId"));
+			m.setMemberPw(params.get("memberPw"));
+			MemberDto mDto = mService.login(m);	
+
+			// 입력한 아이디가 없거나 비밀번호가 일치하지 않으면 에러 처리 
+			if (mDto == null) {
+				throw new Exception();
+			}
 			
+			// 세션 설정 
+			session.setAttribute("memberId", mDto);
+			session.setMaxInactiveInterval(60 * 60 * 24);
+			
+			map.put("nextPage", "/index.do");
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("", e);
-			map.put("nextPage", "/index.do");
-			map.put("msg", e.getMessage());
+			map.put("nextPage", "/login.do");
+			map.put("msg", "아이디 또는 비밀번호 입력을 잘못했습니다.");
 		}
 		return map;
 	}

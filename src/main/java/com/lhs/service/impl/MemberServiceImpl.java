@@ -2,22 +2,28 @@ package com.lhs.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.lhs.dao.EmailAuthDao;
 import com.lhs.dao.MemberDao;
-import com.lhs.exception.PasswordMissMatchException;
-import com.lhs.exception.UserNotFoundException;
+import com.lhs.dto.EmailDto;
+import com.lhs.dto.MemberDto;
+import com.lhs.entity.EmailAuth;
 import com.lhs.service.MemberService;
+import com.lhs.util.EmailUtil;
 import com.lhs.util.Sha512Encoder;
 
 @Service
 public class MemberServiceImpl implements MemberService {
 	
 	@Autowired MemberDao mDao; 
-
+	@Autowired EmailUtil emailUtil;
+	@Autowired EmailAuthDao emailAuthDao;
+	
 	@Override
 	public ArrayList<HashMap<String, Object>> memberList(HashMap<String, Object> params) {
 		return mDao.memberList(params);
@@ -33,11 +39,55 @@ public class MemberServiceImpl implements MemberService {
 	public int join(HashMap<String, String> params) {
 		
 		String pwd = params.get("memberPw");
+		String pwAgain = params.get("pwAgain");
+		
+		// 비밀번호 길이가 6보다 적을 때 
+		if(pwd.length() < 6) {
+			return 0;
+		}
+		
+		// 비밀번호와 확인 비밀번호가 일치하지 않으면 바로 반환.
+		if (!pwd.equals(pwAgain)) {
+			return 0;
+		}
+		
+		// 제약조건을 다 충족했기 때문에 여기서부터는 설정 과정.
+		
+		// DB에 암호화된 비밀번호를 넣기 위한 설정.
 		Sha512Encoder encoder = Sha512Encoder.getInstance();
 		String encodePwd = encoder.getSecurePassword(pwd);
 		params.put("memberPw", encodePwd);
 		
-		return mDao.join(params);
+		int result = mDao.join(params);
+		
+		// 회원가입 후 인증 이메일을 보내기 위한 과정. 
+//		String sMemberIdx = String.valueOf(params.get("memberIdx"));
+//		int memberIdx = Integer.parseInt(sMemberIdx);
+		String link = UUID.randomUUID().toString();
+		EmailAuth emailAuth = EmailAuth.builder()
+//				.memberIdx(memberIdx)
+				.memberType(1)
+				.memberId(params.get("memberId"))
+				.email(params.get("email"))
+				.link(link)
+				.build();
+		
+		EmailDto emailDto = new EmailDto();
+		emailDto.setFrom("보낼 ID");
+		emailDto.setReceiver(params.get("email"));
+		emailDto.setSubject("회원가입을 환영합니다.");
+		String html = "<a href='http://localhost:8080/pf/" + link 
+				+ ">인증하기</a>";
+		emailDto.setText(html);
+		
+		try {
+			emailUtil.sendMail(emailDto);
+			emailAuthDao.addEmailAuth(emailAuth);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return 1;
 	}
 
 	@Override
@@ -46,37 +96,28 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public HashMap<String, Object> login(HashMap<String, String> params) throws UserNotFoundException, PasswordMissMatchException {
-		System.out.println("sibalsibal");
-		HashMap<String, Object> member = mDao.getMemberById(params);
-		if(member == null)  {
-			member.put("e", "error occured");
-			return member;
-		}
+	public MemberDto login(MemberDto mDto) {
+		MemberDto m = mDao.getMemberById(mDto);
+		// DB에 입력한 ID가 없다면 바로 반환.
+		if (m == null) return null;
 		
-		String memberPw = params.get("memberPw");
-		String passwd = (String)member.get("memberPw");
+		// DB에 저장된 ID의 비밀번호 불러오기 
+		String memberPw = m.getMemberPw();
+		// 입력한 비밀번호 불러오기 
+		String passwd = mDto.getMemberPw();
+		Sha512Encoder encoder = new Sha512Encoder();
 		
-		Sha512Encoder encoder = Sha512Encoder.getInstance();
-		String encodePwd = encoder.getSecurePassword(passwd);
-		System.out.println("EncodePwd   			" + encodePwd);
+		// 입력한 비밀번호 암호화 하기 <- DB 저장된 비밀번호와 비교하기 위해 
+		String encodePw = encoder.getSecurePassword(passwd);
+		// 비밀번호 동일한지 확인 
+		boolean ok = StringUtils.pathEquals(memberPw, encodePw);
 		
-		if(StringUtils.pathEquals(passwd, encodePwd)) {
-			return member;
-		}
-		else {
-			member.put("e", "error occured");
-			return member;
-		}
+		return (ok == true) ? m : null; 
 	}
 
 	@Override
 	public int delMember(HashMap<String, Object> params) {	
 		return mDao.delMember(params);
 	}
-
-
-
-	
 
 }

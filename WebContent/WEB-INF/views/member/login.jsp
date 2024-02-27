@@ -5,6 +5,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script type="text/javascript">
+	
+	var ctx = "${pageContext.request.contextPath}";
+	
 	$(document).ready(function(){
 		$('#msgDiv').hide();
 		$("#loading-div-background").css({ opacity: 1 });
@@ -20,7 +23,7 @@
 			$("#loading-div-background").css({'z-index' : '9999'}).show();
 			var formData = new FormData(document.loginForm);
 			$.ajax({
-				url: 'URL',
+				url: ctx + '/member/login.do',
 				type: "POST",
 				data: formData,
 				dataType:'TEXT',

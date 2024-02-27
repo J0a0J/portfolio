@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lhs.dao.EmailAuthDao">
+	
+	<insert id="addEmailAuth" parameterType="EmailAuth">
+		INSERT INTO S_J0a0J.email_auth
+		(member_type_seq, member_idx, member_id, email, link, send_dtm)
+		VALUES(
+			#{memberType},
+			17,
+			#{memberId},  
+			#{email}, 
+			#{link},
+			DATE_FORMAT(now(), '%Y%m%d%H%i%s')
+		)
+	</insert>
+</mapper>
