@@ -63,9 +63,15 @@ public class MemberServiceImpl implements MemberService {
 		// 회원가입 후 인증 이메일을 보내기 위한 과정. 
 //		String sMemberIdx = String.valueOf(params.get("memberIdx"));
 //		int memberIdx = Integer.parseInt(sMemberIdx);
+		MemberDto temp = new MemberDto();
+		temp.setMemberId(params.get("memberId"));
+		MemberDto mDto = mDao.getMemberById(temp);
+		
+		System.out.println("MEMBER DTO  	" + mDto);
+		
 		String link = UUID.randomUUID().toString();
 		EmailAuth emailAuth = EmailAuth.builder()
-//				.memberIdx(memberIdx)
+				.memberIdx(mDto.getMemberIdx())
 				.memberType(1)
 				.memberId(params.get("memberId"))
 				.email(params.get("email"))
@@ -73,11 +79,10 @@ public class MemberServiceImpl implements MemberService {
 				.build();
 		
 		EmailDto emailDto = new EmailDto();
-		emailDto.setFrom("보낼 ID");
+		emailDto.setFrom("j0a0j@naver.com");
 		emailDto.setReceiver(params.get("email"));
 		emailDto.setSubject("회원가입을 환영합니다.");
-		String html = "<a href='http://localhost:8080/pf/" + link 
-				+ ">인증하기</a>";
+		String html = "<a href='https://github.com/J0a0J/portfolio'>인증하기</a>";
 		emailDto.setText(html);
 		
 		try {

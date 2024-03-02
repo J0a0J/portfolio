@@ -182,7 +182,7 @@ function customAjax(url, responseUrl) {
 
 									<div class="row">
 										<div class="col-md-12 text-right">
-										<a href="javascript:movePage(null, '/notice/list.do')">
+										<a href="javascript:movePage('/notice/list.do')">
 								       	 <button type="button" class="btn btn-primary">목록</button>
 								   		</a>	
 															

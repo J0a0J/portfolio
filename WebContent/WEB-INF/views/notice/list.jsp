@@ -53,23 +53,23 @@
 			    <ul class="pagination pagination-simple pagination-sm">
 			    	<!-- 페이징 -->
 				    <li class="page-item">
-			        	<a class="page-link" href="javascript:movePage(null, '/notice/list.do?page=1')">&laquo;</a>
+			        	<a class="page-link" href="javascript:movePage('/notice/list.do?page=1')">&laquo;</a>
 			        </li>
 			        <li class="page-item"><a class="page-link">1</a></li>
-			        <li class="page-item active"><a class="page-link" href="javascript:movePage(null, '/notice/list.do?page=2')">2</a></li>
-			        <li class="page-item"><a class="page-link" href="javascript:movePage(null, '/notice/list.do?page=3')">3</a></li>
-			        <li class="page-item"><a class="page-link" href="javascript:movePage(null, '/notice/list.do?page=4')">4</a></li>
-			        <li class="page-item"><a class="page-link" href="javascript:movePage(null, '/notice/list.do?page=5')">5</a></li>
-			        <li class="page-item"><a class="page-link" href="javascript:movePage(null, '/notice/list.do?page=6')">6</a></li>
+			        <li class="page-item active"><a class="page-link" href="javascript:movePage('/notice/list.do?page=2')">2</a></li>
+			        <li class="page-item"><a class="page-link" href="javascript:movePage('/notice/list.do?page=3')">3</a></li>
+			        <li class="page-item"><a class="page-link" href="javascript:movePage('/notice/list.do?page=4')">4</a></li>
+			        <li class="page-item"><a class="page-link" href="javascript:movePage('/notice/list.do?page=5')">5</a></li>
+			        <li class="page-item"><a class="page-link" href="javascript:movePage('/notice/list.do?page=6')">6</a></li>
 			        <li class="page-item">
-			        	<a class="page-link" href="javascript:movePage(null, '/notice/list.do?page=99')">&raquo;</a></li>
+			        	<a class="page-link" href="javascript:movePage('/notice/list.do?page=99')">&raquo;</a></li>
 			        </li>
 			    </ul>
 		    </div>
 		</div>
 		<div class="row">
 		    <div class="col-md-12 text-right">			   
-		    <a href="javascript:movePage(null, '/notice/goToWrite.do')">
+		    <a href="javascript:movePage('/notice/goToWrite.do')">
 		        <button type="button" class="btn btn-primary">
 		        	<i class="fa fa-pencil"></i> 글쓰기
 		        </button>

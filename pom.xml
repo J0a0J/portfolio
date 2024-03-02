@@ -272,7 +272,7 @@
 
 	<build>
 		<!-- WAR 파일 명 -->
-		<finalName>lhs</finalName>
+		<finalName>ROOT</finalName>
 
 		<!-- 환경설정에 관한 태그 -->
 		<resources>

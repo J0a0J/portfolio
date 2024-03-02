@@ -22,7 +22,7 @@ public class EmailUtil {
 			MimeMessage message = mailSender.createMimeMessage();
 			MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
 			messageHelper.setTo(email.getReceiver());
-			messageHelper.setText(email.getText(), isHtml);
+			messageHelper.setText(email.getText(), true);
 			messageHelper.setFrom(email.getFrom());
 			messageHelper.setSubject(email.getSubject());	// 메일제목은 생략이 가능하다
 

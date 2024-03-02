@@ -89,7 +89,7 @@ $(document).ready(function(){
 							<div class="row">
 								<div class="col-md-12 text-right">
 							<c:if test="${ true }">				
-									<a href="javascript:movePage(null, '/notice/goToUpdate.do?boardSeq=PK1')">
+									<a href="javascript:movePage('/notice/goToUpdate.do?boardSeq=PK1')">
 							       		 <button type="button" class="btn btn-primary"><i class="fa fa-pencil"></i> 수정</button>
 							   		</a>	
 									<button type="button" class="btn btn-primary"  id="btnDelete">
@@ -99,12 +99,12 @@ $(document).ready(function(){
 								
 					   		<c:choose>
 				        		<c:when test="${empty currentPage}">
-					        		<a href="javascript:movePage(null, '/notice/list.do')">
+					        		<a href="javascript:movePage('/notice/list.do')">
 							        	<button type="button" class="btn btn-primary">목록</button>
 							   		</a>
 				        		</c:when>
 				        		<c:otherwise>
-				        			<a href="javascript:movePage(null, '/notice/list.do?page=currentPage')">
+				        			<a href="javascript:movePage('/notice/list.do?page=currentPage')">
 								        <button type="button" class="btn btn-primary">목록</button>
 							   		</a>
 				        		</c:otherwise>

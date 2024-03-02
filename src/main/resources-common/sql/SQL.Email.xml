@@ -10,7 +10,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		(member_type_seq, member_idx, member_id, email, link, send_dtm)
 		VALUES(
 			#{memberType},
-			17,
+			#{memberIdx},
 			#{memberId},  
 			#{email}, 
 			#{link},

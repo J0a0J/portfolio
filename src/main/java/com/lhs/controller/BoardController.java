@@ -16,6 +16,9 @@ import com.lhs.service.AttFileService;
 import com.lhs.service.BoardService;
 import com.lhs.util.FileUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
 public class BoardController {
 

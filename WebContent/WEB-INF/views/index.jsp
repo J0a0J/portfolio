@@ -49,7 +49,7 @@
 	<script type="text/javascript" >
 		var ctx = '<%= request.getContextPath() %>';
 	    $(document).ready(function() {
-	    	//movePage(this, '/home.do');
+	    	//movePage('/home.do');
 	    	
 	    	// 뒤로가기 버튼 죽이기
 	          history.pushState(null, document.title, location.href); 
@@ -83,7 +83,7 @@
 								<li><a tabindex="-1" href="<c:url value='/member/logout.do'/>"><i class="glyphicon glyphicon-off"></i> LOGOUT</a></li>
 	                    	</c:when>
 	                    	<c:otherwise>
-								<li><a tabindex="-1" href="javascript:movePage(this, '/member/goLoginPage.do')">LOGIN</a></li>
+								<li><a tabindex="-1" href="javascript:movePage('/member/goLoginPage.do')">LOGIN</a></li>
 	                    	</c:otherwise>
 	                    </c:choose>
 					</ul>
@@ -115,7 +115,7 @@
 									</li>
 									
 									<li class="dropdown"><!-- PROFILE -->
-										<a class="dropdown-toggle noicon" href="javascript:movePage(this, '/profile.do')">
+										<a class="dropdown-toggle noicon" href="javascript:movePage('/profile.do')">
 											PROFILE
 										</a>
 									</li>
@@ -124,12 +124,12 @@
 											SPRING BOARD
 										</a>
 										<ul class="dropdown-menu">
-											<li><a href="javascript:movePage(this, '/notice/list.do')">공지사항</a></li>
-											<li><a href="javascript:movePage(this, '/board/list.do')">자유게시판</a></li>
+											<li><a href="javascript:movePage('/notice/list.do')">공지사항</a></li>
+											<li><a href="javascript:movePage('/board/list.do')">자유게시판</a></li>
 										</ul>
 									</li>
 									<li class="dropdown"><!-- NOTES -->
-										<a class="dropdown-toggle noicon" href="javascript:movePage(this, '/devNotes.do')">
+										<a class="dropdown-toggle noicon" href="javascript:movePage('/devNotes.do')">
 											DEV-NOTES
 										</a>
 									</li>
@@ -137,7 +137,7 @@
 							
 							<c:if test='${sessionScope.memberId != null && sessionScope.memberType ==1 }'>
 									<li class="dropdown mega-menu"><!-- SHORTCODES -->
-										<a class="dropdown-toggle noicon" href="javascript:movePage(this, '/admin.do')">
+										<a class="dropdown-toggle noicon" href="javascript:movePage('/admin.do')">
 											ADMIN
 										</a>
 									</li>
@@ -302,8 +302,8 @@
 						<h4 class="letter-spacing-1">MENU</h4>
 						<ul class="footer-links list-unstyled">
 							<li><a href="<c:url value='/index.do'/>">홈으로</a></li>
-							<li><a href="javascript:movePage(this, '/profile.do')">프로필</a></li>
-							<li><a href="javascript:movePage(this, '/board/list.do')">게시판(spring)</a></li>
+							<li><a href="javascript:movePage('/profile.do')">프로필</a></li>
+							<li><a href="javascript:movePage('/board/list.do')">게시판(spring)</a></li>
 						</ul>
 						<!-- /Links -->
 					</div>
@@ -334,26 +334,26 @@
 									</a>
 								</li>
 								<li class="list-group-item">
-									<a href="javascript:movePage(this, '/profile.do')">
+									<a href="javascript:movePage('/profile.do')">
 										<i class="ico-category et-happy"></i>  
 										PROFILE
 									</a>
 								</li>
 								<li class="list-group-item">
-									<a href="javascript:movePage(this, '/notice/list.do')">
+									<a href="javascript:movePage('/notice/list.do')">
 										<i class="ico-category et-happy"></i>  
 										NOTICE
 									</a>
 								</li>
 								<li class="list-group-item">
-									<a href="javascript:movePage(this, '/board/list.do')">
+									<a href="javascript:movePage('/board/list.do')">
 										<i class="ico-category et-happy"></i>  
 										FREE-BOARD
 									</a>
 								</li>
 							
 								<li class="list-group-item">
-									<a href="javascript:movePage(this, '/tables.do')">
+									<a href="javascript:movePage('/tables.do')">
 										<i class="ico-category et-happy"></i>  
 										DEV-NOTES
 									</a>

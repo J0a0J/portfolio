@@ -1,7 +1,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/java,maven,windows,macos,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,maven,windows,macos,visualstudiocode
 
-applicationContext-datasource.xml
+config.properties
 
 ### Java ###
 # Compiled class file

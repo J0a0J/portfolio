@@ -19,7 +19,7 @@ import lombok.ToString;
 @Alias("EmailAuth")
 public class EmailAuth {
 	
-//	private int memberIdx;
+	private int memberIdx;
 	private int memberType;
 	private String memberId;
 	private String email;

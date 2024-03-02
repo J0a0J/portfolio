@@ -2,17 +2,13 @@
  *  공통 스크립트
  */
 
-function movePage(target, url, params){
+function movePage(url, params){
 	if(console){
-		console.log(target);
 		console.log(url);
 		console.log(params);
 	}
 	
 	if(params == undefined) params = {};
-	if(target != null){
-		
-	}
 	
 	$.ajax({
 		url : ctx + url,

@@ -53,7 +53,7 @@ $(document).ready(function(){
 
 							$("#loading-div-background").hide();	// overlay 숨기기
 							
-							movePage(null, data.nextPage);
+							movePage(data.nextPage);
 						},
 						error: function(jqXHR, textStatus, errorThrown) {
 							$("#loading-div-background").hide();	// overlay 숨기기

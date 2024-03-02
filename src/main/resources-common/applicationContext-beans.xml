@@ -31,10 +31,10 @@
 
 	<!-- 홈에서 이메일 전송하기 위한 bean설정 -->
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host" value="smtp.gmail.com" />
+		<property name="host" value="smtp.naver.com" />
 		<property name="port" value="587" />
-		<property name="username" value="yourmail" />
-		<property name="password" value="yourpassword" />
+		<property name="username" value="${mail.id}" />
+		<property name="password" value="${mail.passwd}" />
 		<property name="javaMailProperties">
 			<props>
 				<prop key="mail.smtp.starttls.enable">true</prop>
@@ -45,9 +45,8 @@
 	<!-- Annotation 기반의 Component Scan 필터(service package 만 검색) -->
 	<context:component-scan base-package="com.lhs">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
-		<context:include-filter type="regex" expression="\.*\.dao\.*"/>
+		<context:include-filter type="regex" expression=".*\.dao\..*"/>
 	</context:component-scan>
-	
 	
 	<!-- DB와 연결/쿼리의 수행/결과의 가공 등을 담당하는 sqlSessionFactory -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -72,9 +71,9 @@
 	</bean>
 
 	<!-- 트랜잭션 관리를 위한 bean -->
-	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<!-- <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
-	</bean>
+	</bean> -->
 	
 	
 	<!-- 첨부파일 위한 빈 수동 설정.. fileUtil  -->
