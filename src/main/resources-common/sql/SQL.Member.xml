@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lhs.dao.MemberDao">
+	<!-- resultType은 반드시 있어야 함 -->
+	<select id="memberList" parameterType="HashMap" resultType="HashMap">
+	
+	</select>
+	
+	
+	<select id="totalMemberCnt" parameterType="HashMap" resultType="int">
+	
+	</select>
+	
+	<select id="getMemberById" parameterType="MemberDto" resultType="MemberDto">
+	SELECT member_id, member_pw, member_idx, member_nick
+	FROM S_J0a0J.member
+	WHERE member_id = #{memberId} 
+	</select>
+	
+	<select id="makeCipherText" parameterType="map" resultType="String">
+	SELECT SHA2(MD5(#{memberPw}), 256) AS pw
+	</select>
+	
+	<select id="checkId" parameterType="map" resultType="int">
+		SELECT COUNT(1)
+		FROM S_J0a0J.member
+		WHERE member_id = #{memberId}
+	</select>
+	
+	<insert id="join" parameterType="map">
+		<selectKey resultType="int" keyProperty="memberIdx" order="BEFORE">
+		    <!-- MariaDB -->
+		    SELECT LAST_INSERT_ID() + 1 AS memberIdx;
+		</selectKey>
+		INSERT INTO S_J0a0J.`member`
+		(member_idx, member_id, member_pw, member_name, member_nick, email, create_dtm, update_dtm, membercol, type_seq)
+		VALUES(#{member_idx}, #{memberId}, #{memberPw}, #{memberName}, #{memberNick}, #{email}, DATE_FORMAT(now(), '%Y%m%d%H%i%s'), DATE_FORMAT(now(), '%Y%m%d%H%i%s'), NULL, 1);
+	</insert>
+	<delete id = "delMember" parameterType="HashMap">
+		
+	</delete>		
+
+</mapper>

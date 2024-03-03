@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.lhs.dao.BoardDao">
+	<!-- resultType은 반드시 있어야 함 -->
+	<select id="list" parameterType="HashMap" resultType="com.lhs.dto.BoardDto">
+	SELECT title, member_nick, hits, has_file, create_dtm, content, board_seq
+	FROM S_J0a0J.board
+	WHERE type_seq = 2 
+	limit 10;
+	</select>
+		
+	<select id="getTotalArticleCnt" parameterType="HashMap" resultType="int">
+	
+	</select>
+	<!-- keyProperty selectKey와 같은 기능을 구현  -->
+	<insert id ="write" parameterType="HashMap" useGeneratedKeys="true" keyProperty="boardSeq" >
+	INSERT INTO S_J0a0J.board
+	(type_seq, member_id, member_nick, title, content, has_file, hits, create_dtm, update_dtm)
+	VALUES(#{typeSeq}, #{memberId}, #{memberNick}, #{title}, #{content}, 
+	NULL, 0, DATE_FORMAT(NOW(), '%Y.%m.%d %H:%i'), DATE_FORMAT(now(), '%Y%m%d%H%i%s'));
+		
+	</insert>
+	
+	<!-- public int existFile(HashMap<String, String> params); -->
+	<update id="existFile" parameterType="HashMap">
+	UPDATE S_J0a0J.board
+	SET has_file = 'Y'
+	where board_seq = #{boardSeq}
+	</update>
+	
+	<select id="read" parameterType="HashMap" resultType = "HashMap">
+	SELECT board_seq, member_nick, title, content, has_file, hits, create_dtm, update_dtm
+	FROM S_J0a0J.board
+	WHERE board_seq = ${boardSeq};
+	</select>
+
+	<update id="updateHits" parameterType="HashMap" >
+	</update>
+
+	<update id="update" parameterType="HashMap">
+	
+	</update>
+	
+	<update id="updateHasFileToZero" parameterType="HashMap" >
+	 	 
+	 </update>
+	
+	<delete id="delete" parameterType="HashMap">
+		DELETE FROM S_J0a0J.board
+		WHERE board_seq=#{board_seq};
+	</delete>
+	
+	<!-- public int deleteFile(HashMap<String, Object> params); -->
+	<delete id="deleteFile" parameterType="HashMap">
+	DELETE FROM S_J0a0J.board_attach
+	WHERE board_seq=#{board_seq};
+	</delete>
+
+
+</mapper>
