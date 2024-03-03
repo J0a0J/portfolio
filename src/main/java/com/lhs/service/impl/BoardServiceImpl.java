@@ -102,8 +102,7 @@ public class BoardServiceImpl implements BoardService{
 			}
 		}
 		return bDao.delete(params);
-	}
-	리스트에 글 나열, 글, 파일 업로드 및 삭제 
+	} 
 
 	@Override
 	public boolean deleteAttFile(HashMap<String, Object> params) {
