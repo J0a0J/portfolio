@@ -31,20 +31,24 @@
 					</tr>
 				</thead>
 				<tbody>
+				
+				<c:forEach var="member" items="${memberList}" varStatus="rowStatus">
 					<tr>
-						<td align="center">글번호</td>
+						<td align="center">${member.boardSeq}</td>
 						<td>
 							<span class="bold">
-								<a href="javascript:movePage(null,'/board/read.do?boardSeq=boardSeq&currentPage=currentPage')">
-									title
+								<a href="javascript:movePage('/board/read.do?boardSeq=${member.boardSeq }&currentPage=1')">
+									${member.title }
 								</a>
 							</span>
                           </td>
-                          <td>memberNick</td>
-                          <td>hits</td>
-                          <td>hasFile</td>
-                          <td>createDate</td>
+                          <td>${member.memberNick}</td>
+                          <td>${member.hits}</td>
+                          <td>${member.hasFile}</td>
+                          <td>${member.createDtm}</td>
                       </tr> 
+                </c:forEach>
+                	
 				</tbody>
 			</table>
 		</div>
@@ -55,8 +59,8 @@
 				    <li class="page-item">
 			        	<a class="page-link" href="javascript:movePage('/board/list.do?page=1')">&laquo;</a>
 			        </li>
-			        <li class="page-item"><a class="page-link">1</a></li>
-			        <li class="page-item active"><a class="page-link" href="javascript:movePage('/board/list.do?page=2')">2</a></li>
+			        <li class="page-item active"><a class="page-link">1</a></li>
+			        <li class="page-item"><a class="page-link" href="javascript:movePage('/board/list.do?page=2')">2</a></li>
 			        <li class="page-item"><a class="page-link" href="javascript:movePage('/board/list.do?page=3')">3</a></li>
 			        <li class="page-item"><a class="page-link" href="javascript:movePage('/board/list.do?page=4')">4</a></li>
 			        <li class="page-item"><a class="page-link" href="javascript:movePage('/board/list.do?page=5')">5</a></li>

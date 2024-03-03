@@ -8,7 +8,7 @@
 <body>
 <section>
 	<div class="container">
-		<h4>공지사항  </h4>
+		<h4>공지사항</h4>
 		<div class="table-responsive">
 			<table class="table table-sm">
 				<colgroup>
@@ -35,7 +35,7 @@
 						<td align="center">글번호</td>
 						<td>
 							<span class="bold">
-								<a href="javascript:movePage(null,'/notice/read.do?boardSeq=boardSeq&currentPage=currentPage')">
+								<a href="javascript:movePage('/notice/read.do?boardSeq=boardSeq&currentPage=currentPage')">
 									title
 								</a>
 							</span>

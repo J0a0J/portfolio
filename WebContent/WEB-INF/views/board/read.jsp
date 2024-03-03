@@ -37,10 +37,11 @@ $(document).ready(function(){
 						<input type="hidden" name="typeSeq" value ="PK2"/>
 					</form>
 					<!-- post -->
+					<c:if test="${not empty memberList }">
 					<div class="clearfix mb-80">
 						<div class="border-bottom-1 border-top-1 p-12">
-							<span class="float-right fs-10 mt-10 text-muted">작성일시</span>
-							<center><strong>타이틀</strong></center>
+							<span class="float-right fs-10 mt-10 text-muted">${memberList.create_dtm}</span>
+							<center><strong>${memberList.title}</strong></center>
 						</div>
 						<div class="block-review-content">
 							<div class="block-review-body">
@@ -49,12 +50,13 @@ $(document).ready(function(){
 										<img src="resources/images/_smarty/avatar2.jpg" width="100" alt="avatar">
 										<!--  <i class="fa fa-user" style="font-size:30px"></i>-->
 									</div>
-									<small class="block">닉네임</small>		
+									<small class="block">${memberList.member_nick }</small>		
 									<hr />
 								</div>
 								<p>
-									본문 내용
+									${memberList.content }
 								</p>
+								</c:if>
 							<!-- 컬렉션 형태에서는 (list) items  -->
 							
 							<!-- 첨부파일 없으면  -->
@@ -92,9 +94,11 @@ $(document).ready(function(){
 									<a href="javascript:movePage('/board/goToUpdate.do?boardSeq=PK1')">
 							       		 <button type="button" class="btn btn-primary"><i class="fa fa-pencil"></i> 수정</button>
 							   		</a>	
+							   		<a href="javascript:movePage('/board/delete.do?boardSeq=${boardSeq }')">
 									<button type="button" class="btn btn-primary"  id="btnDelete">
 											삭제
 									</button>
+									</a>	
 							</c:if>
 								
 					   		<c:choose>

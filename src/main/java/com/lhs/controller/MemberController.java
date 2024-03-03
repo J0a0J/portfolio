@@ -96,7 +96,9 @@ public class MemberController {
 			}
 			
 			// 세션 설정 
-			session.setAttribute("memberId", mDto);
+			session.setAttribute("memberId", mDto.getMemberId());
+			session.setAttribute("memberNick", mDto.getMemberNick());
+			session.setAttribute("memberIdx", mDto.getMemberIdx());
 			session.setMaxInactiveInterval(60 * 60 * 24);
 			
 			map.put("nextPage", "/index.do");

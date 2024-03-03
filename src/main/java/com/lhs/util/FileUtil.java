@@ -16,7 +16,7 @@ public class FileUtil {
 	
 	private Logger logger = Logger.getLogger(FileUtil.class);
 	
-	// config.ini 에 설정해둔 값을 찾아서 사용한다.
+	// config.ini 에 설정해둔 값을 찾아서 사용한다. (물리적)	
 	@Value("#{config['project.file.upload.location']}")
 	private String saveLocation;
 	

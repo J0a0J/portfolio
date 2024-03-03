@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
 
 
+
+@Repository
 public interface AttFileDao {
 
 	/**

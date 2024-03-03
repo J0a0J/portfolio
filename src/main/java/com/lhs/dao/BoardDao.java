@@ -3,19 +3,26 @@ package com.lhs.dao;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.springframework.stereotype.Repository;
+
+import com.lhs.dto.BoardDto;
+
+@Repository
 public interface BoardDao {
 	/**
 	 * 모든 리스트 select  
 	 * @param typeSeq
 	 * @return
 	 */
-	public ArrayList<HashMap<String, Object>> list(HashMap<String, String> params);
+	public ArrayList<BoardDto> list(HashMap<String, String> params);
 	
 	/**
 	 * 총 글 수 
 	 * @param params
 	 * @return
 	 */
+	
+	public int existFile(HashMap<String, Object> params);
 	
 	public int getTotalArticleCnt(HashMap<String, String> params);
 	
@@ -58,6 +65,8 @@ public interface BoardDao {
 	 * @return
 	 */
 	public int delete(HashMap<String, Object> params);
+	
+	public int deleteFile(HashMap<String, Object> params);
 	
 	
 }

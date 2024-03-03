@@ -15,7 +15,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="getMemberById" parameterType="MemberDto" resultType="MemberDto">
-	SELECT member_id, member_pw, member_idx
+	SELECT member_id, member_pw, member_idx, member_nick
 	FROM S_J0a0J.member
 	WHERE member_id = #{memberId} 
 	</select>
