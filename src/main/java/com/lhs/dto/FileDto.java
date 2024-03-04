@@ -1,21 +1,29 @@
 package com.lhs.dto;
 
+import org.apache.ibatis.type.Alias;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
+@RequiredArgsConstructor  
+@AllArgsConstructor
+@Alias("board_attach")
 public class FileDto {
-	int board_seq;
-	int type_seq;
-	String member_id;
-	String member_nick;
-	String title;
-	String content;
-	String has_file;
-	int hits;
-	String create_dtm;
-	String update_dtm;
+	private int boardSeq;
+	private int fileIdx;
+	private int type_seq;
+	private int fileSize;
+	private String fileName;
+	private String fakeFileName;
+	private String fileType;
+	private String saveLoc;
+	private String createDtm;
+	
+	
 }

@@ -117,7 +117,7 @@ function customAjax(url, responseUrl) {
 						<!-- Useful Elements -->
 						<div class="card card-default">
 							<div class="card-heading card-heading-transparent">
-								<h2 class="card-title">공지 글 작성 </h2>
+								<h2 class="card-title">게시판 글 작성 </h2>
 							</div>
 
 							<div class="card-block">

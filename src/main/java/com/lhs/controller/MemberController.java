@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -55,14 +56,16 @@ public class MemberController {
 
 	@RequestMapping("/member/join.do")
 	@ResponseBody
-	public HashMap<String, Object> join(@RequestParam HashMap<String, String> params){		
-		HashMap<String, Object> map = new HashMap<String, Object>();
+	public HashMap<String, Object> join(@ModelAttribute("MemberDto") MemberDto mDto){		
+		System.out.println("This is MDTO          " + mDto);
 		int cnt = 0;
+		cnt = mService.join(mDto);
 		
-		cnt = mService.join(params);
+		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("cnt", cnt);
 		map.put("msg", cnt==1?"회원 가입 완료!":"회원 가입 실패!");
 		map.put("nextPage", cnt==1?"/member/goLoginPage.do" : "/member/goRegisterPage.do");
+		
 		return map;
 	}
 
@@ -80,15 +83,11 @@ public class MemberController {
 
 	@RequestMapping("/member/login.do")
 	@ResponseBody
-	public HashMap<String, Object> login(@RequestParam HashMap<String, String> params, HttpSession session){
-		System.out.println("Sibalsibal");
+	public HashMap<String, Object> login(@ModelAttribute("MemberDto") MemberDto mDto, HttpSession session){
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		try {
-			MemberDto m = new MemberDto();
-			// 입력한 아이디, 비밀번호 객체에 넣어주기 
-			m.setMemberId(params.get("memberId"));
-			m.setMemberPw(params.get("memberPw"));
-			MemberDto mDto = mService.login(m);	
+			MemberDto m = mService.login(mDto);	
+			System.out.println("MEMBER LOGIN 				"+m);
 
 			// 입력한 아이디가 없거나 비밀번호가 일치하지 않으면 에러 처리 
 			if (mDto == null) {
@@ -96,9 +95,9 @@ public class MemberController {
 			}
 			
 			// 세션 설정 
-			session.setAttribute("memberId", mDto.getMemberId());
-			session.setAttribute("memberNick", mDto.getMemberNick());
-			session.setAttribute("memberIdx", mDto.getMemberIdx());
+			session.setAttribute("memberId", m.getMemberId());
+			session.setAttribute("memberNick", m.getMemberNick());
+			session.setAttribute("memberIdx", m.getMemberIdx());
 			session.setMaxInactiveInterval(60 * 60 * 24);
 			
 			map.put("nextPage", "/index.do");

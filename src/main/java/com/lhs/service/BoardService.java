@@ -14,7 +14,8 @@ public interface BoardService {
 	
 	public int getTotalArticleCnt(HashMap<String, String> params);
 	
-	public int write(HashMap<String, Object> params, List<MultipartFile> mFiles);
+//	public int write(HashMap<String, Object> params, List<MultipartFile> mFiles);
+	public int write(BoardDto bDto, List<MultipartFile> mFiles);
 
 	/**
 	 * 글 조회  

@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.lhs.dto.FileDto;
+
 
 
 @Repository
@@ -16,7 +18,7 @@ public interface AttFileDao {
 	 * @param params
 	 * @return
 	 */
-	public int addAttFile(HashMap<String, Object> params);
+	public int addAttFile(FileDto fDto);
 	
 	/** type, board_seq 통한 해당 게시글의 모든 첨부파일 불러오기. 
 	 * @param params

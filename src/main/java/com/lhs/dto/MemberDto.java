@@ -1,32 +1,29 @@
 package com.lhs.dto;
 
-import org.apache.ibatis.type.Alias;
-
 public class MemberDto {
-	
-	Integer memberIdx;
-	private Integer typeSeq;
+
+	private int typeSeq;
+	private int memberIdx;
 	private String memberId;
 	private String memberPw;
+	private String pwAgain;
 	private String memberName;
 	private String memberNick;
 	private String email;
 	private String createDtm;
 	private String updateDtm;
 	private String membercol;
-	
-	
-	public Integer getMemberIdx() {
-		return memberIdx;
-	}
-	public void setMemberIdx(Integer memberIdx) {
-		this.memberIdx = memberIdx;
-	}
-	public Integer getTypeSeq() {
+	public int getTypeSeq() {
 		return typeSeq;
 	}
-	public void setTypeSeq(Integer typeSeq) {
+	public void setTypeSeq(int typeSeq) {
 		this.typeSeq = typeSeq;
+	}
+	public int getMemberIdx() {
+		return memberIdx;
+	}
+	public void setMemberIdx(int memberIdx) {
+		this.memberIdx = memberIdx;
 	}
 	public String getMemberId() {
 		return memberId;
@@ -39,6 +36,12 @@ public class MemberDto {
 	}
 	public void setMemberPw(String memberPw) {
 		this.memberPw = memberPw;
+	}
+	public String getPwAgain() {
+		return pwAgain;
+	}
+	public void setPwAgain(String pwAgain) {
+		this.pwAgain = pwAgain;
 	}
 	public String getMemberName() {
 		return memberName;
@@ -76,13 +79,14 @@ public class MemberDto {
 	public void setMembercol(String membercol) {
 		this.membercol = membercol;
 	}
-	
 	@Override
 	public String toString() {
-		return "MemberDto [memberIdx=" + memberIdx + ", typeSeq=" + typeSeq + ", memberId=" + memberId + ", memberPw="
-				+ memberPw + ", memberName=" + memberName + ", memberNick=" + memberNick + ", email=" + email
-				+ ", createDtm=" + createDtm + ", updateDtm=" + updateDtm + ", membercol=" + membercol + "]";
+		return "MemberDto [typeSeq=" + typeSeq + ", memberIdx=" + memberIdx + ", memberId=" + memberId + ", memberPw="
+				+ memberPw + ", pwAgain=" + pwAgain + ", memberName=" + memberName + ", memberNick=" + memberNick
+				+ ", email=" + email + ", createDtm=" + createDtm + ", updateDtm=" + updateDtm + ", membercol="
+				+ membercol + "]";
 	}
+	
 	
 	
 	

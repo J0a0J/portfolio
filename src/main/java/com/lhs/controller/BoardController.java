@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -61,17 +62,18 @@ public class BoardController {
 		return mv;
 	}
 
+//			@RequestParam HashMap<String, Object> params,
 	@RequestMapping("/board/write.do")
 	@ResponseBody
 	public HashMap<String, Object> write(
-			@RequestParam HashMap<String, Object> params, 
-			MultipartHttpServletRequest mReq) {
-		if(!params.containsKey("typeSeq")) {
-			params.put("typeSeq", this.typeSeq);
+			@ModelAttribute("BoardDto") BoardDto bDto, MultipartHttpServletRequest mReq) {
+		int boardType = bDto.getTypeSeq();
+		if(boardType == 0) {
+			bDto.setTypeSeq(Integer.parseInt(this.typeSeq));
 		}
-		// parameter, 관련 정보도 다 같이 옴. like title, content 
-		System.out.println("fdskldfjjsfljjlk						" +params);
-		int result = bService.write(params, mReq.getFiles("attFiles"));
+		System.out.println("BDTO is THIS !!!!!!!!!????????      " + bDto);
+//		// parameter, 관련 정보도 다 같이 옴. like title, content
+		int result = bService.write(bDto, mReq.getFiles("attFiles"));
 		System.out.println("RESULT        "+result);
 
 		return null;
@@ -86,10 +88,10 @@ public class BoardController {
 		//2. 받아온 정보를 토대로 물리적으로 저장된 실제 파일을 읽어온다.
 		byte[] fileByte = null;
 		
-		if(fileInfo != null) { //지워진 경우 
-			//파일 읽기 메서드 호출 
-			fileByte = fileUtil.readFile(fileInfo);
-		}
+//		if(fileInfo != null) { //지워진 경우 
+//			//파일 읽기 메서드 호출 
+//			fileByte = fileUtil.readFile(fileInfo);
+//		}
 		
 		//돌려보내기 위해 응답(httpServletResponse rep)에 정보 입력. **** 응답사용시 @ResponseBody 필요 ! !
 		//Response 정보전달: 파일 다운로드 할수있는 정보들을 브라우저에 알려주는 역할 
@@ -145,7 +147,7 @@ public class BoardController {
 
 	@RequestMapping("/board/delete.do")
 	@ResponseBody
-	public HashMap<String, Object> delete(@RequestParam HashMap<String, Object> params, HttpSession session) {
+	public ModelAndView delete(@RequestParam HashMap<String, Object> params, HttpSession session) {
 		System.out.println("DELETE   						"+params);
 		if(!params.containsKey("typeSeq")) {
 			params.put("typeSeq", this.typeSeq);
@@ -154,7 +156,10 @@ public class BoardController {
 		System.out.println("MEMBER INFO          " + memberInfo);
 		int result = bService.delete(memberInfo);
 		System.out.println("DELETE RESULT      " + result);
-		return null; // 비동기: map return 
+//		return null; // 비동기: map 
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("/board/list");
+		return mv;
 	}
 
 	@RequestMapping("/board/deleteAttFile.do")

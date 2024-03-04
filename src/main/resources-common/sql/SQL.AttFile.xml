@@ -4,12 +4,12 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 
 	<mapper namespace="com.lhs.dao.AttFileDao"> 
-		
-	<insert id ="addAttFile" parameterType="HashMap" >
-	INSERT INTO S_J0a0J.board_attach
-	(file_idx, type_seq, board_seq, file_name, fake_filename, file_size, file_type, save_loc, create_dtm)
-	VALUES(#{fileIdx}, 2, #{boardSeq}, #{fileName}, #{fakeName}, #{fileSize}, 
-	#{fileType}, #{saveLoc}, DATE_FORMAT(now(), '%Y%m%d%H%i%s'));
+	<!-- useGeneratedKeys="true" keyProperty="boardSeq"  -->
+	<insert id ="addAttFile" parameterType="com.lhs.dto.FileDto" useGeneratedKeys="true" keyProperty="fileIdx">
+		INSERT INTO S_J0a0J.board_attach
+		(board_seq, file_idx, type_seq, file_name, fake_filename, file_size, file_type, save_loc, create_dtm)
+		VALUES(#{boardSeq}, #{fileIdx}, 2, #{fileName}, #{fakeFileName}, #{fileSize}, 
+		#{fileType}, #{saveLoc}, DATE_FORMAT(now(), '%Y%m%d%H%i%s'));
 	</insert>
 	
  	<select id="readAttFiles" parameterType="HashMap" resultType="HashMap">

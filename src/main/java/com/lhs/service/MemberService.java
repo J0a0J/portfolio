@@ -15,7 +15,7 @@ public interface MemberService {
 	//총 회원수 for paging
 	public int totalMemberCnt(HashMap<String, Object> params);
 
-	public int join(HashMap<String, String> params);
+	public int join(MemberDto mDto);
 	
 	public int checkId(HashMap<String, String> params);
 

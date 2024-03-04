@@ -22,7 +22,7 @@ public interface BoardDao {
 	 * @return
 	 */
 	
-	public int existFile(HashMap<String, Object> params);
+	public int existFile(BoardDto bDto);
 	
 	public int getTotalArticleCnt(HashMap<String, String> params);
 	
@@ -31,7 +31,7 @@ public interface BoardDao {
 	 * @param params
 	 * @return
 	 */
-	public int write(HashMap<String, Object> params);
+	public int write(BoardDto bDto);
 	
 	/**
 	 * 글 조회  

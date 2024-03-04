@@ -36,10 +36,11 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public int join(HashMap<String, String> params) {
+	public int join(MemberDto mDto) {
+//		
+		String pwd = mDto.getMemberPw();
+		String pwAgain = mDto.getPwAgain();
 		
-		String pwd = params.get("memberPw");
-		String pwAgain = params.get("pwAgain");
 		
 		// 비밀번호 길이가 6보다 적을 때 
 		if(pwd.length() < 6) {
@@ -48,6 +49,8 @@ public class MemberServiceImpl implements MemberService {
 		
 		// 비밀번호와 확인 비밀번호가 일치하지 않으면 바로 반환.
 		if (!pwd.equals(pwAgain)) {
+			System.out.println("PWD   !!!!!!!!!!!          !!!!" + pwd);
+			System.out.println("PWD   !!!!!!!!!!!          !!!!" + pwAgain);
 			return 0;
 		}
 		
@@ -56,16 +59,19 @@ public class MemberServiceImpl implements MemberService {
 		// DB에 암호화된 비밀번호를 넣기 위한 설정.
 		Sha512Encoder encoder = Sha512Encoder.getInstance();
 		String encodePwd = encoder.getSecurePassword(pwd);
-		params.put("memberPw", encodePwd);
+		mDto.setMemberPw(encodePwd);
 		
-		int result = mDao.join(params);
+		System.out.println("MEMBER IDX IS !!!!!!!!!!!!!!!!!    " + mDto.getMemberIdx());
+		
+		int result = mDao.join(mDto);
+		System.out.println("THIS IS RESULT         " + result);
 		
 		// 회원가입 후 인증 이메일을 보내기 위한 과정. 
 //		String sMemberIdx = String.valueOf(params.get("memberIdx"));
 //		int memberIdx = Integer.parseInt(sMemberIdx);
-		MemberDto temp = new MemberDto();
-		temp.setMemberId(params.get("memberId"));
-		MemberDto mDto = mDao.getMemberById(temp);
+//		MemberDto temp = new MemberDto();
+//		temp.setMemberId(mDto.getMemberId());
+//		MemberDto mDto = mDao.getMemberById(temp);
 		
 		System.out.println("MEMBER DTO  	" + mDto);
 		
@@ -73,14 +79,14 @@ public class MemberServiceImpl implements MemberService {
 		EmailAuth emailAuth = EmailAuth.builder()
 				.memberIdx(mDto.getMemberIdx())
 				.memberType(1)
-				.memberId(params.get("memberId"))
-				.email(params.get("email"))
+				.memberId(mDto.getMemberId())
+				.email(mDto.getEmail())
 				.link(link)
 				.build();
 		
 		EmailDto emailDto = new EmailDto();
 		emailDto.setFrom("j0a0j@naver.com");
-		emailDto.setReceiver(params.get("email"));
+		emailDto.setReceiver(mDto.getEmail());
 		emailDto.setSubject("회원가입을 환영합니다.");
 		String html = "<a href='https://github.com/J0a0J/portfolio'>인증하기</a>";
 		emailDto.setText(html);

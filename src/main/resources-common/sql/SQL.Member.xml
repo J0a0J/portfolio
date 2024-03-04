@@ -30,14 +30,13 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		WHERE member_id = #{memberId}
 	</select>
 	
-	<insert id="join" parameterType="map">
-		<selectKey resultType="int" keyProperty="memberIdx" order="BEFORE">
-		    <!-- MariaDB -->
-		    SELECT LAST_INSERT_ID() + 1 AS memberIdx;
+	<insert id="join" parameterType="MemberDto">
+		<selectKey resultType="int" keyProperty="memberIdx" order="AFTER" >
+		    SELECT LAST_INSERT_ID() AS memberIdx
 		</selectKey>
 		INSERT INTO S_J0a0J.`member`
 		(member_idx, member_id, member_pw, member_name, member_nick, email, create_dtm, update_dtm, membercol, type_seq)
-		VALUES(#{member_idx}, #{memberId}, #{memberPw}, #{memberName}, #{memberNick}, #{email}, DATE_FORMAT(now(), '%Y%m%d%H%i%s'), DATE_FORMAT(now(), '%Y%m%d%H%i%s'), NULL, 1);
+		VALUES(#{memberIdx}, #{memberId}, #{memberPw}, #{memberName}, #{memberNick}, #{email}, DATE_FORMAT(now(), '%Y%m%d%H%i%s'), DATE_FORMAT(now(), '%Y%m%d%H%i%s'), NULL, 1);
 	</insert>
 	<delete id = "delMember" parameterType="HashMap">
 		
