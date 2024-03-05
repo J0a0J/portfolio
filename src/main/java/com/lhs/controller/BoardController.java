@@ -105,16 +105,16 @@ public class BoardController {
 	}
 
 	@RequestMapping("/board/read.do")
-	public ModelAndView read(@RequestParam HashMap<String, Object> params) {
-		if(!params.containsKey("typeSeq")) {
-			params.put("typeSeq", this.typeSeq);
+	public ModelAndView read(@ModelAttribute("BoardDto") BoardDto bDto) {
+		if(bDto.getTypeSeq() == 0) {
+			bDto.setTypeSeq(Integer.parseInt(this.typeSeq));
 		}
-		System.out.println("READ PARAMS~~~~~~~~~~~~~~~~~~~~~~       " + params);
+
 		ModelAndView mv = new ModelAndView();
-		HashMap<String, Object> memberList = bService.read(params);
+		BoardDto memberList = bService.read(bDto);
 		System.out.println("memberLISt                        " + memberList);
 		mv.addObject("memberList", memberList);
-		mv.addObject("boardSeq", params.get("boardSeq"));
+		mv.addObject("boardSeq", bDto.getBoardSeq());
 		mv.setViewName("/board/read");
 		return mv;
 	}	
@@ -122,40 +122,56 @@ public class BoardController {
 
 	//수정  페이지로 	
 	@RequestMapping("/board/goToUpdate.do")
-	public ModelAndView goToUpdate(@RequestParam HashMap<String, Object> params, HttpSession session) {
+	public ModelAndView goToUpdate(@ModelAttribute("BoardDto") BoardDto bDto, HttpSession session) {
 		ModelAndView mv = new ModelAndView();
 
-		if(!params.containsKey("typeSeq")) {
-			params.put("typeSeq", this.typeSeq);
-		}
+		if(bDto.getTypeSeq() == 0) {
+			bDto.setTypeSeq(Integer.parseInt(this.typeSeq));
+		} 
+		BoardDto boardMember = bService.read(bDto);
+		System.out.println("GO TO UPDATE 's board info : " + boardMember.getBoardSeq());
+		mv.addObject("boardMember", boardMember);
+		mv.setViewName("/board/update");
 		
+		System.out.println("GO TO UPDATE 's params info : " + boardMember);
 		return mv;
 
 	}
 
 	@RequestMapping("/board/update.do")
 	@ResponseBody // !!!!!!!!!!!! 비동기 응답 
-	public HashMap<String, Object> update(@RequestParam HashMap<String,Object> params, 
+	public HashMap<String, Object> update(@ModelAttribute("BoardDto") BoardDto bDto,
 			MultipartHttpServletRequest mReq) {
-
-		if(!params.containsKey("typeSeq")) {
-			params.put("typeSeq", this.typeSeq);
+//		BoardDto          !!!!!!!! {memberNick=saaaaa, is_ajax=true, hasFile=, memberIdx=, 
+//		typeSeq=, action=contact_send, boardSeq=, title=연습, content=연습장
+//		, memberId=}
+		System.out.println("BoardDto          !!!!!!!! " + bDto);
+		
+		if(bDto.getTypeSeq() == 0) {
+			bDto.setTypeSeq(Integer.parseInt(this.typeSeq));
 		}
-
-		return null;
+		
+		int result = bService.update(bDto, null);
+		
+		System.out.println("FIRST UPDATE BDTO's INFO IS     must be 1     " + result);
+		HashMap<String, Object> map = new HashMap<String , Object>();
+		map.put("cnt", result);
+		map.put("msg", result==1?"게시물 업데이트 완료!!!":"게시물 업데이트 실패!!!");
+		map.put("nextPage", result==1?"/board/list.do" : "/board/list.do");
+		return map;
 	}
 
 	@RequestMapping("/board/delete.do")
 	@ResponseBody
-	public ModelAndView delete(@RequestParam HashMap<String, Object> params, HttpSession session) {
-		System.out.println("DELETE   						"+params);
-		if(!params.containsKey("typeSeq")) {
-			params.put("typeSeq", this.typeSeq);
+	public ModelAndView delete(@ModelAttribute("BoardDto") BoardDto bDto, HttpSession session) {
+		System.out.println("DELETE   						" + bDto);
+		if(bDto.getTypeSeq() == 0) {
+			bDto.setTypeSeq(Integer.parseInt(this.typeSeq));
 		}
-		HashMap<String, Object> memberInfo = bService.read(params);
-		System.out.println("MEMBER INFO          " + memberInfo);
-		int result = bService.delete(memberInfo);
-		System.out.println("DELETE RESULT      " + result);
+		int result = bService.delete(bDto);
+		System.out.println("MEMBER INFO          " + result);
+//		int result = bService.delete(memberInfo);
+//		System.out.println("DELETE RESULT      " + result);
 //		return null; // 비동기: map 
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("/board/list");

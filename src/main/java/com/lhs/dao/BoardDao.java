@@ -36,21 +36,21 @@ public interface BoardDao {
 	/**
 	 * 글 조회  
 	 */
-	public HashMap<String, Object> read(HashMap<String, Object> params);
+	public BoardDto read(BoardDto bDto);
 	
 	/**
 	 * 조회수 증가.
 	 * @param params
 	 * @return
 	 */
-	public int updateHits(HashMap<String, Object> params);
+	public int updateHits(BoardDto bDto);
 	
 	/**
 	 * 글 수정 update 
 	 * @param params
 	 * @return
 	 */
-	public int update(HashMap<String, Object> params);
+	public int update(BoardDto bDto);
 	
 	/**
 	 * 모든 첨부파일 삭제시 has_file = 0 으로 수정 
@@ -64,9 +64,9 @@ public interface BoardDao {
 	 * @param params
 	 * @return
 	 */
-	public int delete(HashMap<String, Object> params);
+	public int delete(BoardDto bDto);
 	
-	public int deleteFile(HashMap<String, Object> params);
+	public int deleteFile(BoardDto bDto);
 	
 	
 }

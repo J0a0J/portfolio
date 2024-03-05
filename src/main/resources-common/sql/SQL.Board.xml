@@ -30,8 +30,8 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		where board_seq = #{boardSeq}
 	</update>
 	
-	<select id="read" parameterType="HashMap" resultType = "HashMap">
-		SELECT board_seq, member_nick, title, content, has_file, hits, create_dtm, update_dtm
+	<select id="read" parameterType="com.lhs.dto.BoardDto" resultType = "com.lhs.dto.BoardDto">
+		SELECT board_seq, member_nick, title, content, has_file, hits, create_dtm, update_dtm, type_seq
 		FROM S_J0a0J.board
 		WHERE board_seq = ${boardSeq};
 	</select>
@@ -43,22 +43,24 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	</update>
 
 	<update id="update" parameterType="HashMap">
-	
+	UPDATE S_J0a0J.board
+	SET title=#{title}, content=#{content}, update_dtm=DATE_FORMAT(NOW(), '%Y.%m.%d %H:%i')
+	WHERE board_seq=#{boardSeq};
 	</update>
 	
 	<update id="updateHasFileToZero" parameterType="HashMap" >
 	 	 
 	 </update>
 	
-	<delete id="delete" parameterType="HashMap">
+	<delete id="delete" parameterType="com.lhs.dto.BoardDto">
 		DELETE FROM S_J0a0J.board
-		WHERE board_seq=#{board_seq};
+		WHERE board_seq=#{boardSeq};
 	</delete>
 	
 	<!-- public int deleteFile(HashMap<String, Object> params); -->
-	<delete id="deleteFile" parameterType="HashMap">
+	<delete id="deleteFile" parameterType="com.lhs.dto.BoardDto">
 		DELETE FROM S_J0a0J.board_attach
-		WHERE board_seq=#{board_seq};
+		WHERE board_seq=#{boardSeq};
 	</delete>
 
 

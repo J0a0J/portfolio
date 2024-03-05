@@ -70,7 +70,7 @@
 			}
 			$('#content').val(content);
 			
-			customAjax("<c:url value='/board/update.do' />", "/board/read.do?boardSeq=${boardInfo.board_seq}");
+			customAjax("<c:url value='/board/update.do' />", "/board/read.do?boardSeq=${boardMember.boardSeq}");
 		
 		}); //#btnUpdate end 		
 }); //ready End 
@@ -93,11 +93,9 @@ function customAjax(url, responseUrl) {
              
              alert(data.msg);
              var boardSeq = data.boardSeq;
-             if(data.result == 1){
-                movePage(this, responseUrl);
-             } else {
-               window.location.href="<c:url value='/index.do'/>";
-             }
+            
+                movePage(responseUrl);
+           
          },
          error : function (XMLHttpRequest, textStatus, errorThrown) {
                alert("작성 에러\n관리자에게 문의바랍니다.");
@@ -127,15 +125,15 @@ function deleteFile(fileIdx, boardSeq){
 					<!-- Useful Elements -->
 					<div class="card card-default">
 						<div class="card-heading card-heading-transparent">
-							<h2 class="card-title">공지 글 수정</h2>
+							<h2 class="card-title">게시글 수정</h2>
 						</div>
 						<div class="card-block">
 							<form name="updateForm" class="validate" method="post" enctype="multipart/form-data" data-success="Sent! Thank you!" data-toastr-position="top-right">
 								<input type="hidden" name="memberId" value="${ sessionScope.memberId }"/>
 								<input type="hidden" name="memberIdx" value="${ sessionScope.memberIdx }"/>
-								<input type="hidden" name="typeSeq" value="${ boardInfo.type_seq}"/>
-								<input type="hidden" name="boardSeq" value="${ boardInfo.board_seq }"/>
-								<input type="hidden" name="hasFile" value="${ boardInfo.has_file }"/>
+								<input type="hidden" name="typeSeq" value="${ boardMember.typeSeq}"/>
+								<input type="hidden" name="boardSeq" value="${ boardMember.boardSeq }"/>
+								<input type="hidden" name="hasFile" value="${ boardMember.hasFile }"/>
 									
 								<fieldset>
 									<!-- required [php action request] -->
@@ -143,12 +141,13 @@ function deleteFile(fileIdx, boardSeq){
 									<div class="row">
 										<div class="col-md-8 col-sm-8">
 											<label>제목</label>
-											<input type="text" name="title" id="title" value="타이틀" class="form-control required">
+											<c:if test="${not empty boardMember}">
+											    <input type="text" name="title" id="title" value="${boardMember.title}" class="form-control required">
 										</div>
 										
 										<div class="col-md-4 col-sm-4">
 											<label>작성자</label>
-											<input type="text" id="memberNick" name="memberNick" value="작성자" 
+											<input type="text" id="memberNick" name="memberNick" value="${boardMember.memberNick }" 
 											class="form-control" readonly="readonly">
 										</div>
 										
@@ -158,8 +157,9 @@ function deleteFile(fileIdx, boardSeq){
 										<div class="col-md-12 col-sm-12">
 											<label>내용</label>
 											<textarea class="summernote form-control" data-height="200" data-lang="en-US" name="content" id="content" rows="4">
-												내용내용내용내용내용내용내용
+												${ boardMember.content}
 											</textarea>
+											</c:if>
 									
 										</div>
 									</div>
@@ -212,12 +212,14 @@ function deleteFile(fileIdx, boardSeq){
 									<div class="col-md-12 text-right">
 										<a href="javascript:movePage('/board/list.do?')">
 											<button type="button" class="btn btn-primary">
-												목록 
+												목록
 											</button>
 										</a>
+										<a href="javascript:movePage('/board/update.do?boardSeq=boardMember.boardSeq')">
 										<button type="button" class="btn btn-primary" id="btnUpdate">
 											수정
 										</button>
+										</a>
 									</div>
 								</div>
 							</form>

@@ -79,29 +79,34 @@ public class BoardServiceImpl implements BoardService{
 
 	//글 조회 
 	@Override
-	public HashMap<String, Object> read(HashMap<String, Object> params) {
-		bDao.updateHits(params);
-		return bDao.read(params);
+	public BoardDto read(BoardDto bDto) {
+		bDao.updateHits(bDto);
+		return bDao.read(bDto);
 	}
 
 	@Override
-	public int update(HashMap<String, Object> params, List<MultipartFile> mFiles) {
-		if(params.get("hasFile").equals("Y")) { // 첨부파일 존재시 			
+	public int update(BoardDto bDto, List<MultipartFile> mFiles) {
+
+		System.out.println("THIS IS BDTO IN UPDATE :    " + bDto);
+		if(bDto.getHasFile().equals("Y")) { // 첨부파일 존재시 			
 			// 파일 처리
 		}	
 		// 글 수정 dao 
-		return bDao.update(params);
+		return bDao.update(bDto);
 	}
 
 	@Override
-	public int delete(HashMap<String, Object> params) {
-		if(params.get("has_file") != null) {			
-			if(params.get("has_file").equals("Y")) { // 첨부파일 있으면 		
+	public int delete(BoardDto bDto) {
+		System.out.println("SERVICE IMPL DELETE         "+ bDto);
+		if(bDto.getHasFile() != null) {			
+			if((bDto.getHasFile()).equals("Y")) { // 첨부파일 있으면 		
 				// 파일 처리
-				int result = bDao.deleteFile(params);
+				System.out.println("파일이 있다면!!!!!!!!! ");
+				int result = bDao.deleteFile(bDto);
 			}
 		}
-		return bDao.delete(params);
+		
+		return bDao.delete(bDto);
 	} 
 
 	@Override
