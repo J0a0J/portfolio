@@ -2,6 +2,7 @@ package com.lhs.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -12,10 +13,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.UriUtils;
 
 import com.lhs.dto.BoardDto;
+import com.lhs.dto.FileDto;
 import com.lhs.service.AttFileService;
 import com.lhs.service.BoardService;
 import com.lhs.util.FileUtil;
@@ -71,6 +75,8 @@ public class BoardController {
 		if(boardType == 0) {
 			bDto.setTypeSeq(Integer.parseInt(this.typeSeq));
 		}
+		System.out.println("MREQ !!!!!!!! "+ mReq.getContentType());
+
 		System.out.println("BDTO is THIS !!!!!!!!!????????      " + bDto);
 //		// parameter, 관련 정보도 다 같이 옴. like title, content
 		int result = bService.write(bDto, mReq.getFiles("attFiles"));
@@ -81,23 +87,27 @@ public class BoardController {
 	
 	@RequestMapping("/board/download.do")
 	@ResponseBody
-	public byte[] downloadFile(@RequestParam int fileIdx, HttpServletResponse rep) {
+	public byte[] downloadFile(@RequestParam int fileIdx,  HttpServletResponse rep) {
 		//1.받아온 파람의 파일 pk로 파일 전체 정보 불러온다. -attFilesService필요! 
-		HashMap<String, Object> fileInfo = null;
+		// 파일 전체 정보 받아오기 
+		FileDto fileInfo = bService.getFileInfo(fileIdx);
+		System.out.println("FILE INFO IN DOWNLOAD FILE          " + fileInfo);
 		
 		//2. 받아온 정보를 토대로 물리적으로 저장된 실제 파일을 읽어온다.
 		byte[] fileByte = null;
 		
-//		if(fileInfo != null) { //지워진 경우 
-//			//파일 읽기 메서드 호출 
-//			fileByte = fileUtil.readFile(fileInfo);
-//		}
+		if(fileInfo != null) { //지워진 경우 
+			//파일 읽기 메서드 호출 
+			fileByte = fileUtil.readFile(fileInfo);
+		}
+		// 파일명이 한글이면 오류가 발생하기에 꼭 utf-8로 해줘야 한다.
+		String fileName = UriUtils.encode(fileInfo.getFileName(), "utf-8");
 		
 		//돌려보내기 위해 응답(httpServletResponse rep)에 정보 입력. **** 응답사용시 @ResponseBody 필요 ! !
 		//Response 정보전달: 파일 다운로드 할수있는 정보들을 브라우저에 알려주는 역할 
-		rep.setHeader("Content-Disposition", "attachment; filename=\""+fileInfo.get("file_name") + "\""); //파일명
-		rep.setContentType(String.valueOf(fileInfo.get("file_type"))); // content-type
-		rep.setContentLength(Integer.parseInt(String.valueOf(fileInfo.get("file_size")))); // 파일사이즈 
+		rep.setHeader("Content-Disposition", "attachment; filename=\""+ fileName + "\""); //파일명
+		rep.setContentType(fileInfo.getFileType()); // content-type
+		rep.setContentLength(fileInfo.getFileSize()); // 파일사이즈 
 		rep.setHeader("pragma", "no-cache");
 		rep.setHeader("Cache-Control", "no-cache");
 		
@@ -111,9 +121,18 @@ public class BoardController {
 		}
 
 		ModelAndView mv = new ModelAndView();
-		BoardDto memberList = bService.read(bDto);
-		System.out.println("memberLISt                        " + memberList);
-		mv.addObject("memberList", memberList);
+		// 게시글 정보 
+		BoardDto boardList = bService.read(bDto);
+		
+		// 파일이 있는지 확인 
+		String checkFile = boardList.getHasFile();
+		if (checkFile != null) {
+			// 파일 정보 
+			ArrayList<FileDto> fDto = bService.readFile(bDto);
+			mv.addObject("attFiles", fDto);
+		}
+		
+		mv.addObject("boardList", boardList);
 		mv.addObject("boardSeq", bDto.getBoardSeq());
 		mv.setViewName("/board/read");
 		return mv;
@@ -122,18 +141,21 @@ public class BoardController {
 
 	//수정  페이지로 	
 	@RequestMapping("/board/goToUpdate.do")
-	public ModelAndView goToUpdate(@ModelAttribute("BoardDto") BoardDto bDto, HttpSession session) {
+	public ModelAndView goToUpdate(BoardDto bDto, HttpSession session) {
 		ModelAndView mv = new ModelAndView();
-
+		// read로 하면 조회수가 총 +2 되기 때문에 uri 로 값 받기 
+		System.out.println("BOARD DTO IS THIS!!!!!      " + bDto);
 		if(bDto.getTypeSeq() == 0) {
 			bDto.setTypeSeq(Integer.parseInt(this.typeSeq));
-		} 
-		BoardDto boardMember = bService.read(bDto);
-		System.out.println("GO TO UPDATE 's board info : " + boardMember.getBoardSeq());
-		mv.addObject("boardMember", boardMember);
-		mv.setViewName("/board/update");
+		}
+		// 게시글 정보 
+		mv.addObject("boardMember", bDto);
+		// 첨부 파일 정보 
+		ArrayList<FileDto> attFiles = bService.readFile(bDto);
+		mv.addObject("attFiles", attFiles);
 		
-		System.out.println("GO TO UPDATE 's params info : " + boardMember);
+		mv.setViewName("/board/update");
+
 		return mv;
 
 	}
@@ -142,22 +164,23 @@ public class BoardController {
 	@ResponseBody // !!!!!!!!!!!! 비동기 응답 
 	public HashMap<String, Object> update(@ModelAttribute("BoardDto") BoardDto bDto,
 			MultipartHttpServletRequest mReq) {
-//		BoardDto          !!!!!!!! {memberNick=saaaaa, is_ajax=true, hasFile=, memberIdx=, 
-//		typeSeq=, action=contact_send, boardSeq=, title=연습, content=연습장
-//		, memberId=}
-		System.out.println("BoardDto          !!!!!!!! " + bDto);
 		
 		if(bDto.getTypeSeq() == 0) {
 			bDto.setTypeSeq(Integer.parseInt(this.typeSeq));
+			
 		}
 		
-		int result = bService.update(bDto, null);
+		System.out.println("MREQ !!!!!!!! "+ mReq.getAttributeNames());
+		System.out.println("MREQ !!!!!!!! "+ mReq.getFileNames());
 		
-		System.out.println("FIRST UPDATE BDTO's INFO IS     must be 1     " + result);
+		int result = bService.update(bDto, mReq.getFiles("attFiles"));
+
 		HashMap<String, Object> map = new HashMap<String , Object>();
+		
 		map.put("cnt", result);
 		map.put("msg", result==1?"게시물 업데이트 완료!!!":"게시물 업데이트 실패!!!");
 		map.put("nextPage", result==1?"/board/list.do" : "/board/list.do");
+		
 		return map;
 	}
 
@@ -169,10 +192,7 @@ public class BoardController {
 			bDto.setTypeSeq(Integer.parseInt(this.typeSeq));
 		}
 		int result = bService.delete(bDto);
-		System.out.println("MEMBER INFO          " + result);
-//		int result = bService.delete(memberInfo);
-//		System.out.println("DELETE RESULT      " + result);
-//		return null; // 비동기: map 
+		
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("/board/list");
 		return mv;
@@ -180,11 +200,13 @@ public class BoardController {
 
 	@RequestMapping("/board/deleteAttFile.do")
 	@ResponseBody
-	public HashMap<String, Object> deleteAttFile(@RequestParam HashMap<String, Object> params) {
-
-		if(!params.containsKey("typeSeq")) {
-			params.put("typeSeq", this.typeSeq);
-		}
+	public HashMap<String, Object> deleteAttFile(@ModelAttribute("FileDto") FileDto fDto) {	
+		System.out.println("params is here " + fDto);
+//		if(!params.containsKey("typeSeq")) {
+//			params.put("typeSeq", this.typeSeq);
+//		}
+//		
+		bService.deleteAttFile(fDto);
 		return null;
 	} 
 

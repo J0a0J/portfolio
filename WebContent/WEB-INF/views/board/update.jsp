@@ -171,7 +171,8 @@ function deleteFile(fileIdx, boardSeq){
 											</label>
 
 											<!-- custom file upload -->												
-		<c:if test="${empty attFiles}"> <!-- 첨부파일없으면  -->
+											<!-- 첨부파일없으면  -->
+											<c:if test="${empty attFiles}"> 
 											<div class="fancy-file-upload fancy-file-primary">
 												<i class="fa fa-upload"></i>
 												<input type="file" class="form-control" name="attFiles" onchange="jQuery(this).next('input').val(this.value);" />
@@ -185,22 +186,24 @@ function deleteFile(fileIdx, boardSeq){
 												<span class="button">Choose File</span>
 											</div>
 											<small class="text-muted block">Max file size: 10Mb (zip/pdf/jpg/png)</small>
-		</c:if>
-	<!-- 파일있으면  -->	
-	<c:forEach items="${attFiles}" var="file" varStatus ="f" > 
+											</c:if>
+										<!-- 파일있으면  -->	
+										<c:forEach items="${attFiles}" var="file" varStatus ="f" > 
 											<div class="row">	
 												<div class="col-md-8 col-sm-8">
 													<div class="fancy-file-upload fancy-file-primary" >
 														<i class="fa fa-upload"></i>
 														
-														<input type="text" class="form-control" placeholder="${file.file_name} (${file.file_size} bytes)" readonly="" />
+														<input type="text" class="form-control" placeholder="${file.fileName} (${file.fileSize} bytes)" readonly="" />
 													</div>
 	
 												</div>
 												<div class="col-md-4 col-sm-4">	
-													<button type="button" class="btn btn-primary" onclick="deleteFile(${file.file_idx} , ${file.board_seq});">
+													<a href="javascript:movePage('/board/deleteAttFile.do?fileIdx=${file.fileIdx }&boardSeq=${file.boardSeq }')">
+													<button type="button" class="btn btn-primary" onclick="deleteFile(${file.fileIdx} , ${file.boardSeq});">
 														첨부파일 삭제
 													</button>
+													</a>
 												</div>					
 											</div>
 	</c:forEach>

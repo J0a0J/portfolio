@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.lhs.dto.FileDto;
+
 //물리적 위치로 파일 저장 
 
 public class FileUtil {
@@ -48,9 +50,9 @@ public class FileUtil {
 	/**
 	 * 파일 읽기(다운로드) 
 	 */
-	public byte[] readFile(HashMap<String, Object> fileInfo) {
+	public byte[] readFile(FileDto fileInfo) {
 		//1. 파일 찾기 File(파일위치, 파일명)  
-		File f = new File(saveLocation, String.valueOf(fileInfo.get("fake_file_name")));// 파일명 페이크네임으로 저장되어있으므로. 
+		File f = new File(saveLocation, fileInfo.getFakeFileName());// 파일명 페이크네임으로 저장되어있으므로. 
 		byte[] fileByte = null;
 		if(f.exists()) { // 물리적 위치에 존재하면
 			// 파일 byte단위로 읽어온다.

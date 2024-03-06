@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.springframework.stereotype.Repository;
 
 import com.lhs.dto.BoardDto;
+import com.lhs.dto.FileDto;
 
 @Repository
 public interface BoardDao {
@@ -21,10 +22,10 @@ public interface BoardDao {
 	 * @param params
 	 * @return
 	 */
+	public int getTotalArticleCnt(HashMap<String, String> params);
+	
 	
 	public int existFile(BoardDto bDto);
-	
-	public int getTotalArticleCnt(HashMap<String, String> params);
 	
 	/**
 	 * 글 작성 insert 
@@ -37,6 +38,10 @@ public interface BoardDao {
 	 * 글 조회  
 	 */
 	public BoardDto read(BoardDto bDto);
+	
+	public ArrayList<FileDto> readFile(BoardDto bDto);
+	
+	public FileDto getFileInfo(int fileIdx);
 	
 	/**
 	 * 조회수 증가.
@@ -66,7 +71,22 @@ public interface BoardDao {
 	 */
 	public int delete(BoardDto bDto);
 	
+	/**
+	 * 게시글 삭제할 때 파일 통째로 삭제 
+	 * @param bDto
+	 * @return
+	 */
 	public int deleteFile(BoardDto bDto);
 	
-	
+	/*
+	 * 게시글 수정시 파일 개별 삭제 
+	 */
+	public int deleteAttFile(FileDto fDto);
+	 
+	/**
+	 * 게시글 내 파일 개수 구하기 
+	 * @param fDto
+	 * @return
+	 */
+	public int getFileCount(FileDto fDto);
 }

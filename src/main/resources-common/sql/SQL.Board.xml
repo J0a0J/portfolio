@@ -26,7 +26,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	<!-- 파일 존재한다면 board 테이블 업데이트 해줘야 함. -->
 	<update id="existFile" parameterType="com.lhs.dto.BoardDto">
 		UPDATE S_J0a0J.board
-		SET has_file = 'Y'
+		SET has_file =#{hasFile}
 		where board_seq = #{boardSeq}
 	</update>
 	
@@ -34,6 +34,20 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		SELECT board_seq, member_nick, title, content, has_file, hits, create_dtm, update_dtm, type_seq
 		FROM S_J0a0J.board
 		WHERE board_seq = ${boardSeq};
+	</select>
+	
+	<!-- public FileDto read(BoardDto bDto); -->
+	<select id="readFile" parameterType="com.lhs.dto.BoardDto" resultType="com.lhs.dto.FileDto">
+		SELECT board_seq, file_idx, type_seq, file_name, fake_filename, file_size, file_type, save_loc, create_dtm
+		FROM S_J0a0J.board_attach
+		WHERE board_seq = #{boardSeq};	
+	</select>
+	
+	<!-- public FileDto getFileInfo(int fileIdx, int boardSeq); -->
+	<select id="getFileInfo" parameterType="int" resultType="com.lhs.dto.FileDto">
+		SELECT file_idx, type_seq, board_seq, file_name, fake_filename, file_size, file_type, save_loc, create_dtm
+		FROM S_J0a0J.board_attach
+		WHERE file_idx = #{fildIdx};
 	</select>
 
 	<update id="updateHits" parameterType="HashMap" >
@@ -43,9 +57,9 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	</update>
 
 	<update id="update" parameterType="HashMap">
-	UPDATE S_J0a0J.board
-	SET title=#{title}, content=#{content}, update_dtm=DATE_FORMAT(NOW(), '%Y.%m.%d %H:%i')
-	WHERE board_seq=#{boardSeq};
+		UPDATE S_J0a0J.board
+		SET title=#{title}, content=#{content}, update_dtm=DATE_FORMAT(NOW(), '%Y.%m.%d %H:%i')
+		WHERE board_seq=#{boardSeq};
 	</update>
 	
 	<update id="updateHasFileToZero" parameterType="HashMap" >
@@ -62,6 +76,19 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		DELETE FROM S_J0a0J.board_attach
 		WHERE board_seq=#{boardSeq};
 	</delete>
+	
+	<!-- int deleteAttFile(HashMap<String, Object> params) -->
+	<delete id="deleteAttFile" parameterType="com.lhs.dto.FileDto">
+		DELETE FROM S_J0a0J.board_attach
+		WHERE file_idx=#{fileIdx};
+	</delete>
+	
+	<!-- public int getFileCount(HashMap<String, Object> params); -->
+	<select id="getFileCount" parameterType="com.lhs.dto.FileDto">
+		SELECT COUNT(*) 
+		FROM S_J0a0J.board_attach 
+		WHERE board_seq =#{boardSeq};
+	</select>
 
 
 </mapper>

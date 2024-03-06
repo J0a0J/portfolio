@@ -38,16 +38,13 @@ public class BoardServiceImpl implements BoardService{
 		return bDao.getTotalArticleCnt(params);
 	}
 
-	@Override
-	public int write(BoardDto bDto, List<MultipartFile> mFiles) {	
-		//1. board DB에 글 정보등록 + hasFile 
-		System.out.println("At BOARD SERVICE IMPL, BOARD DTO IS " + bDto);
-		int write = bDao.write(bDto);
-
+	// 반복해서 사요하기에 파일만 따로 작성하는 부분 분리 
+	public int writeFile(BoardDto bDto, List<MultipartFile> mFiles) {
 		for (MultipartFile mFile : mFiles) {
 //			TODO: smart_123.pdf -> (UUID).pdf
 			String origin = mFile.getOriginalFilename();
 			if (origin.length() > 0) {	
+				bDto.setHasFile("Y");
 				int r = bDao.existFile(bDto);	
 				
 				// 파일 확장자 
@@ -69,6 +66,7 @@ public class BoardServiceImpl implements BoardService{
 					// 파일 이름 변환 
 					fileUtil.copyFile(mFile,  fakeName);
 					int result = attFileDao.addAttFile(fileInfo);
+					return result;
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -77,24 +75,50 @@ public class BoardServiceImpl implements BoardService{
 		return 0;
 	}
 
+	// 게시글 작성 
+	@Override
+	public int write(BoardDto bDto, List<MultipartFile> mFiles) {	
+		//1. board DB에 글 정보등록 + hasFile 
+		System.out.println("At BOARD SERVICE IMPL, BOARD DTO IS " + bDto);
+		int write = bDao.write(bDto);
+		System.out.println("mFILESDFSFSD" + mFiles);
+		writeFile(bDto, mFiles);
+		
+		return 0;
+	}
+
 	//글 조회 
 	@Override
 	public BoardDto read(BoardDto bDto) {
-		bDao.updateHits(bDto);
+		bDao.updateHits(bDto); // 조회수 1 올리기 
 		return bDao.read(bDto);
+	}
+	
+	// 파일 다운로드 시 사용 
+	@Override
+	public ArrayList<FileDto> readFile(BoardDto bDto) {
+		return bDao.readFile(bDto);
+	}
+	
+	// 간략적인 정보가 아닌 파일의 전체 정보 얻어올 때 사용 
+	@Override
+	public FileDto getFileInfo(int fileIdx) {
+		FileDto fDto = bDao.getFileInfo(fileIdx);
+		
+		return fDto;
 	}
 
 	@Override
 	public int update(BoardDto bDto, List<MultipartFile> mFiles) {
-
-		System.out.println("THIS IS BDTO IN UPDATE :    " + bDto);
-		if(bDto.getHasFile().equals("Y")) { // 첨부파일 존재시 			
-			// 파일 처리
-		}	
+		// 새로운 파일을 첨부 시 사
+		if (mFiles != null) {
+			writeFile(bDto, mFiles);			
+		}
 		// 글 수정 dao 
 		return bDao.update(bDto);
 	}
 
+	// 게시글 자체를 삭제할 때 
 	@Override
 	public int delete(BoardDto bDto) {
 		System.out.println("SERVICE IMPL DELETE         "+ bDto);
@@ -109,9 +133,21 @@ public class BoardServiceImpl implements BoardService{
 		return bDao.delete(bDto);
 	} 
 
+	// 게시글 수정할 때 파일만 삭제 시 사용 
 	@Override
-	public boolean deleteAttFile(HashMap<String, Object> params) {
-		boolean result = false;		
+	public int deleteAttFile(FileDto fDto) {
+		int result = bDao.deleteAttFile(fDto);
+		// 게시물 내 파일 개수 구하기 
+		int fileCount = bDao.getFileCount(fDto);
+		// 파일이 없다면 게시글 내 첨부파일 없다고 바꿔야함. 
+		if (fileCount == 0) {
+			BoardDto tmp = new BoardDto();
+			tmp.setHasFile(null);
+			int t = fDto.getBoardSeq();
+			tmp.setBoardSeq(t);
+			
+			bDao.existFile(tmp);
+		}
 		return result;
 	}
 }
