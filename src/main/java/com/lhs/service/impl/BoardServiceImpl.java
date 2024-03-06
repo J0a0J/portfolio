@@ -40,6 +40,7 @@ public class BoardServiceImpl implements BoardService{
 
 	// 반복해서 사요하기에 파일만 따로 작성하는 부분 분리 
 	public int writeFile(BoardDto bDto, List<MultipartFile> mFiles) {
+		int totalResult = 0;
 		for (MultipartFile mFile : mFiles) {
 //			TODO: smart_123.pdf -> (UUID).pdf
 			String origin = mFile.getOriginalFilename();
@@ -61,18 +62,17 @@ public class BoardServiceImpl implements BoardService{
 				fileInfo.setFileSize((int)mFile.getSize());
 				fileInfo.setFileType(extension);
 				fileInfo.setSaveLoc(saveLocation);
-
 				try {
 					// 파일 이름 변환 
 					fileUtil.copyFile(mFile,  fakeName);
 					int result = attFileDao.addAttFile(fileInfo);
-					return result;
+					totalResult += result;
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		return 0;
+		return totalResult;
 	}
 
 	// 게시글 작성 
@@ -110,7 +110,7 @@ public class BoardServiceImpl implements BoardService{
 
 	@Override
 	public int update(BoardDto bDto, List<MultipartFile> mFiles) {
-		// 새로운 파일을 첨부 시 사
+		// 새로운 파일을 첨부 시 사용 
 		if (mFiles != null) {
 			writeFile(bDto, mFiles);			
 		}
