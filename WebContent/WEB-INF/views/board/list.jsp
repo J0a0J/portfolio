@@ -37,7 +37,7 @@
 						<td align="center">${member.boardSeq}</td>
 						<td>
 							<span class="bold">
-								<a href="javascript:movePage('/board/read.do?boardSeq=${member.boardSeq }&currentPage=1')">
+								<a href="javascript:movePage('/board/read.do?boardSeq=${member.boardSeq }&hasFile=${member.hasFile }&currentPage=1')">
 									${member.title }
 								</a>
 							</span>
@@ -59,14 +59,20 @@
 				    <li class="page-item">
 			        	<a class="page-link" href="javascript:movePage('/board/list.do?page=1')">&laquo;</a>
 			        </li>
-			        <li class="page-item active"><a class="page-link">1</a></li>
-			        <li class="page-item"><a class="page-link" href="javascript:movePage('/board/list.do?page=2')">2</a></li>
-			        <li class="page-item"><a class="page-link" href="javascript:movePage('/board/list.do?page=3')">3</a></li>
-			        <li class="page-item"><a class="page-link" href="javascript:movePage('/board/list.do?page=4')">4</a></li>
-			        <li class="page-item"><a class="page-link" href="javascript:movePage('/board/list.do?page=5')">5</a></li>
-			        <li class="page-item"><a class="page-link" href="javascript:movePage('/board/list.do?page=6')">6</a></li>
+			        <c:set var="lastPageNum" value="${pageTotalNum }" />
+			        <c:set var="pageUnit" value="10" />
+			        <c:forEach begin="${1 + (pageTimes * 10) }" end="${pageUnit + (pageTimes * 10)}" var="i">
+			        <c:choose>
+			        	<c:when test="${currentPage eq i }">
+			        		<li class="page-item active"><a class="page-link" href="javascript:movePage('/board/list.do?page=${i}')">${i}</a></li>
+			        	</c:when>
+			        	<c:otherwise>
+			        	<li class="page-item"><a class="page-link" href="javascript:movePage('/board/list.do?page=${i}')">${i}</a></li>
+			        	</c:otherwise>
+		        	</c:choose>
+			        </c:forEach>
 			        <li class="page-item">
-			        	<a class="page-link" href="javascript:movePage('/board/list.do?page=99')">&raquo;</a></li>
+			        	<a class="page-link" href="javascript:movePage('/board/list.do?page=${pageUnit + 1 + (pageTimes * 10)}')">&raquo;</a></li>
 			        </li>
 			    </ul>
 		    </div>

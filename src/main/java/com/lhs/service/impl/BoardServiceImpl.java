@@ -3,6 +3,7 @@ package com.lhs.service.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +31,19 @@ public class BoardServiceImpl implements BoardService{
 	
 	@Override
 	public ArrayList<BoardDto> list(HashMap<String, String> params) {
-		return bDao.list(params);
+		// 페이지 시작할 게시글 번호 지정  
+		int pageSeq = Integer.parseInt(params.get("page"));
+		pageSeq = (pageSeq -1) * 10;
+		
+		Map<String, Integer> map = new HashMap();
+		map.put("pageSeq", pageSeq);
+		
+		// 페이지에서 보여줄 게시글 개수 
+		int pageNum = 10;
+		map.put("pageNum", pageNum);
+		
+		return bDao.list(map);
 	}
-
 	@Override
 	public int getTotalArticleCnt(HashMap<String, String> params) {
 		return bDao.getTotalArticleCnt(params);

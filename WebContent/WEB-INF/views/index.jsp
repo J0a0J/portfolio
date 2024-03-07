@@ -125,7 +125,7 @@
 										</a>
 										<ul class="dropdown-menu">
 											<li><a href="javascript:movePage('/notice/list.do')">공지사항</a></li>
-											<li><a href="javascript:movePage('/board/list.do')">자유게시판</a></li>
+											<li><a href="javascript:movePage('/board/list.do?page=111')">자유게시판</a></li>
 										</ul>
 									</li>
 									<li class="dropdown"><!-- NOTES -->

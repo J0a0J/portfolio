@@ -128,14 +128,14 @@
 					<!-- Dao에서 read를 통해 수정을 했었는데 그러면 조회수가 2번 더해지기 때문에 -->
 					<!-- 값을 받아오는 걸로 변경. -->
 						<a
-							href="javascript:movePage('/board/goToUpdate.do?boardSeq=${boardList.boardSeq}&title=${boardList.title}&content=${boardList.content}&memberNick=${boardList.memberNick }')">
+							href="javascript:movePage('/board/goToUpdate.do?boardSeq=${boardList.boardSeq}&title=${boardList.title}&content=${boardList.content}&memberNick=${boardList.memberNick }&hasFile=${boardList.hasFile }')">
 							</c:if>
 							<button type="button" class="btn btn-primary">
 								<i class="fa fa-pencil"></i> 수정
 							</button>
 						</a>
 						<a
-							href="javascript:movePage('/board/delete.do?boardSeq=${boardSeq }&hasFile=${hasFile }')">
+							href="javascript:movePage('/board/delete.do?boardSeq=${boardSeq }&hasFile=${boardList.hasFile }')">
 							<button type="button" class="btn btn-primary" id="btnDelete">
 								삭제</button>
 						</a>

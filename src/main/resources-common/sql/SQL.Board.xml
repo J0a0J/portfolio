@@ -9,11 +9,13 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		SELECT title, member_nick, hits, has_file, create_dtm, content, board_seq
 		FROM S_J0a0J.board
 		WHERE type_seq = 2 
-		limit 100;
+		ORDER BY board_seq desc
+		limit #{pageSeq}, #{pageNum};
 	</select>
 		
 	<select id="getTotalArticleCnt" parameterType="HashMap" resultType="int">
-	
+		SELECT COUNT(*)
+		FROM S_J0a0J.board;
 	</select>
 	<!-- keyProperty selectKey와 같은 기능을 구현  -->
 	<insert id ="write" parameterType="com.lhs.dto.BoardDto" useGeneratedKeys="true" keyProperty="boardSeq" >

@@ -38,11 +38,37 @@ public class BoardController {
 
 	@RequestMapping("/board/list.do")
 	public ModelAndView goLogin(@RequestParam HashMap<String, String> params){
+		// 전체 페이지 수 
+		int articleTotalCnt = bService.getTotalArticleCnt(params);
+		System.out.println("ARTIRCLE count " + articleTotalCnt);
+		
+		// 전체 페이지 수 - 전체 페이지를 10으로 나눈 후 나머지 값을 위해 페이지 1개 더 만들어야 함. 
+		int pageTotalNum = (int) Math.ceil((double) articleTotalCnt / 10);
+		// 현재 페이지
+		int currentPage = Integer.parseInt(params.get("page"));
+		// 몫 
+		int quot = currentPage / 10;
+		// 나머지 
+		int remainder = currentPage % 10;
+		// 10번 대, 20번 대 페이지로 넘어갈 때 필요한 변수 
+		int pageTimes = 0;
+		if(quot > 0) {
+			if(remainder == 0) {
+				pageTimes = quot - 1;
+			} else {
+				pageTimes = quot;
+			}
+		}
+		
 		ModelAndView mv = new ModelAndView();
 		ArrayList<BoardDto> memberList = bService.list(params);
 		for(BoardDto member : memberList) {
 			System.out.println(member);
 		}
+		
+		mv.addObject("pageTimes", pageTimes);
+		mv.addObject("currentPage", params.get("page"));
+		mv.addObject("pageTotalNum", pageTotalNum);
 		mv.addObject("memberList",memberList);
 		mv.setViewName("board/list");
 		return mv;
@@ -192,6 +218,7 @@ public class BoardController {
 			bDto.setTypeSeq(Integer.parseInt(this.typeSeq));
 		}
 		int result = bService.delete(bDto);
+		System.out.println("RESULT IS HERE " + result);
 		
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("/board/list");

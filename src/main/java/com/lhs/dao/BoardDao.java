@@ -2,6 +2,7 @@ package com.lhs.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +16,7 @@ public interface BoardDao {
 	 * @param typeSeq
 	 * @return
 	 */
-	public ArrayList<BoardDto> list(HashMap<String, String> params);
+	public ArrayList<BoardDto> list(Map<String, Integer> map);
 	
 	/**
 	 * 총 글 수 
