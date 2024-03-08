@@ -213,12 +213,12 @@ function deleteFile(fileIdx, boardSeq){
 
 								<div class="row">
 									<div class="col-md-12 text-right">
-										<a href="javascript:movePage('/board/list.do?')">
+										<a href="javascript:movePage('/board/list.do?page=${currentPage }')">
 											<button type="button" class="btn btn-primary">
 												목록
 											</button>
 										</a>
-										<a href="javascript:movePage('/board/update.do?boardSeq=boardMember.boardSeq')">
+										<a href="javascript:movePage('/board/update.do?')">
 										<button type="button" class="btn btn-primary" id="btnUpdate">
 											수정
 										</button>

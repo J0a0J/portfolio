@@ -50,7 +50,8 @@ public class BoardController {
 		int quot = currentPage / 10;
 		// 나머지 
 		int remainder = currentPage % 10;
-		// 10번 대, 20번 대 페이지로 넘어갈 때 필요한 변수 
+		// 10번 대, 20번 대 페이지로 넘어갈 때 필요한 변수
+		int lastPageTimes = pageTotalNum / 10;
 		int pageTimes = 0;
 		if(quot > 0) {
 			if(remainder == 0) {
@@ -67,6 +68,7 @@ public class BoardController {
 		}
 		
 		mv.addObject("pageTimes", pageTimes);
+		mv.addObject("lastPageTimes", lastPageTimes);
 		mv.addObject("currentPage", params.get("page"));
 		mv.addObject("pageTotalNum", pageTotalNum);
 		mv.addObject("memberList",memberList);
@@ -103,12 +105,23 @@ public class BoardController {
 		}
 		System.out.println("MREQ !!!!!!!! "+ mReq.getContentType());
 
+		// BoardDto(boardSeq=0, typeSeq=2, memberId=saaaaa, memberNick=saaaaa, title=에요 , 
+		// content=요요요, hasFile=null, hits=0, createDtm=null)
 		System.out.println("BDTO is THIS !!!!!!!!!????????      " + bDto);
 //		// parameter, 관련 정보도 다 같이 옴. like title, content
 		int result = bService.write(bDto, mReq.getFiles("attFiles"));
+		System.out.println("writing result is here !!!!! " + result);
+		BoardDto view = bService.readAfterWriting(bDto);
 		System.out.println("RESULT        "+result);
-
-		return null;
+		String link = "/board/read.do?boardSeq=" + view.getBoardSeq() +  
+				"&hasFile=" + view.getHasFile() + 
+				"&currentPage=1";
+		
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("cnt", result);
+		map.put("msg", result==1?"게시물 작성 완료!!!":"게시물 작성 실패!!!");
+		map.put("nextPage", result==1?"/board/list.do" : "/board/list.do");
+		return map;
 	}
 	
 	@RequestMapping("/board/download.do")
@@ -145,6 +158,8 @@ public class BoardController {
 		if(bDto.getTypeSeq() == 0) {
 			bDto.setTypeSeq(Integer.parseInt(this.typeSeq));
 		}
+		
+		System.out.println("BOARD DTO IN READ !!! " + bDto);
 
 		ModelAndView mv = new ModelAndView();
 		// 게시글 정보 
@@ -157,7 +172,8 @@ public class BoardController {
 			ArrayList<FileDto> fDto = bService.readFile(bDto);
 			mv.addObject("attFiles", fDto);
 		}
-		
+		// 게시글에서 목록 누르면 같은 페이지의 목록으로 이동하기 위해 추가 
+		mv.addObject("currentPage", bDto.getPage());
 		mv.addObject("boardList", boardList);
 		mv.addObject("boardSeq", bDto.getBoardSeq());
 		mv.setViewName("/board/read");
@@ -179,6 +195,7 @@ public class BoardController {
 		// 첨부 파일 정보 
 		ArrayList<FileDto> attFiles = bService.readFile(bDto);
 		mv.addObject("attFiles", attFiles);
+		mv.addObject("curentPage", bDto.getPage());
 		
 		mv.setViewName("/board/update");
 
@@ -196,8 +213,7 @@ public class BoardController {
 			
 		}
 		
-		System.out.println("MREQ !!!!!!!! "+ mReq.getAttributeNames());
-		System.out.println("MREQ !!!!!!!! "+ mReq.getFileNames());
+		System.out.println("BDTO FDSDSFDS! " + bDto);
 		
 		int result = bService.update(bDto, mReq.getFiles("attFiles"));
 
@@ -205,14 +221,15 @@ public class BoardController {
 		
 		map.put("cnt", result);
 		map.put("msg", result==1?"게시물 업데이트 완료!!!":"게시물 업데이트 실패!!!");
-		map.put("nextPage", result==1?"/board/list.do" : "/board/list.do");
+//		map.put("nextPage", result==1?"/board/list.do?page=" + bDto.getPage() : "/board/list.do?page=" + bDto.getPage() );
 		
 		return map;
 	}
 
 	@RequestMapping("/board/delete.do")
 	@ResponseBody
-	public ModelAndView delete(@ModelAttribute("BoardDto") BoardDto bDto, HttpSession session) {
+	public HashMap<String, Object> delete(@ModelAttribute("BoardDto") BoardDto bDto, HttpSession session) {
+		System.out.println("BOARD DTO !!!!!" + bDto);
 		System.out.println("DELETE   						" + bDto);
 		if(bDto.getTypeSeq() == 0) {
 			bDto.setTypeSeq(Integer.parseInt(this.typeSeq));
@@ -220,9 +237,12 @@ public class BoardController {
 		int result = bService.delete(bDto);
 		System.out.println("RESULT IS HERE " + result);
 		
-		ModelAndView mv = new ModelAndView();
-		mv.setViewName("/board/list");
-		return mv;
+		// /board/list.do?page=1
+		String link = "/board/list.do?page=" + bDto.getPage(); 
+		HashMap<String, Object> map = new HashMap<>();
+		System.out.println("THIS IS LINK!!!!! "+ link);
+		map.put("nextPage", result==1?"/board/list.do?page=" + bDto.getPage() : "/board/list.do?page=" + bDto.getPage() );
+		return map;
 	}
 
 	@RequestMapping("/board/deleteAttFile.do")

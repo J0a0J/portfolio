@@ -35,7 +35,13 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	<select id="read" parameterType="com.lhs.dto.BoardDto" resultType = "com.lhs.dto.BoardDto">
 		SELECT board_seq, member_nick, title, content, has_file, hits, create_dtm, update_dtm, type_seq
 		FROM S_J0a0J.board
-		WHERE board_seq = ${boardSeq};
+		WHERE board_seq = #{boardSeq};
+	</select>
+	
+	<select id="readAfterWriting" parameterType="com.lhs.dto.BoardDto" resultType = "com.lhs.dto.BoardDto">
+		SELECT board_seq, has_file
+		FROM S_J0a0J.board
+		WHERE title=#{title} AND content=#{content};
 	</select>
 	
 	<!-- public FileDto read(BoardDto bDto); -->

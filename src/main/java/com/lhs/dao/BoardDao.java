@@ -40,6 +40,8 @@ public interface BoardDao {
 	 */
 	public BoardDto read(BoardDto bDto);
 	
+	public BoardDto readAfterWriting(BoardDto bDto);
+	
 	public ArrayList<FileDto> readFile(BoardDto bDto);
 	
 	public FileDto getFileInfo(int fileIdx);

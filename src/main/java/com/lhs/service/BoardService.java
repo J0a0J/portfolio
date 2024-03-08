@@ -26,6 +26,13 @@ public interface BoardService {
 	public BoardDto read(BoardDto bDto);
 	
 	/**
+	 * 글 작성 후 작성 글 보여주기 
+	 * @param bDto
+	 * @return
+	 */
+	public BoardDto readAfterWriting(BoardDto bDto);
+	
+	/**
 	 * 간략적인 파일 정보 조회 
 	 * @param bDto
 	 * @return

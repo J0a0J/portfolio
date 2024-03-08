@@ -9,6 +9,9 @@
 <script src="<c:url value='/resources/js/scripts.js'/>"></script>
 
 <script type="text/javascript">
+
+	var ctx = "${pageContext.request.contextPath}";
+	
 	$(document).ready(function() {
 
 		$('#btnUpdate').on('click', function() {
@@ -17,13 +20,15 @@
 			// code here
 		});
 
-		$('#btnDelete').on('click', function() {
-			if (confirm("삭제하시겠습니까?")) {
-				// code here
-			}
-		});
+		$('#btnDelete').on('click', function(){      
+		      if(confirm("삭제하시겠습니까?")){
+		         customAjax("<c:url value='/board/delete.do' />", "/board/list.do?page=${currentPage}");
+		      }
+		   });
 
 	});//ready
+	
+	
 	
 	function customAjax(url, responseUrl) {
 		  var frm = document.updateForm;
@@ -65,11 +70,11 @@
 				<form name="readForm" class="validate" method="post"
 					enctype="multipart/form-data" data-success="Sent! Thank you!"
 					data-toastr-position="top-right">
-					<input type="hidden" name="boardSeq" value="PK1" /> <input
-						type="hidden" name="typeSeq" value="PK2" />
+				<c:if test="${not empty boardList }">
+					<input type="hidden" name="boardSeq" value="${boardList.boardSeq }" /> <input
+						type="hidden" name="typeSeq" value="${boardList.typeSeq }" />
 				</form>
 				<!-- post -->
-				<c:if test="${not empty boardList }">
 					<div class="clearfix mb-80">
 						<div class="border-bottom-1 border-top-1 p-12">
 							<span class="float-right fs-10 mt-10 text-muted">${boardList.createDtm}</span>
@@ -128,27 +133,26 @@
 					<!-- Dao에서 read를 통해 수정을 했었는데 그러면 조회수가 2번 더해지기 때문에 -->
 					<!-- 값을 받아오는 걸로 변경. -->
 						<a
-							href="javascript:movePage('/board/goToUpdate.do?boardSeq=${boardList.boardSeq}&title=${boardList.title}&content=${boardList.content}&memberNick=${boardList.memberNick }&hasFile=${boardList.hasFile }')">
+							href="javascript:movePage('/board/goToUpdate.do?boardSeq=${boardList.boardSeq}&title=${boardList.title}&content=${boardList.content}&memberNick=${boardList.memberNick }&hasFile=${boardList.hasFile }&currentPage=${currentPage }')">
 							</c:if>
 							<button type="button" class="btn btn-primary">
 								<i class="fa fa-pencil"></i> 수정
 							</button>
 						</a>
-						<a
-							href="javascript:movePage('/board/delete.do?boardSeq=${boardSeq }&hasFile=${boardList.hasFile }')">
+						<%-- <a href="javascript:movePage('/board/delete.do?boardSeq=${boardSeq }&hasFile=${boardList.hasFile }&page=${currentPage }')"> --%>
 							<button type="button" class="btn btn-primary" id="btnDelete">
 								삭제</button>
-						</a>
+						<!-- </a> -->
 					</c:if>
 
 					<c:choose>
 						<c:when test="${empty currentPage}">
-							<a href="javascript:movePage('/board/list.do')">
+							<a href="javascript:movePage('/board/list.do?page=1')">
 								<button type="button" class="btn btn-primary">목록</button>
 							</a>
 						</c:when>
 						<c:otherwise>
-							<a href="javascript:movePage('/board/list.do?page=currentPage')">
+							<a href="javascript:movePage('/board/list.do?page=${currentPage}')">
 								<button type="button" class="btn btn-primary">목록</button>
 							</a>
 						</c:otherwise>

@@ -23,7 +23,10 @@ public class BoardDto {
 	String content;
 	String hasFile;
 	int hits;
+	int page;
 	String createDtm;
+	
+	
 	public int getBoardSeq() {
 		return boardSeq;
 	}
@@ -77,6 +80,12 @@ public class BoardDto {
 	}
 	public void setCreateDtm(String createDtm) {
 		this.createDtm = createDtm;
+	}
+	public int getPage() {
+		return page;
+	}
+	public void setPage(int page) {
+		this.page = page;
 	}
 	
 	

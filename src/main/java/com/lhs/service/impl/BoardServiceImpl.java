@@ -94,8 +94,7 @@ public class BoardServiceImpl implements BoardService{
 		int write = bDao.write(bDto);
 		System.out.println("mFILESDFSFSD" + mFiles);
 		writeFile(bDto, mFiles);
-		
-		return 0;
+		return write;
 	}
 
 	//글 조회 
@@ -103,6 +102,11 @@ public class BoardServiceImpl implements BoardService{
 	public BoardDto read(BoardDto bDto) {
 		bDao.updateHits(bDto); // 조회수 1 올리기 
 		return bDao.read(bDto);
+	}
+	
+	
+	public BoardDto readAfterWriting(BoardDto bDto) {
+		return bDao.readAfterWriting(bDto);
 	}
 	
 	// 파일 다운로드 시 사용 
