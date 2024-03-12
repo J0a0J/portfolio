@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BoardController {
 
 	@Autowired BoardService bService;
-	@Autowired AttFileService attFileService;
+//	@Autowired AttFileService attFileService;
 	@Autowired FileUtil fileUtil;
 
 	private String typeSeq = "2";
@@ -241,7 +241,7 @@ public class BoardController {
 		String link = "/board/list.do?page=" + bDto.getPage(); 
 		HashMap<String, Object> map = new HashMap<>();
 		System.out.println("THIS IS LINK!!!!! "+ link);
-		map.put("nextPage", result==1?"/board/list.do?page=" + bDto.getPage() : "/board/list.do?page=" + bDto.getPage() );
+//		map.put("nextPage", result==1?"/board/list.do?page=" + bDto.getPage() : "/board/list.do?page=" + bDto.getPage() );
 		return map;
 	}
 

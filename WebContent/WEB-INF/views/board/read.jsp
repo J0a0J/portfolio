@@ -22,7 +22,7 @@
 
 		$('#btnDelete').on('click', function(){      
 		      if(confirm("삭제하시겠습니까?")){
-		         customAjax("<c:url value='/board/delete.do' />", "/board/list.do?page=${currentPage}");
+		         customAjax("<c:url value='/board/delete.do?boardSeq=${boardSeq}' />", "/board/list.do?page=${currentPage}");
 		      }
 		   });
 
@@ -139,7 +139,7 @@
 								<i class="fa fa-pencil"></i> 수정
 							</button>
 						</a>
-						<%-- <a href="javascript:movePage('/board/delete.do?boardSeq=${boardSeq }&hasFile=${boardList.hasFile }&page=${currentPage }')"> --%>
+						<!-- <a href="javascript:movePage('/board/delete.do?boardSeq=${boardSeq }&hasFile=${boardList.hasFile }&page=${currentPage }')"> -->
 							<button type="button" class="btn btn-primary" id="btnDelete">
 								삭제</button>
 						<!-- </a> -->

@@ -137,13 +137,9 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public int delete(BoardDto bDto) {
 		System.out.println("SERVICE IMPL DELETE         "+ bDto);
-		if(bDto.getHasFile() != null) {			
-			if((bDto.getHasFile()).equals("Y")) { // 첨부파일 있으면 		
-				// 파일 처리
-				System.out.println("파일이 있다면!!!!!!!!! ");
-				int result = bDao.deleteFile(bDto);
-			}
-		}
+
+		// hasFile 값 받아오지 않고 파일 유무와 관계없이 sql 돌리는 게 효율적. 
+		int result = bDao.deleteFile(bDto);
 		
 		return bDao.delete(bDto);
 	} 
