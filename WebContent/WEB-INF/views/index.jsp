@@ -4,7 +4,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>JohnDoe's Portfolio </title>
+	<title>Jiweon's Portfolio </title>
 	<meta name="description" content="" />
 	<meta name="Author" content="Dorin Grigoras [www.stepofweb.com]" />
 
@@ -124,7 +124,7 @@
 											SPRING BOARD
 										</a>
 										<ul class="dropdown-menu">
-											<li><a href="javascript:movePage('/notice/list.do')">공지사항</a></li>
+											<li><a href="javascript:movePage('/notice/list.do?page=1')">공지사항</a></li>
 											<li><a href="javascript:movePage('/board/list.do?page=1')">자유게시판</a></li>
 										</ul>
 									</li>

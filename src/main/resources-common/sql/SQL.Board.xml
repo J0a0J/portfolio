@@ -8,7 +8,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	<select id="list" parameterType="HashMap" resultType="com.lhs.dto.BoardDto">
 		SELECT title, member_nick, hits, has_file, create_dtm, content, board_seq
 		FROM S_J0a0J.board
-		WHERE type_seq = 2 
+		WHERE type_seq = #{typeSeq} 
 		ORDER BY board_seq desc
 		limit #{pageSeq}, #{pageNum};
 	</select>

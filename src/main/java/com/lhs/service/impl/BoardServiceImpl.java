@@ -28,15 +28,17 @@ public class BoardServiceImpl implements BoardService{
 	@Value("#{config['project.file.upload.location']}")
 	private String saveLocation;
 	
-	
 	@Override
 	public ArrayList<BoardDto> list(HashMap<String, String> params) {
+		
+		System.out.println("PARAMS IN LIST " + params);
 		// 페이지 시작할 게시글 번호 지정  
 		int pageSeq = Integer.parseInt(params.get("page"));
 		pageSeq = (pageSeq -1) * 10;
 		
 		Map<String, Integer> map = new HashMap();
 		map.put("pageSeq", pageSeq);
+		map.put("typeSeq", Integer.parseInt(params.get("typeSeq")));
 		
 		// 페이지에서 보여줄 게시글 개수 
 		int pageNum = 10;

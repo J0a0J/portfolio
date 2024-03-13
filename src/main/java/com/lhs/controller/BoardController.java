@@ -40,6 +40,7 @@ public class BoardController {
 	public ModelAndView goLogin(@RequestParam HashMap<String, String> params){
 		// 전체 페이지 수 
 		int articleTotalCnt = bService.getTotalArticleCnt(params);
+		System.out.println("Board PARAMAS " + params);
 		System.out.println("ARTIRCLE count " + articleTotalCnt);
 		
 		// 전체 페이지 수 - 전체 페이지를 10으로 나눈 후 나머지 값을 위해 페이지 1개 더 만들어야 함. 
@@ -62,11 +63,16 @@ public class BoardController {
 		}
 		
 		ModelAndView mv = new ModelAndView();
+		
+		if(!params.containsKey("typeSeq")) {
+			params.put("typeSeq", this.typeSeq);
+		}
+		
 		ArrayList<BoardDto> memberList = bService.list(params);
 		for(BoardDto member : memberList) {
 			System.out.println(member);
 		}
-		
+
 		mv.addObject("pageTimes", pageTimes);
 		mv.addObject("lastPageTimes", lastPageTimes);
 		mv.addObject("currentPage", params.get("page"));
@@ -102,17 +108,13 @@ public class BoardController {
 		int boardType = bDto.getTypeSeq();
 		if(boardType == 0) {
 			bDto.setTypeSeq(Integer.parseInt(this.typeSeq));
-		}
-		System.out.println("MREQ !!!!!!!! "+ mReq.getContentType());
+		} 
 
-		// BoardDto(boardSeq=0, typeSeq=2, memberId=saaaaa, memberNick=saaaaa, title=에요 , 
-		// content=요요요, hasFile=null, hits=0, createDtm=null)
-		System.out.println("BDTO is THIS !!!!!!!!!????????      " + bDto);
-//		// parameter, 관련 정보도 다 같이 옴. like title, content
+		// parameter, 관련 정보도 다 같이 옴. like title, content
 		int result = bService.write(bDto, mReq.getFiles("attFiles"));
-		System.out.println("writing result is here !!!!! " + result);
+		
 		BoardDto view = bService.readAfterWriting(bDto);
-		System.out.println("RESULT        "+result);
+		
 		String link = "/board/read.do?boardSeq=" + view.getBoardSeq() +  
 				"&hasFile=" + view.getHasFile() + 
 				"&currentPage=1";
