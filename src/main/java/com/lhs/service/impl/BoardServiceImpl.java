@@ -163,4 +163,8 @@ public class BoardServiceImpl implements BoardService{
 		}
 		return result;
 	}
+	@Override
+	public ArrayList<BoardDto> search(HashMap<String, String> search) {
+		return bDao.search(search);
+	}
 }

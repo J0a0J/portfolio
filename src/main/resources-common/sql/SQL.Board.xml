@@ -97,6 +97,14 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		FROM S_J0a0J.board_attach 
 		WHERE board_seq =#{boardSeq};
 	</select>
+	
+	<select id="search" parameterType="HashMap" resultType="com.lhs.dto.BoardDto">
+		SELECT title, member_nick, hits, has_file, create_dtm, content, board_seq
+		FROM S_J0a0J.board
+		WHERE ${select} LIKE CONCAT("%", #{content}, "%")
+		AND type_seq = #{typeSeq};
+
+	</select>
 
 
 </mapper>

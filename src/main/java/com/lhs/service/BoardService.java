@@ -68,5 +68,13 @@ public interface BoardService {
 	 */
 	public int delete(BoardDto bDto);
 	
+	/**
+	 * 글 검색 
+	 * @param searchSelect
+	 * @param searchContent
+	 * @return
+	 */
+	public ArrayList<BoardDto> search(HashMap<String, String> search);
+	
 
 }

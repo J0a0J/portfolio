@@ -31,18 +31,22 @@ public class NoticeController {
 
 	@RequestMapping("/notice/list.do")
 	public ModelAndView goLogin(@RequestParam HashMap<String, String> params,
-			@RequestParam(value="searchSelect" , required=false) String searchSelect){
+			@RequestParam(value="searchSelect" , required=false) String searchSelect,
+			@RequestParam(value="searchContent" , required=false) String searchContent){
 		// 전체 페이지 수 
 		int articleTotalCnt = bService.getTotalArticleCnt(params);
+		// 현재 페이지
+		int currentPage;
+		// 검색을 한다면 Current page 는 1로 설정해야 함. 
+		if (searchSelect != null) {
+			params.put("page", "1");
+		}
 		
-		System.out.println("SEARCH SELECT !!!!!!!!! " + searchSelect);
 		params.put("typeSeq", this.typeSeq);
-		
 		
 		// 전체 페이지 수 - 전체 페이지를 10으로 나눈 후 나머지 값을 위해 페이지 1개 더 만들어야 함. 
 		int pageTotalNum = (int) Math.ceil((double) articleTotalCnt / 10);
-		// 현재 페이지
-		int currentPage = Integer.parseInt(params.get("page"));
+		currentPage = Integer.parseInt(params.get("page"));			
 		// 몫 
 		int quot = currentPage / 10;
 		// 나머지 
@@ -59,10 +63,17 @@ public class NoticeController {
 		}
 		
 		ModelAndView mv = new ModelAndView();
-		ArrayList<BoardDto> memberList = bService.list(params);
-		System.out.println("ARTIRCLE count " + memberList);
-		for(BoardDto member : memberList) {
-			System.out.println(member);
+		ArrayList<BoardDto> memberList;
+		if(searchSelect != null) {
+			HashMap<String, String> tmp = new HashMap<>();
+			// 공지사항, 자유게시판 결과를 분리하기 위해 
+			tmp.put("typeSeq", this.typeSeq);
+			tmp.put("select", searchSelect);
+			tmp.put("content", searchContent);
+			memberList = bService.search(tmp);
+		}
+		else {			
+			memberList= bService.list(params);
 		}
 
 		mv.addObject("pageTimes", pageTimes);

@@ -116,10 +116,10 @@
 	        <!-- 검색 조건 선택 드롭다운 -->
 	        <select id="searchSelect" class="search-select" name="searchSelect">
 	            <option value="title" name="title">제목</option>
-	            <option value="author" name="memberId">글쓴이</option>
+	            <option value="member_nick" name="member_nick">글쓴이</option>
         	</select>	
 	        <!-- 검색 입력란 -->
-	        <input type="text" id="searchInput" class="search-input" placeholder="검색어를 입력하세요" name="searchInput">
+	        <input type="text" id="searchInput" class="search-input" placeholder="검색어를 입력하세요" name="searchContent">
 	        <!-- 검색 버튼 -->
 	        <!-- <a href="javascript:movePage('/notice/list.do?')"> -->
 		        <button id="searchButton" class="btn btn-primary" type="submit">검색</button>
