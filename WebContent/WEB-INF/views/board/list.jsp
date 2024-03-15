@@ -6,7 +6,32 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
+<script>
+function search() {
+	// 선택된 검색 조건과 검색어 가져오기
+    var searchSelectValue = document.getElementById('searchSelect').value;
+    var searchInputValue = document.getElementById('searchInput').value;
+    
+    // URL 생성
+    var url = '/board/list.do?searchSelect=' + searchSelectValue + '&searchKeyword=' + searchInputValue;
+    
+    // 생성된 URL로 이동
+	movePage(url);
+</script>
 <body>
+<style>
+.search-container {
+    text-align: center;
+}
+.search-input,
+.search-select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+    box-sizing: border-box;
+}
+</style>
 	<section>
 	<div class="container">
 		<h4>자유게시판</h4>
@@ -98,6 +123,17 @@
 				</a>
 			</div>
 		</div>
+		<div class="search-container">
+	        <!-- 검색 조건 선택 드롭다운 -->
+	        <select id="searchSelect" class="search-select"  name="searchSelect">
+	            <option value="title" name="title">제목</option>
+	            <option value="memberNick" name="member_nick">글쓴이</option>
+        	</select>	
+	        <!-- 검색 입력란 -->
+	        <input type="text" id="searchInput" class="search-input" placeholder="검색어를 입력하세요" name="searchInput">
+	        <!-- 검색 버튼 -->
+	        <button id="searchButton" class="btn btn-primary" type="submit" onclick="search()">검색</button>
+    	</div>
 	</div>
 	</section>
 	<!-- / -->

@@ -92,4 +92,6 @@ public interface BoardDao {
 	 * @return
 	 */
 	public int getFileCount(FileDto fDto);
+	
+	public ArrayList<BoardDto> search(HashMap<String, String> serach);
 }
