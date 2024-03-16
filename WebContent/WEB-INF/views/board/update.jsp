@@ -75,6 +75,43 @@
 		}); //#btnUpdate end 		
 }); //ready End 
 
+
+function deleteFile(fileIdx, boardSeq, title, content, memberNick) {
+	console.log(fileIdx, boardSeq, title);
+	
+	if ("${sessionScope.memberId}" != null) {
+	    if(confirm("첨부파일을 삭제하시겠습니까?")) {
+	        let deleteLink = '/board/deleteAttFile.do?fileIdx='+ fileIdx + '&boardSeq=' + boardSeq;
+	        let updateLink = '/board/goToUpdate.do?boardSeq=' +
+	            boardSeq + '&title=' + title + 
+	            '&content=' + content + 
+	            '&memberNick=' + memberNick + 
+	            '&hasFile=Y' 
+	            '&currentPage=' + 1;
+	        /* movePage(deleteLink, updateLink); */
+	        
+	        $.ajax({
+	            url: deleteLink,
+	            type: 'POST',
+	            data: {
+	                fileIdx: fileIdx,
+	                boardSeq: boardSeq
+	            },
+	            success: function(response) {
+	                console.log('File deleted successfully');
+	                // 필요한 경우 추가 작업 수행
+	                // 예: 삭제된 파일에 대한 UI 업데이트 등
+	                // 페이지 이동 없이 그대로 유지
+	            },
+	            error: function(xhr, status, error) {
+	                console.error('Error deleting file:', error);
+	            }
+	        });
+	    }
+	}
+}
+//func deletefile
+
 function customAjax(url, responseUrl) {
   var frm = document.updateForm;
   var formData = new FormData(frm);
@@ -103,14 +140,6 @@ function customAjax(url, responseUrl) {
          }
 	});
 } // func customAjax End 
-
-function deleteFile(fileIdx, boardSeq){
-	  if("${sessionScope.memberId}" != null) {
-       	 if(confirm("첨부파일을 삭제하시겠습니까?")){
-        	// code here
-       	}	       
-  	}
-}//func deletefile
 
 </script>
 
@@ -199,10 +228,12 @@ function deleteFile(fileIdx, boardSeq){
 	
 												</div>
 												<div class="col-md-4 col-sm-4">	
-													<a href="javascript:movePage('/board/deleteAttFile.do?fileIdx=${file.fileIdx }&boardSeq=${file.boardSeq }')">
-													<button type="button" class="btn btn-primary" onclick="deleteFile(${file.fileIdx} , ${file.boardSeq});">
+													<%-- <a href="javascript:movePage('/board/deleteAttFile.do?fileIdx=${file.fileIdx }&boardSeq=${file.boardSeq }')"> --%>
+													<button type="button" class="btn btn-primary" onclick="deleteFile(${file.fileIdx} , ${file.boardSeq}, '${boardMember.title }', 
+													'${boardMember.content }', '${boardMember.memberNick }');">
 														첨부파일 삭제
 													</button>
+													
 													</a>
 												</div>					
 											</div>

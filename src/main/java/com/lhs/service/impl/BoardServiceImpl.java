@@ -61,6 +61,8 @@ public class BoardServiceImpl implements BoardService{
 				bDto.setHasFile("Y");
 				int r = bDao.existFile(bDto);	
 				
+				System.out.println("BOARD SEQ " + bDto);
+				
 				// 파일 확장자 
 				String extension = origin.substring(origin.lastIndexOf("."));
 				String fakeName = UUID.randomUUID().toString().replaceAll("-", "");
@@ -70,6 +72,7 @@ public class BoardServiceImpl implements BoardService{
 				// 파일 테이블에 넣을 매개변수 
 				FileDto fileInfo = new FileDto();
 				fileInfo.setBoardSeq(bDto.getBoardSeq());
+				fileInfo.setTypeSeq(bDto.getTypeSeq());
 				fileInfo.setFileName(origin);
 				fileInfo.setFakeFileName(fakeName);
 				fileInfo.setFileSize((int)mFile.getSize());

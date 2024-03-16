@@ -17,7 +17,7 @@ import lombok.ToString;
 public class FileDto {
 	private int boardSeq;
 	private int fileIdx;
-	private int type_seq;
+	private int typeSeq;
 	private int fileSize;
 	private String fileName;
 	private String fakeFileName;

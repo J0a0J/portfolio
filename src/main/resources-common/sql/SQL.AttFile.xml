@@ -8,7 +8,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	<insert id ="addAttFile" parameterType="com.lhs.dto.FileDto" useGeneratedKeys="true" keyProperty="fileIdx">
 		INSERT INTO S_J0a0J.board_attach
 		(board_seq, file_idx, type_seq, file_name, fake_filename, file_size, file_type, save_loc, create_dtm)
-		VALUES(#{boardSeq}, #{fileIdx}, 2, #{fileName}, #{fakeFileName}, #{fileSize}, 
+		VALUES(#{boardSeq}, #{fileIdx}, #{typeSeq}, #{fileName}, #{fakeFileName}, #{fileSize}, 
 		#{fileType}, #{saveLoc}, DATE_FORMAT(now(), '%Y%m%d%H%i%s'));
 	</insert>
 	

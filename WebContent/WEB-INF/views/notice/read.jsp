@@ -18,7 +18,7 @@ $(document).ready(function(){
 	
 	$('#btnDelete').on('click', function(){		
 		if(confirm("삭제하시겠습니까?")){
-			// code here
+			customAjax("<c:url value='/notice/delete.do?boardSeq=${boardSeq}' />", "/notice/list.do?page=${currentPage}");
 		}
 	});
 	
@@ -32,29 +32,34 @@ $(document).ready(function(){
 			<div class="row">
 				<!-- LEFT -->
 				<div class="col-md-12 order-md-1">
-					<form name="readForm" class="validate" method="post" enctype="multipart/form-data" data-success="Sent! Thank you!" data-toastr-position="top-right">
-						<input type="hidden" name="boardSeq" value ="PK1"/>
-						<input type="hidden" name="typeSeq" value ="PK2"/>
-					</form>
-					<!-- post -->
+				<form name="readForm" class="validate" method="post"
+					enctype="multipart/form-data" data-success="Sent! Thank you!"
+					data-toastr-position="top-right">
+				<c:if test="${not empty boardList }">
+					<input type="hidden" name="boardSeq" value="${boardList.boardSeq }" /> <input
+						type="hidden" name="typeSeq" value="${boardList.typeSeq }" />
+				</form>
+				<!-- post -->
 					<div class="clearfix mb-80">
 						<div class="border-bottom-1 border-top-1 p-12">
-							<span class="float-right fs-10 mt-10 text-muted">작성일시</span>
-							<center><strong>타이틀</strong></center>
+							<span class="float-right fs-10 mt-10 text-muted">${boardList.createDtm}</span>
+							<center>
+								<strong>${boardList.title}</strong>
+							</center>
 						</div>
 						<div class="block-review-content">
 							<div class="block-review-body">
 								<div class="block-review-avatar text-center">
-									<div class="push-bit">							
-										<img src="resources/images/_smarty/avatar2.jpg" width="100" alt="avatar">
+									<div class="push-bit">
+										<img src="resources/images/_smarty/avatar2.jpg" width="100"
+											alt="avatar">
 										<!--  <i class="fa fa-user" style="font-size:30px"></i>-->
 									</div>
-									<small class="block">닉네임</small>		
+									<small class="block">${boardList.memberNick }</small>
 									<hr />
 								</div>
-								<p>
-									본문 내용
-								</p>
+								<p>${boardList.content }</p>
+				</c:if>
 							<!-- 컬렉션 형태에서는 (list) items  -->
 							
 							<!-- 첨부파일 없으면  -->
@@ -71,13 +76,13 @@ $(document).ready(function(){
 										<th class="tright">첨부파일 ${ f.count }</th>
 										<td colspan="6" class="tleft"> 
 										<c:choose>
-											<c:when test="${file.linked == 0}">
-												${file.file_name} (서버에 파일을 찾을 수 없습니다.)
+											<c:when test="${file.saveLoc == null}">
+												${file.fileName} (서버에 파일을 찾을 수 없습니다.)
 											</c:when>
 											
 											<c:otherwise>
-												<a href="<c:url value='/notice/downloadFile.do?fileIdx=${file.file_idx}'/>"> 
-												${file.file_name}  ( ${file.file_size } bytes) 
+												<a href="<c:url value='/notice/downloadFile.do?fileIdx=${file.fileIdx}'/>"> 
+												${file.fileName}  ( ${file.fileSize } bytes) 
 												</a> 
 												<br/>
 											</c:otherwise>
@@ -88,8 +93,10 @@ $(document).ready(function(){
 								</div>
 							<div class="row">
 								<div class="col-md-12 text-right">
-							<c:if test="${ true }">				
-									<a href="javascript:movePage('/notice/goToUpdate.do?boardSeq=PK1')">
+								
+							<c:if test="${not empty boardList }">	
+									<a href="javascript:movePage('/notice/goToUpdate.do?boardSeq=${boardList.boardSeq}&title=${boardList.title}
+									&content=${boardList.content}&memberNick=${boardList.memberNick }&hasFile=${boardList.hasFile }&currentPage=${currentPage}')">
 							       		 <button type="button" class="btn btn-primary"><i class="fa fa-pencil"></i> 수정</button>
 							   		</a>	
 									<button type="button" class="btn btn-primary"  id="btnDelete">
@@ -99,12 +106,12 @@ $(document).ready(function(){
 								
 					   		<c:choose>
 				        		<c:when test="${empty currentPage}">
-					        		<a href="javascript:movePage('/notice/list.do')">
+					        		<a href="javascript:movePage('/notice/list.do?page=1')">
 							        	<button type="button" class="btn btn-primary">목록</button>
 							   		</a>
 				        		</c:when>
 				        		<c:otherwise>
-				        			<a href="javascript:movePage('/notice/list.do?page=currentPage')">
+				        			<a href="javascript:movePage('/notice/list.do?page=${currentPage }')">
 								        <button type="button" class="btn btn-primary">목록</button>
 							   		</a>
 				        		</c:otherwise>

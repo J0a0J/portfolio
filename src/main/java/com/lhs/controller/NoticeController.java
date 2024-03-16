@@ -3,6 +3,7 @@ package com.lhs.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.UriUtils;
 
 import com.lhs.dto.BoardDto;
 import com.lhs.dto.FileDto;
@@ -39,8 +41,6 @@ public class NoticeController {
 		ArrayList<BoardDto> memberList;
 		// 공지사항, 자유게시판 결과를 분리하기 위해 
 		params.put("typeSeq", this.typeSeq);
-		
-		System.out.println("PARAMS " + params);
 		
 		// 현재 페이지
 		int currentPage;
@@ -87,6 +87,34 @@ public class NoticeController {
 		mv.setViewName("notice/list");
 		return mv;
 	}
+	
+	@RequestMapping("/notice/downloadFile.do")
+	@ResponseBody
+	public byte[] downloadFile(@RequestParam int fileIdx,  HttpServletResponse rep) {
+		//1.받아온 파람의 파일 pk로 파일 전체 정보 불러온다. -attFilesService필요! 
+		// 파일 전체 정보 받아오기 
+		FileDto fileInfo = bService.getFileInfo(fileIdx);
+		
+		//2. 받아온 정보를 토대로 물리적으로 저장된 실제 파일을 읽어온다.
+		byte[] fileByte = null;
+		
+		if(fileInfo != null) { //지워진 경우 
+			//파일 읽기 메서드 호출 
+			fileByte = fileUtil.readFile(fileInfo);
+		}
+		// 파일명이 한글이면 오류가 발생하기에 꼭 utf-8로 해줘야 한다.
+		String fileName = UriUtils.encode(fileInfo.getFileName(), "utf-8");
+		
+		//돌려보내기 위해 응답(httpServletResponse rep)에 정보 입력. **** 응답사용시 @ResponseBody 필요 ! !
+		//Response 정보전달: 파일 다운로드 할수있는 정보들을 브라우저에 알려주는 역할 
+		rep.setHeader("Content-Disposition", "attachment; filename=\""+ fileName + "\""); //파일명
+		rep.setContentType(fileInfo.getFileType()); // content-type
+		rep.setContentLength(fileInfo.getFileSize()); // 파일사이즈 
+		rep.setHeader("pragma", "no-cache");
+		rep.setHeader("Cache-Control", "no-cache");
+		
+		return fileByte;
+	}
 
 
 	//글쓰기 페이지로 	
@@ -112,26 +140,34 @@ public class NoticeController {
 		int result = bService.write(bDto, mReq.getFiles("attFiles"));
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		String msg = (result == 1) ? "성공" : "실패";
+		
+		BoardDto view = bService.readAfterWriting(bDto);
+		
+		String link = "/board/read.do?boardSeq=" + view.getBoardSeq() +  
+				"&hasFile=" + view.getHasFile() + 
+				"&currentPage=1";
 
 		map.put("result", result);
-		map.put("msg", msg);
-		
+		map.put("nextPage", result==1? link : "/notice/list.do");
 		return map;
 	}
 
 	@RequestMapping("/notice/read.do")
 	public ModelAndView read(@ModelAttribute("BoardDto") BoardDto bDto) {
+		
 		if(bDto.getTypeSeq() == 0) {
 			bDto.setTypeSeq(Integer.parseInt(this.typeSeq));
 		}
 		
-		ModelAndView mv = new ModelAndView();		
+		System.out.println("BOARD DTO IN READ !!! " + bDto);
+
+		ModelAndView mv = new ModelAndView();
 		// 게시글 정보 
 		BoardDto boardList = bService.read(bDto);
 		
 		// 파일이 있는지 확인 
 		String checkFile = boardList.getHasFile();
+		System.out.println("CHECK FILE   " + checkFile);
 		if (checkFile != null) {
 			// 파일 정보 
 			ArrayList<FileDto> fDto = bService.readFile(bDto);
@@ -141,7 +177,7 @@ public class NoticeController {
 		mv.addObject("currentPage", bDto.getPage());
 		mv.addObject("boardList", boardList);
 		mv.addObject("boardSeq", bDto.getBoardSeq());
-		mv.setViewName("/board/read");
+		mv.setViewName("notice/read");
 		return mv;
 	}	
 
@@ -242,11 +278,17 @@ public class NoticeController {
 		int result = bService.delete(bDto);
 		System.out.println("RESULT IS HERE " + result);
 		
-		// /board/list.do?page=1
-		String link = "/board/list.do?page=" + bDto.getPage(); 
+		String link = "/notice/list.do?page="; 
+		
+		if (bDto.getPage() == 0) {
+			link += 1;
+		} else {
+			link += bDto.getPage();
+		}
+		
 		HashMap<String, Object> map = new HashMap<>();
 		System.out.println("THIS IS LINK!!!!! "+ link);
-		map.put("nextPage", result==1?"/board/list.do?page=" + bDto.getPage() : "/board/list.do?page=" + bDto.getPage() );
+		map.put("nextPage", result==1?"/notice/list.do?page=" + bDto.getPage() : "/notice/list.do?page=" + bDto.getPage() );
 		return map;
 
 //		if(session.getAttribute("memberId") != null) { // 세션에 값있을 : 로긴상태일때만 

@@ -118,7 +118,7 @@
 
 								<c:otherwise>
 									<a
-										href="<c:url value='/board/download.do?fileIdx=${file.fileIdx}'/>">
+										href="<c:url value='/board/downloadFile.do?fileIdx=${file.fileIdx}'/>">
 										${file.fileName} ( ${file.fileSize } bytes) </a>
 									<br />
 								</c:otherwise>
@@ -128,7 +128,6 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12 text-right">
-					<c:if test="${ true }">
 					<c:if test="${not empty boardList }">
 					<!-- Dao에서 read를 통해 수정을 했었는데 그러면 조회수가 2번 더해지기 때문에 -->
 					<!-- 값을 받아오는 걸로 변경. -->
@@ -139,11 +138,8 @@
 								<i class="fa fa-pencil"></i> 수정
 							</button>
 						</a>
-						<!-- <a href="javascript:movePage('/board/delete.do?boardSeq=${boardSeq }&hasFile=${boardList.hasFile }&page=${currentPage }')"> -->
 							<button type="button" class="btn btn-primary" id="btnDelete">
 								삭제</button>
-						<!-- </a> -->
-					</c:if>
 
 					<c:choose>
 						<c:when test="${empty currentPage}">
