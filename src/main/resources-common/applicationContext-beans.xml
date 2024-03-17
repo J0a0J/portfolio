@@ -23,12 +23,6 @@
 	<!-- 공용 설정 파일 -->
 	<util:properties id="config" location="classpath:*config.ini" />
 
-	<!-- bean IOC - 비밀번호재설정을 위한 메일 보낼 유틸 bean설정 
-	<bean id="AES256Util" class="com.lhs.util.AES256Util">
-		<constructor-arg value="aes256-test-key!!"></constructor-arg>
-	</bean>
-	-->
-
 	<!-- 홈에서 이메일 전송하기 위한 bean설정 -->
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host" value="smtp.naver.com" />
@@ -43,7 +37,7 @@
 	</bean>
 
 	<!-- Annotation 기반의 Component Scan 필터(service package 만 검색) -->
-	<context:component-scan base-package="com.lhs">
+	<context:component-scan base-package="com.j0a0j">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
 		<context:include-filter type="regex" expression=".*\.dao\..*"/>
 	</context:component-scan>
@@ -67,7 +61,7 @@
 	
 	<!-- DAO interface를 mapper(xml)과 연결시키기 위해 탐색(scan) -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.lhs.dao"></property>
+		<property name="basePackage" value="com.j0a0j.dao"></property>
 	</bean>
 
 	<!-- 트랜잭션 관리를 위한 bean -->
@@ -77,7 +71,7 @@
 	
 	
 	<!-- 첨부파일 위한 빈 수동 설정.. fileUtil  -->
-	<bean id="fileUtil" class="com.lhs.util.FileUtil" />
+	<bean id="fileUtil" class="com.j0a0j.util.FileUtil" />
 	
 	<!-- transaction annotation -->
 	<tx:annotation-driven transaction-manager="transactionManager"/>

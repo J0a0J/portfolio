@@ -3,7 +3,7 @@
 PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 
-<mapper namespace="com.lhs.dao.EmailAuthDao">
+<mapper namespace="com.j0a0j.dao.EmailAuthDao">
 	
 	<insert id="addEmailAuth" parameterType="EmailAuth">
 		INSERT INTO S_J0a0J.email_auth

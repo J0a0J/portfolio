@@ -3,9 +3,9 @@
 PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 
-<mapper namespace="com.lhs.dao.BoardDao">
+<mapper namespace="com.j0a0j.dao.BoardDao">
 	<!-- resultType은 반드시 있어야 함 -->
-	<select id="list" parameterType="HashMap" resultType="com.lhs.dto.BoardDto">
+	<select id="list" parameterType="HashMap" resultType="com.j0a0j.dto.BoardDto">
 		SELECT title, member_nick, hits, has_file, create_dtm, content, board_seq
 		FROM S_J0a0J.board
 		WHERE type_seq = #{typeSeq} 
@@ -18,7 +18,7 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		FROM S_J0a0J.board;
 	</select>
 	<!-- keyProperty selectKey와 같은 기능을 구현  -->
-	<insert id ="write" parameterType="com.lhs.dto.BoardDto" useGeneratedKeys="true" keyProperty="boardSeq" >
+	<insert id ="write" parameterType="com.j0a0j.dto.BoardDto" useGeneratedKeys="true" keyProperty="boardSeq" >
 		INSERT INTO S_J0a0J.board
 		(type_seq, member_id, member_nick, title, content, has_file, hits, create_dtm, update_dtm)
 		VALUES(#{typeSeq}, #{memberId}, #{memberNick}, #{title}, #{content}, 
@@ -26,33 +26,33 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	</insert>
 	
 	<!-- 파일 존재한다면 board 테이블 업데이트 해줘야 함. -->
-	<update id="existFile" parameterType="com.lhs.dto.BoardDto">
+	<update id="existFile" parameterType="com.j0a0j.dto.BoardDto">
 		UPDATE S_J0a0J.board
 		SET has_file =#{hasFile}
 		where board_seq = #{boardSeq}
 	</update>
 	
-	<select id="read" parameterType="com.lhs.dto.BoardDto" resultType = "com.lhs.dto.BoardDto">
+	<select id="read" parameterType="com.j0a0j.dto.BoardDto" resultType = "com.j0a0j.dto.BoardDto">
 		SELECT board_seq, member_nick, title, content, has_file, hits, create_dtm, update_dtm, type_seq
 		FROM S_J0a0J.board
 		WHERE board_seq = #{boardSeq};
 	</select>
 	
-	<select id="readAfterWriting" parameterType="com.lhs.dto.BoardDto" resultType = "com.lhs.dto.BoardDto">
+	<select id="readAfterWriting" parameterType="com.j0a0j.dto.BoardDto" resultType = "com.j0a0j.dto.BoardDto">
 		SELECT board_seq, has_file
 		FROM S_J0a0J.board
 		WHERE title=#{title} AND content=#{content};
 	</select>
 	
 	<!-- public FileDto read(BoardDto bDto); -->
-	<select id="readFile" parameterType="com.lhs.dto.BoardDto" resultType="com.lhs.dto.FileDto">
+	<select id="readFile" parameterType="com.j0a0j.dto.BoardDto" resultType="com.j0a0j.dto.FileDto">
 		SELECT board_seq, file_idx, type_seq, file_name, fake_filename, file_size, file_type, save_loc, create_dtm
 		FROM S_J0a0J.board_attach
 		WHERE board_seq = #{boardSeq};	
 	</select>
 	
 	<!-- public FileDto getFileInfo(int fileIdx, int boardSeq); -->
-	<select id="getFileInfo" parameterType="int" resultType="com.lhs.dto.FileDto">
+	<select id="getFileInfo" parameterType="int" resultType="com.j0a0j.dto.FileDto">
 		SELECT file_idx, type_seq, board_seq, file_name, fake_filename, file_size, file_type, save_loc, create_dtm
 		FROM S_J0a0J.board_attach
 		WHERE file_idx = #{fildIdx};
@@ -74,31 +74,31 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 	 	 
 	 </update>
 	
-	<delete id="delete" parameterType="com.lhs.dto.BoardDto">
+	<delete id="delete" parameterType="com.j0a0j.dto.BoardDto">
 		DELETE FROM S_J0a0J.board
 		WHERE board_seq=#{boardSeq};
 	</delete>
 	
 	<!-- public int deleteFile(HashMap<String, Object> params); -->
-	<delete id="deleteFile" parameterType="com.lhs.dto.BoardDto">
+	<delete id="deleteFile" parameterType="com.j0a0j.dto.BoardDto">
 		DELETE FROM S_J0a0J.board_attach
 		WHERE board_seq=#{boardSeq};
 	</delete>
 	
 	<!-- int deleteAttFile(HashMap<String, Object> params) -->
-	<delete id="deleteAttFile" parameterType="com.lhs.dto.FileDto">
+	<delete id="deleteAttFile" parameterType="com.j0a0j.dto.FileDto">
 		DELETE FROM S_J0a0J.board_attach
 		WHERE file_idx=#{fileIdx};
 	</delete>
 	
 	<!-- public int getFileCount(HashMap<String, Object> params); -->
-	<select id="getFileCount" parameterType="com.lhs.dto.FileDto">
+	<select id="getFileCount" parameterType="com.j0a0j.dto.FileDto">
 		SELECT COUNT(*) 
 		FROM S_J0a0J.board_attach 
 		WHERE board_seq =#{boardSeq};
 	</select>
 	
-	<select id="search" parameterType="HashMap" resultType="com.lhs.dto.BoardDto">
+	<select id="search" parameterType="HashMap" resultType="com.j0a0j.dto.BoardDto">
 		SELECT title, member_nick, hits, has_file, create_dtm, content, board_seq
 		FROM S_J0a0J.board
 		WHERE ${select} LIKE CONCAT("%", #{content}, "%")

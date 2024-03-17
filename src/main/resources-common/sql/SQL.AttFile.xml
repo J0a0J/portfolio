@@ -3,9 +3,9 @@
 PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 
-	<mapper namespace="com.lhs.dao.AttFileDao"> 
+	<mapper namespace="com.j0a0j.dao.AttFileDao"> 
 	<!-- useGeneratedKeys="true" keyProperty="boardSeq"  -->
-	<insert id ="addAttFile" parameterType="com.lhs.dto.FileDto" useGeneratedKeys="true" keyProperty="fileIdx">
+	<insert id ="addAttFile" parameterType="com.j0a0j.dto.FileDto" useGeneratedKeys="true" keyProperty="fileIdx">
 		INSERT INTO S_J0a0J.board_attach
 		(board_seq, file_idx, type_seq, file_name, fake_filename, file_size, file_type, save_loc, create_dtm)
 		VALUES(#{boardSeq}, #{fileIdx}, #{typeSeq}, #{fileName}, #{fakeFileName}, #{fileSize}, 
