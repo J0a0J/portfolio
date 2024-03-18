@@ -15,7 +15,8 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		
 	<select id="getTotalArticleCnt" parameterType="HashMap" resultType="int">
 		SELECT COUNT(*)
-		FROM S_J0a0J.board;
+		FROM S_J0a0J.board
+		WHERE type_seq=#{typeSeq};
 	</select>
 	<!-- keyProperty selectKey와 같은 기능을 구현  -->
 	<insert id ="write" parameterType="com.j0a0j.dto.BoardDto" useGeneratedKeys="true" keyProperty="boardSeq" >

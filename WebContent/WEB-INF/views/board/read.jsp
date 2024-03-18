@@ -118,7 +118,7 @@
 
 								<c:otherwise>
 									<a
-										href="<c:url value='/board/downloadFile.do?fileIdx=${file.fileIdx}'/>">
+										href="<c:url value='/board/download.do?fileIdx=${file.fileIdx}'/>">
 										${file.fileName} ( ${file.fileSize } bytes) </a>
 									<br />
 								</c:otherwise>
@@ -132,7 +132,7 @@
 					<!-- Dao에서 read를 통해 수정을 했었는데 그러면 조회수가 2번 더해지기 때문에 -->
 					<!-- 값을 받아오는 걸로 변경. -->
 						<a
-							href="javascript:movePage('/board/goToUpdate.do?boardSeq=${boardList.boardSeq}&title=${boardList.title}&content=${boardList.content}&memberNick=${boardList.memberNick }&hasFile=${boardList.hasFile }&currentPage=${currentPage }')">
+							href="javascript:movePage('/board/goToUpdate.do?boardSeq=${boardList.boardSeq}&title=${boardList.title}&content=${boardList.content}&memberNick=${boardList.memberNick }&hasFile=${boardList.hasFile }&page=${page }')">
 							</c:if>
 							<button type="button" class="btn btn-primary">
 								<i class="fa fa-pencil"></i> 수정
@@ -142,13 +142,13 @@
 								삭제</button>
 
 					<c:choose>
-						<c:when test="${empty currentPage}">
+						<c:when test="${empty page}">
 							<a href="javascript:movePage('/board/list.do?page=1')">
 								<button type="button" class="btn btn-primary">목록</button>
 							</a>
 						</c:when>
 						<c:otherwise>
-							<a href="javascript:movePage('/board/list.do?page=${currentPage}')">
+							<a href="javascript:movePage('/board/list.do?page=${page}')">
 								<button type="button" class="btn btn-primary">목록</button>
 							</a>
 						</c:otherwise>

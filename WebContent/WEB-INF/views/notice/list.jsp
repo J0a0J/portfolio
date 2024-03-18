@@ -60,7 +60,7 @@ $('.search-btn').on('click', function() {
 				</thead>
 				<tbody>
 
-					<c:forEach var="member" items="${memberList}" varStatus="rowStatus">
+					<c:forEach var="member" items="${boardTotalInfo}" varStatus="rowStatus">
 						<tr>
 							<td align="center">${member.boardSeq}</td>
 							<td><span class="bold"> <a
@@ -87,10 +87,10 @@ $('.search-btn').on('click', function() {
 					<c:set var="pageUnit" value="10" />
 
 					<c:choose>
-						<c:when test="${lastPageTimes >= pageTimes}">
-							<c:set var="beginPage" value="${1 + (pageTimes * 10)}" />
+						<c:when test="${lastPageNum >= pageNum}">
+							<c:set var="beginPage" value="${1 + (pageNum * 10)}" />
 							<c:set var="endPage"
-								value="${lastPageTimes eq pageTimes ? pageTotalNum : (pageUnit + (pageTimes * 10))}" />
+								value="${lastPageNum eq pageNum ? pageTotalNum : (pageUnit + (pageNum * 10))}" />
 						</c:when>
 					</c:choose>
 
@@ -111,7 +111,7 @@ $('.search-btn').on('click', function() {
 
 
 					<li class="page-item"><a class="page-link"
-						href="javascript:movePage('/notice/list.do?page=${pageUnit + 1 + (pageTimes * 10)}')">&raquo;</a></li>
+						href="javascript:movePage('/notice/list.do?page=${pageUnit + 1 + (pageNums * 10)}')">&raquo;</a></li>
 					</li>
 				</ul>
 			</div>

@@ -76,7 +76,7 @@ public class MemberController {
 		session.invalidate();
 		
 		ModelAndView mv = new ModelAndView();
-		RedirectView rv = new RedirectView("/pf/index.do");
+		RedirectView rv = new RedirectView("/haha/index.do");
 		mv.setView(rv);		
 		return mv;
 	}

@@ -262,7 +262,8 @@
 		
 	</dependencies>
 
-	<!-- 적혀진 id에 해당하는 profile의 env 설정 -->
+	<!-- 적혀진 id에 해당하는 profile의 env 설정 (op - operation) -->
+	<!-- 아래  src/main/resources-${env}에 env 값 넣어줌 -->
 	<profiles>
 		<profile>
 			<id>local</id>
@@ -281,7 +282,7 @@
 
 	<build>
 		<!-- WAR 파일 명 -->
-		<finalName>haha</finalName>
+		<finalName>j0a0j</finalName>
 
 		<!-- 환경설정에 관한 태그 -->
 		<resources>

@@ -33,6 +33,15 @@ public class BoardController {
 	@Autowired BoardService bService;
 	private String typeSeq = "2";
 	
+	@RequestMapping("/board/list.do")
+	public ModelAndView list(@RequestParam(required=false, defaultValue="1")int page) {
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("/board/list");
+		mv.addObject("page", page);
+		
+		return mv;
+	}
+	
 	@RequestMapping("/test.do")
 	public ModelAndView test() {
 		ModelAndView mv = new ModelAndView();

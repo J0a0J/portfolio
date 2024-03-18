@@ -7,6 +7,8 @@ import java.util.HashMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 //물리적 위치로 파일 저장 
 @Slf4j
+@Configuration
 public class FileUtil {
 	
 	private Logger logger = Logger.getLogger(FileUtil.class);
@@ -25,8 +28,8 @@ public class FileUtil {
 	private String saveLocation;
 	
 	
-/* 베포용 : saveLocation = "/home/ubuntu/app/upload/" ;
-   개발용 : saveLocation = "/Users/hyesuelee/Documents/portfolio_dir/";  */
+/* 베포용 : saveLocation = "/home/ec2-user/app/file" ;
+   개발용 : saveLocation = "/Users/jiweon/development/workspace/portfolio_dir/";  */
 	
 	public void setLocation(String location) {
 		this.saveLocation = location;

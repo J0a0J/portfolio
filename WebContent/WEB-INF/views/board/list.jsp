@@ -4,9 +4,98 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 </head>
 <script>
+
+function getBoardData(pageNumber) {
+	// RestController url - 데이터를 받아올 곳 
+    var url = '/haha/board/' + pageNumber + '.do'; // 동적으로 URL 생성
+    // url을 변경해도 현재의 페이지가 뜨게 해주는 기능 
+    // Controller url - jsp를 사용해야 하기에 이 url 사용 
+    history.pushState({}, '', '/haha/board/list.do?page=' + pageNumber);
+   	
+    $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            // 성공적으로 데이터를 받아온 경우 처리 로직
+            var boardList = data.boardInfo;
+            var html = ''; 
+
+            // 받아온 데이터로 HTML을 생성
+            for (var i = 0; i < boardList.length; i++) {
+                var board = boardList[i];
+                
+                // 생성한 HTML을 변수에 추가
+                html += '<tr>' +
+                            '<td align="center">' + board.boardSeq + '</td>' +
+                            '<td>' +
+                                '<span class="bold">' +
+                                    '<a href="javascript:movePage(\'/board/read.do?boardSeq=' + board.boardSeq + '&page=' + 1 + '\')">' + 
+                                        board.title +
+                                    '</a>' +
+                                '</span>' +
+                            '</td>' +
+                            '<td>' + board.memberNick + '</td>' +
+                            '<td>' + board.hits + '</td>' +
+                            '<td>' + (board.hasFile ? board.hasFile : '') + '</td>' +
+                            '<td>' + (board.createDtm ? board.createDtm : '') + '</td>' +
+                        '</tr>';
+                        
+            	generatePagination(data.pageTotalNums, data.pageGroup, ${page});
+            }
+
+            // 생성한 HTML을 tbody에 삽입 
+            $('#boardTableBody').html(html);
+            
+        },
+        error: function(xhr, status, error) {
+            console.error(error); // 오류 처리
+        }
+    });
+}
+
+function generatePagination(pageTotalNums, pageGroup, currentPage) {
+    var pageUnit = 10;
+    var beginPage = 1 + (pageGroup * pageUnit);
+    var endPage = (pageTotalNums - currentPage) < 10 ? pageTotalNums : pageUnit + (pageGroup * 10);
+
+    var html = '';
+
+    // 이전 페이지로 이동하는 링크
+    html += '<li class="page-item"><a class="page-link" href="#" data-page="' + (beginPage - pageUnit) + '">&laquo;</a></li>';
+
+    // 페이지 번호 생성
+    for (var i = beginPage; i <= endPage; i++) {
+        if (currentPage == i) {
+        	// Controller로 현재 페이지 값을 보내고  
+            html += '<li class="page-item active"><a class="page-link" href="/board/list.do?page=' + i 
+            		+ '" data-page="' + i + '">' + i + '</a></li>';
+        } else {
+            html += '<li class="page-item"><a class="page-link" href="javascript:movePage(\'/board/list.do?page=' + i 
+            		+ '\')" data-page="' + i + '">' + i + '</a></li>';
+        }
+    }
+
+    // 다음 페이지로 이동하는 링크
+    html += '<li class="page-item"><a class="page-link" href="javascript:movePage(\'/board/list.do?page=' 
+    		+ (pageUnit + 1 + (pageGroup * 10)) + '\')" data-page="' + (pageUnit + 1 + (pageGroup * 10)) + '">&raquo;</a></li>';
+
+    // 페이지 번호를 출력할 요소에 HTML 삽입
+    $('#pagination').html(html);
+}
+
+// 페이지 로드 시 데이터 요청
+$(document).ready(function() {
+	// 동적으로 url 변경을 위해 Controller에서 값을 받아옴.
+	var currentPage = parseInt('${page}');
+    getBoardData(currentPage); // 초기 페이지 번호를 전달하여 데이터 요청
+});
+
 function search() {
 	// 선택된 검색 조건과 검색어 가져오기
     var searchSelectValue = document.getElementById('searchSelect').value;
@@ -17,6 +106,7 @@ function search() {
     
     // 생성된 URL로 이동
 	movePage(url);
+}
 </script>
 <body>
 <style>
@@ -56,64 +146,22 @@ function search() {
 						<th align="center">작성일</th>
 					</tr>
 				</thead>
-				<tbody>
-
-					<c:forEach var="member" items="${memberList}" varStatus="rowStatus">
-						<tr>
-							<td align="center">${member.boardSeq}</td>
-							<td><span class="bold"> <a
-									href="javascript:movePage('/board/read.do?boardSeq=${member.boardSeq }&hasFile=${member.hasFile }&page=${currentPage }')">
-										${member.title } </a>
-							</span></td>
-							<td>${member.memberNick}</td>
-							<td>${member.hits}</td>
-							<td>${member.hasFile}</td>
-							<td>${member.createDtm}</td>
-						</tr>
-					</c:forEach>
-
+				
+				<!-- 글 정보 들어가는 곳 -->
+				<tbody id="boardTableBody">	
 				</tbody>
+				
 			</table>
 		</div>
 		<div class="row text-center">
 			<div class="col-md-12">
-				<ul class="pagination pagination-simple pagination-sm">
-					<!-- 페이징 -->
-					<li class="page-item"><a class="page-link"
-						href="javascript:movePage('/board/list.do?page=1')">&laquo;</a></li>
-					<c:set var="lastPageNum" value="${pageTotalNum}" />
-					<c:set var="pageUnit" value="10" />
-
-					<c:choose>
-						<c:when test="${lastPageTimes >= pageTimes}">
-							<c:set var="beginPage" value="${1 + (pageTimes * 10)}" />
-							<c:set var="endPage"
-								value="${lastPageTimes eq pageTimes ? pageTotalNum : (pageUnit + (pageTimes * 10))}" />
-						</c:when>
-					</c:choose>
-
-					<c:forEach begin="${beginPage}" end="${endPage}" var="i">
-						<c:choose>
-							<c:when test="${currentPage eq i}">
-								<li class="page-item active"><a class="page-link"
-									href="javascript:movePage('/board/list.do?page=${i}')">${i}</a>
-								</li>
-							</c:when>
-							<c:otherwise>
-								<li class="page-item"><a class="page-link"
-									href="javascript:movePage('/board/list.do?page=${i}')">${i}</a>
-								</li>
-							</c:otherwise>
-						</c:choose>
-					</c:forEach>
-					
-
-					<li class="page-item"><a class="page-link"
-						href="javascript:movePage('/board/list.do?page=${pageUnit + 1 + (pageTimes * 10)}')">&raquo;</a></li>
-					</li>
+			
+			<!-- 하단 번호  -->
+				<ul class="pagination pagination-simple pagination-sm" id="pagination">
 				</ul>
+		
 			</div>
-		</div>
+		</div> 
 		<div class="row">
 			<div class="col-md-12 text-right">
 				<a href="javascript:movePage('/board/goToWrite.do')">

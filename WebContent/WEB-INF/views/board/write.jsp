@@ -71,7 +71,7 @@
 				return;		
 			}
 			$('#content').val(content);
-			customAjax("<c:url value='/board/write.do' />", "/board/list.do");
+			customAjax("<c:url value='/board/write.do' />", "<c:url value='/board/list.do' />");
 	});
 });
 
@@ -90,9 +90,9 @@ function customAjax(url, responseUrl) {
              alert(data.msg);
              var boardSeq = data.boardSeq;
              if(data.result == 1){
-                movePage(this, responseUrl);
+            	 movePage(this, responseUrl);
              } else {
-               window.location.href="<c:url value='/index.do'/>";
+               window.location.href="<c:url value='/board/list.do'/>";
              }
          },
          error : function (XMLHttpRequest, textStatus, errorThrown) {
@@ -182,7 +182,7 @@ function customAjax(url, responseUrl) {
 
 									<div class="row">
 										<div class="col-md-12 text-right">
-										<a href="javascript:movePage('/board/list.do')">
+										<a href="javascript:movePage('/board/list.do?page=1')">
 								       	 <button type="button" class="btn btn-primary">목록</button>
 								   		</a>	
 															
