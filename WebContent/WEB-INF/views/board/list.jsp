@@ -4,23 +4,28 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+
+<jsp:include page="./common-template.jsp" />
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 </head>
 <script>
+var ctx = '/haha';
 
 function getBoardData(pageNumber) {
 	// RestController url - 데이터를 받아올 곳 
-    var url = '/haha/board/' + pageNumber + '.do'; // 동적으로 URL 생성
+    var url = ctx + '/board/' + pageNumber + '.do'; // 동적으로 URL 생성
+    var moveUrl = ctx + '/board/list.do?page=' + pageNumber;
     // url을 변경해도 현재의 페이지가 뜨게 해주는 기능 
     // Controller url - jsp를 사용해야 하기에 이 url 사용 
-    history.pushState({}, '', '/haha/board/list.do?page=' + pageNumber);
+    history.pushState({}, '', moveUrl);
    	
     $.ajax({
         url: url,
         type: 'GET',
-        dataType: 'json',
+        /* dataType: 'json', */
         success: function(data) {
             // 성공적으로 데이터를 받아온 경우 처리 로직
             var boardList = data.boardInfo;
@@ -35,7 +40,8 @@ function getBoardData(pageNumber) {
                             '<td align="center">' + board.boardSeq + '</td>' +
                             '<td>' +
                                 '<span class="bold">' +
-                                    '<a href="javascript:movePage(\'/board/read.do?boardSeq=' + board.boardSeq + '&page=' + 1 + '\')">' + 
+                                    '<a href="javascript:movePage(\'/board/read/' + pageNumber 
+                                    		+ '/' + board.boardSeq + '.do\')">' + 
                                         board.title +
                                     '</a>' +
                                 '</span>' +
@@ -67,34 +73,46 @@ function generatePagination(pageTotalNums, pageGroup, currentPage) {
     var html = '';
 
     // 이전 페이지로 이동하는 링크
-    html += '<li class="page-item"><a class="page-link" href="#" data-page="' + (beginPage - pageUnit) + '">&laquo;</a></li>';
+    var prevPage = '<c:url value="/board/list.do?page=' +  (beginPage - pageUnit) + '" />'
+    html += '<li class="page-item"><a class="page-link" href="' + prevPage + '" data-page="' + (beginPage - pageUnit) + '">&laquo;</a></li>';
 
     // 페이지 번호 생성
     for (var i = beginPage; i <= endPage; i++) {
+    	
+    	var baseUrl = '<c:url value="/board/list.do?page=' + i + '" />';
+    	var nextUrl = '<c:url value="/board/list.do?page=' + (pageUnit + 1 + (pageGroup * 10)) + '" />'
+    			
         if (currentPage == i) {
         	// Controller로 현재 페이지 값을 보내고  
             html += '<li class="page-item active"><a class="page-link" href="/board/list.do?page=' + i 
             		+ '" data-page="' + i + '">' + i + '</a></li>';
         } else {
-            html += '<li class="page-item"><a class="page-link" href="javascript:movePage(\'/board/list.do?page=' + i 
-            		+ '\')" data-page="' + i + '">' + i + '</a></li>';
+        	html += '<li class="page-item"><a class="page-link" href="' + baseUrl + '" data-page="' + i + '">' + i + '</a></li>';
         }
     }
 
     // 다음 페이지로 이동하는 링크
-    html += '<li class="page-item"><a class="page-link" href="javascript:movePage(\'/board/list.do?page=' 
-    		+ (pageUnit + 1 + (pageGroup * 10)) + '\')" data-page="' + (pageUnit + 1 + (pageGroup * 10)) + '">&raquo;</a></li>';
+    html += '<li class="page-item"><a class="page-link" href="' + nextUrl + '" data-page="' + (pageUnit + 1 + (pageGroup * 10)) + '">&raquo;</a></li>';
 
     // 페이지 번호를 출력할 요소에 HTML 삽입
     $('#pagination').html(html);
 }
 
 // 페이지 로드 시 데이터 요청
+window.onload = function() {
+	// 동적으로 url 변경을 위해 Controller에서 값을 받아옴.
+    var currentPage = parseInt('${page}');
+    getBoardData(currentPage); // 초기 페이지 번호를 전달하여 데이터 요청
+}
+
 $(document).ready(function() {
+	console.log("document ready");
 	// 동적으로 url 변경을 위해 Controller에서 값을 받아옴.
 	var currentPage = parseInt('${page}');
     getBoardData(currentPage); // 초기 페이지 번호를 전달하여 데이터 요청
 });
+
+
 
 function search() {
 	// 선택된 검색 조건과 검색어 가져오기
@@ -108,7 +126,8 @@ function search() {
 	movePage(url);
 }
 </script>
-<body>
+
+
 <style>
 .search-container {
     text-align: center;
@@ -122,6 +141,12 @@ function search() {
     box-sizing: border-box;
 }
 </style>
+
+
+<body>
+
+<div id="template"></div>
+
 	<section>
 	<div class="container">
 		<h4>자유게시판</h4>
@@ -186,4 +211,5 @@ function search() {
 	</section>
 	<!-- / -->
 </body>
+<jsp:include page="./common-template-footer.jsp" />
 </html>
