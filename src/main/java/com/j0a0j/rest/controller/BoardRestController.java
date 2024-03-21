@@ -7,14 +7,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,8 +23,6 @@ import org.springframework.web.util.UriUtils;
 
 import com.j0a0j.dto.BoardDto;
 import com.j0a0j.dto.FileDto;
-import com.j0a0j.entity.BoardErrorResponse;
-import com.j0a0j.exception.BoardNotFoundException;
 import com.j0a0j.response.dto.BoardResponseDto;
 import com.j0a0j.service.BoardService;
 import com.j0a0j.util.FileUtil;
@@ -85,12 +81,12 @@ public class BoardRestController {
 	}
 
 	
-	@GetMapping("/read/{page}/{boardSeq}.do")	
-	public ModelAndView readWriting(@PathVariable("page") int page, @PathVariable("boardSeq") int boardSeq,
-			@ModelAttribute("BoardDto") BoardDto bDto) {
+	@GetMapping("/read.do")	
+	public ModelAndView readWriting(@RequestParam("boardSeq") int boardSeq, @ModelAttribute("BoardDto") BoardDto bDto) {
 		if(bDto.getTypeSeq() == 0) {
 			bDto.setTypeSeq(Integer.parseInt(this.typeSeq));
 		}
+		bDto.setBoardSeq(boardSeq);
 		
 		System.out.println("BOARD DTO IN READ !!! " + bDto);
 

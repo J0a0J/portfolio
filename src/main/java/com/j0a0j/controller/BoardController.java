@@ -28,12 +28,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
+@RequestMapping("/board")
 public class BoardController {
 	
 	@Autowired BoardService bService;
 	private String typeSeq = "2";
 	
-	@RequestMapping("/board/list.do")
+	@RequestMapping("/list.do")
 	public ModelAndView list(@RequestParam(required=false, defaultValue="1")int page) {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("/board/list");
@@ -50,7 +51,7 @@ public class BoardController {
 	}
 
 	//글쓰기 페이지로 	
-	@RequestMapping("/board/goToWrite.do")
+	@RequestMapping("/goToWrite.do")
 	public ModelAndView goToWrite(@RequestParam HashMap<String, Object> params) {
 		if(!params.containsKey("typeSeq")) {
 			params.put("typeSeq", this.typeSeq);
@@ -61,7 +62,7 @@ public class BoardController {
 	}
 
 	//수정  페이지로 	
-	@RequestMapping("/board/goToUpdate.do")
+	@RequestMapping("/goToUpdate.do")
 	public ModelAndView goToUpdate(BoardDto bDto, HttpSession session) {
 		ModelAndView mv = new ModelAndView();
 		// read로 하면 조회수가 총 +2 되기 때문에 uri 로 값 받기 

@@ -4,7 +4,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+
+<jsp:include page="./common-template.jsp" />
+
+
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <script src="<c:url value='/resources/js/scripts.js'/>"></script>
 
@@ -13,6 +18,8 @@
 	var ctx = "${pageContext.request.contextPath}";
 	
 	$(document).ready(function() {
+		var url = ctx + '/board/read.do?page=' + ${page} + '&boardSeq=' + ${boardSeq};
+		history.pushState({}, '', url);
 
 		$('#btnUpdate').on('click', function() {
 			var frm = document.readForm;
@@ -132,7 +139,7 @@
 					<!-- Dao에서 read를 통해 수정을 했었는데 그러면 조회수가 2번 더해지기 때문에 -->
 					<!-- 값을 받아오는 걸로 변경. -->
 						<a
-							href="javascript:movePage('/board/goToUpdate.do?boardSeq=${boardList.boardSeq}&title=${boardList.title}&content=${boardList.content}&memberNick=${boardList.memberNick }&hasFile=${boardList.hasFile }&page=${page }')">
+							href="<c:url value='/board/goToUpdate.do?boardSeq=${boardList.boardSeq}&title=${boardList.title}&content=${boardList.content}&memberNick=${boardList.memberNick }&hasFile=${boardList.hasFile }&page=${page }' />">
 							</c:if>
 							<button type="button" class="btn btn-primary">
 								<i class="fa fa-pencil"></i> 수정
@@ -143,12 +150,12 @@
 
 					<c:choose>
 						<c:when test="${empty page}">
-							<a href="javascript:movePage('/board/list.do?page=1')">
+							<a href="<c:url value='/board/list.do?page=1' />">
 								<button type="button" class="btn btn-primary">목록</button>
 							</a>
 						</c:when>
 						<c:otherwise>
-							<a href="javascript:movePage('/board/list.do?page=${page}')">
+							<a href="<c:url value='/board/list.do?page=${page}' />">
 								<button type="button" class="btn btn-primary">목록</button>
 							</a>
 						</c:otherwise>
@@ -162,4 +169,5 @@
 	</div>
 	</section>
 </body>
+<jsp:include page="./common-template-footer.jsp" />
 </html>

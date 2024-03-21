@@ -34,14 +34,17 @@ function getBoardData(pageNumber) {
             // 받아온 데이터로 HTML을 생성
             for (var i = 0; i < boardList.length; i++) {
                 var board = boardList[i];
+                // <a href="/board/read.do?page=${currentPage}&boardSeq=${board.boardSeq}">
+               	var boardUrl = '<c:url value="/board/read.do?page=' + pageNumber + '&boardSeq=' + board.boardSeq + '" />'
                 
                 // 생성한 HTML을 변수에 추가
                 html += '<tr>' +
                             '<td align="center">' + board.boardSeq + '</td>' +
                             '<td>' +
                                 '<span class="bold">' +
-                                    '<a href="javascript:movePage(\'/board/read/' + pageNumber 
-                                    		+ '/' + board.boardSeq + '.do\')">' + 
+                                    /* '<a href="javascript:movePage(\'/board/read/' + pageNumber 
+                                    		+ '/' + board.boardSeq + '.do\')">' +  */
+                                    		'<a href="' + boardUrl +'">' + 
                                         board.title +
                                     '</a>' +
                                 '</span>' +
@@ -72,9 +75,12 @@ function generatePagination(pageTotalNums, pageGroup, currentPage) {
 
     var html = '';
 
-    // 이전 페이지로 이동하는 링크
-    var prevPage = '<c:url value="/board/list.do?page=' +  (beginPage - pageUnit) + '" />'
-    html += '<li class="page-item"><a class="page-link" href="' + prevPage + '" data-page="' + (beginPage - pageUnit) + '">&laquo;</a></li>';
+    // 이전 페이지로 이동하는 링크 - 1보다 값이 작아지면 1로 설정. 
+    var prevPage = '<c:url value="/board/list.do?page=' +  Math.max(1, (beginPage - pageUnit)) + '" />';
+    var firstPage = '<c:url value="/board/list.do?page=' +  1 + '" />';
+    		
+    html += '<li class="page-item"><a class="page-link" href="' + firstPage + '" data-page="' + (beginPage - pageUnit) + '">&laquo;</a></li>';
+    html += '<li class="page-item"><a class="page-link" href="' + prevPage + '" data-page="1">&lt;</a></li>';
 
     // 페이지 번호 생성
     for (var i = beginPage; i <= endPage; i++) {
@@ -90,9 +96,13 @@ function generatePagination(pageTotalNums, pageGroup, currentPage) {
         	html += '<li class="page-item"><a class="page-link" href="' + baseUrl + '" data-page="' + i + '">' + i + '</a></li>';
         }
     }
-
-    // 다음 페이지로 이동하는 링크
-    html += '<li class="page-item"><a class="page-link" href="' + nextUrl + '" data-page="' + (pageUnit + 1 + (pageGroup * 10)) + '">&raquo;</a></li>';
+	// 다음 페이지로 이동하는 링크
+	html += '<li class="page-item"><a class="page-link" href="' + nextUrl + '" data-page="' + (pageUnit + 1 + (pageGroup * 10)) + '">&gt;</a></li>';
+	
+    // 가장 마지막 페이지 
+    var lastUrl = '<c:url value="/board/list.do?page=' + pageTotalNums +'" />';
+    // 마지막 페이지로 이동하는 링크
+    html += '<li class="page-item"><a class="page-link" href="' + lastUrl + '" data-page="' + (pageUnit + 1 + (pageGroup * 10)) + '">&raquo;</a></li>';
 
     // 페이지 번호를 출력할 요소에 HTML 삽입
     $('#pagination').html(html);
@@ -189,7 +199,7 @@ function search() {
 		</div> 
 		<div class="row">
 			<div class="col-md-12 text-right">
-				<a href="javascript:movePage('/board/goToWrite.do')">
+				<a href="<c:url value='/board/goToWrite.do' />">
 					<button type="button" class="btn btn-primary">
 						<i class="fa fa-pencil"></i> 글쓰기
 					</button>
