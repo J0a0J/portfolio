@@ -45,7 +45,7 @@
     <!-- REVOLUTION SLIDER -->
     <script src="<c:url value='/resources/plugins/slider.revolution/js/jquery.themepunch.tools.min.js'/>"></script>
     <script src="<c:url value='/resources/plugins/slider.revolution/js/jquery.themepunch.revolution.min.js'/>"></script>
-    <script src="<c:url value='/resource'/>"></script>
+    <script src="<c:url value='/resources/js/view/demo.revolution_slider.js'/>"></script>
    	<script type="text/javascript" >
 		var ctx = '<%= request.getContextPath() %>';
 	    $(document).ready(function() {

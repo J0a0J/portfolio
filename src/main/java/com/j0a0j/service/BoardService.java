@@ -53,7 +53,9 @@ public interface BoardService {
 	 * @param params
 	 * @return
 	 */	
-	public int update(BoardDto bDto, List<MultipartFile> mFiles);
+	// 파일 업로드 안 돼서 글만 수정하게 수정. 
+//	public int update(BoardDto bDto, List<MultipartFile> mFiles);
+	public int update(BoardDto bDto);
 	
 	/**첨부파일 삭제(수정 페이지에서 삭제버튼 눌러 삭제하는 경우임) 
 	 * 

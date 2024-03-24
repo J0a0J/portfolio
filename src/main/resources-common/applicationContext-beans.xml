@@ -65,9 +65,9 @@
 	</bean>
 
 	<!-- 트랜잭션 관리를 위한 bean -->
-	<!-- <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
-	</bean> -->
+	</bean> 
 	
 	
 	<!-- 첨부파일 위한 빈 수동 설정.. fileUtil  -->

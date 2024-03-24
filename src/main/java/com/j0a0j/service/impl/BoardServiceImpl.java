@@ -73,9 +73,9 @@ public class BoardServiceImpl implements BoardService{
 				FileDto fileInfo = new FileDto();
 				fileInfo.setBoardSeq(bDto.getBoardSeq());
 				fileInfo.setTypeSeq(bDto.getTypeSeq());
+				fileInfo.setFileSize((int)mFile.getSize());
 				fileInfo.setFileName(origin);
 				fileInfo.setFakeFileName(fakeName);
-				fileInfo.setFileSize((int)mFile.getSize());
 				fileInfo.setFileType(extension);
 				fileInfo.setSaveLoc(saveLocation);
 				try {
@@ -129,11 +129,12 @@ public class BoardServiceImpl implements BoardService{
 	}
 
 	@Override
-	public int update(BoardDto bDto, List<MultipartFile> mFiles) {
+//	public int update(BoardDto bDto, List<MultipartFile> mFiles) {
+	public int update(BoardDto bDto) {
 		// 새로운 파일을 첨부 시 사용 
-		if (mFiles != null) {
-			writeFile(bDto, mFiles);			
-		}
+//		if (mFiles != null) {
+//			writeFile(bDto, mFiles);			
+//		}
 		// 글 수정 dao 
 		return bDao.update(bDto);
 	}

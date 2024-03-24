@@ -4,11 +4,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<jsp:include page="./common-template.jsp" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="<c:url value='/resources/js/scripts.js'/>"></script>
 <script type="text/javascript">
 
 	//jQuery event(click) 처리 
 	$(document).ready(function(){
+		
 		/** Summernote HTML Editor
 		<textarea class="summernote form-control" data-height="200"></textarea>
 		 ***************************** **/
@@ -45,35 +49,87 @@
 				}
 			});
 		}
-					
-		$('#btnUpdate').on('click', function(){ 
-			// 온클릭시 굳이 function doWrite() 펑션 선언,호출하지 말고 바로 종속시켜 기능 먹인다. 
-			// 여기서 바로 기능 구현. --> function의 선언을 줄인다.  
-			//따로 function 만들게 되면 해당 기능 수행하는 연결점 찾기 어렵다.. (펑션이름 일일이 검색해야함) 
-			//여기서는 id= btnWrite 를 onClick 시 이 기능을 수행한다. 라고 바로 연결지어 확인가능.. 
-
-			//jQuery  #[id]
-			var title = $('#title').val();
-
-			if(title.length == 0){
-				alert("제목을 입력하세요.");
-				$('#title').focus();
-				
-				return;		
-			}
-			//ck editor 가 textarea 위에 씌워져있어서 ck editor 불러와야함. 
-			var content = _summernote.code();
-			if(content.length < 0 ){
-				alert("내용을 입력하세요.");
-				_summernote.focus();
-				return;		
-			}
-			$('#content').val(content);
-			
-			customAjax("<c:url value='/board/update.do' />", "/board/read.do?boardSeq=${boardMember.boardSeq}");
 		
-		}); //#btnUpdate end 		
-}); //ready End 
+	    $('#btnUpdate').click(function(event) {
+	        event.preventDefault();
+	        
+	        var title = $('#title').val();
+	        
+	        var content = $('textarea.summernote').code();
+
+	        if(title.length == 0) {
+	            alert("제목을 입력하세요.");
+	            $('#title').focus();
+	            return;		
+	        }
+
+	        if(content.length == 0) {
+	            alert("내용을 입력하세요.");
+	            _summernote.focus();
+	            return;		
+	        }
+
+	        $('#content').val(content);
+	        
+	       
+
+			var moveUrl = '<c:url value="/board/update.do?" />';
+			
+			console.log("moveUrl      " + moveUrl);
+			
+			var comebackUrl = '<c:url value="/board/read.do" />';
+			customAjax(moveUrl, comebackUrl);
+
+	});
+
+}) 
+
+function customAjax(url, responseUrl) {
+		
+	 	var frm = document.updateForm;
+		var formData = new FormData(frm);
+		var newForm = new FormData();
+		
+	
+		// 폼 데이터 채우기 (게시글 정보)
+		formData.forEach(function(value, key) {
+			newForm.append(key, value);
+		}); 
+
+	
+		// 파일 정보 추가
+		const fileInputs = document.querySelectorAll('input[type="file"]');
+		const selectedFiles = Array.from(fileInputs)
+		    .map(input => input.files[0]) // 파일 입력 요소에서 파일 가져오기
+		    .filter(file => file !== undefined); // undefined 값 제외
+	
+		selectedFiles.forEach(file => {
+			// 파일정보 form 에 추가 
+			newForm.append("attFiles", file)
+		});
+	
+
+
+ 
+     $.ajax({
+    	 anyne: true,
+         url : url,
+         type : 'PUT',
+         data : newForm,
+         processData : false,
+         contentType : false,
+         enctype : 'multipart/form-data',
+         success : function (result, textStatus, XMLHttpRequest) {
+            console.log("sSibal   	" + result);
+                movePage(responseUrl);
+           
+         },
+         error : function (XMLHttpRequest, textStatus, errorThrown) {
+               /* alert("작성 에러\n관리자에게 문의바랍니다."); */
+             console.log("작성 에러\n" + XMLHttpRequest.responseText);
+         }
+	});
+} // func customAjax End 
 
 
 function deleteFile(fileIdx, boardSeq, title, content, memberNick) {
@@ -112,35 +168,6 @@ function deleteFile(fileIdx, boardSeq, title, content, memberNick) {
 }
 //func deletefile
 
-function customAjax(url, responseUrl) {
-  var frm = document.updateForm;
-  var formData = new FormData(frm);
-     $.ajax({
-         url : url,
-         data : formData,
-         type : 'POST',
-         dataType : "text",
-         processData : false,
-         contentType : false,
-         success : function (result, textStatus, XMLHttpRequest) {
-             var data = $.parseJSON(result);
-             
-             console.log('data' + data);
-             console.log('boardSeq' + data.boardSeq);
-             
-             alert(data.msg);
-             var boardSeq = data.boardSeq;
-            
-                movePage(responseUrl);
-           
-         },
-         error : function (XMLHttpRequest, textStatus, errorThrown) {
-               alert("작성 에러\n관리자에게 문의바랍니다.");
-             console.log("작성 에러\n" + XMLHttpRequest.responseText);
-         }
-	});
-} // func customAjax End 
-
 </script>
 
 </head>
@@ -157,7 +184,7 @@ function customAjax(url, responseUrl) {
 							<h2 class="card-title">게시글 수정</h2>
 						</div>
 						<div class="card-block">
-							<form name="updateForm" class="validate" method="post" enctype="multipart/form-data" data-success="Sent! Thank you!" data-toastr-position="top-right">
+							<form name="updateForm" class="validate" data-success="Sent! Thank you!" data-toastr-position="top-right">
 								<input type="hidden" name="memberId" value="${ sessionScope.memberId }"/>
 								<input type="hidden" name="memberIdx" value="${ sessionScope.memberIdx }"/>
 								<input type="hidden" name="typeSeq" value="${ boardMember.typeSeq}"/>
@@ -204,13 +231,13 @@ function customAjax(url, responseUrl) {
 											<c:if test="${empty attFiles}"> 
 											<div class="fancy-file-upload fancy-file-primary">
 												<i class="fa fa-upload"></i>
-												<input type="file" class="form-control" name="attFiles" onchange="jQuery(this).next('input').val(this.value);" />
+												<input type="file" class="form-control" onchange="jQuery(this).next('input').val(this.value);" />
 												<input type="text" class="form-control" placeholder="no file selected" readonly="" />
 												<span class="button">Choose File</span>
 											</div>
 											<div class="fancy-file-upload fancy-file-primary">
 												<i class="fa fa-upload"></i>
-												<input type="file" class="form-control" name="attFiles" onchange="jQuery(this).next('input').val(this.value);" />
+												<input type="file" class="form-control" onchange="jQuery(this).next('input').val(this.value);" />
 												<input type="text" class="form-control" placeholder="no file selected" readonly="" />
 												<span class="button">Choose File</span>
 											</div>
@@ -244,16 +271,16 @@ function customAjax(url, responseUrl) {
 
 								<div class="row">
 									<div class="col-md-12 text-right">
-										<a href="javascript:movePage('/board/list.do?page=${currentPage }')">
+										<a href="<c:url value='/board/list.do?page=${currentPage }' />">
 											<button type="button" class="btn btn-primary">
 												목록
 											</button>
 										</a>
-										<a href="javascript:movePage('/board/update.do?')">
+										
 										<button type="button" class="btn btn-primary" id="btnUpdate">
 											수정
 										</button>
-										</a>
+										
 									</div>
 								</div>
 							</form>
@@ -268,4 +295,5 @@ function customAjax(url, responseUrl) {
 	<!-- / -->
 
 </body>
+<jsp:include page="./common-template-footer.jsp" />
 </html>

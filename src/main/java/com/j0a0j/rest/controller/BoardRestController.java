@@ -2,21 +2,25 @@ package com.j0a0j.rest.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriUtils;
@@ -31,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
+@MultipartConfig
 @RequestMapping("/board")
 public class BoardRestController {
 
@@ -168,11 +173,23 @@ public class BoardRestController {
 		return fileByte;
 	}
 
-	@PutMapping("/update.do")
-	@ResponseBody // !!!!!!!!!!!! 비동기 응답 
-	public HashMap<String, Object> update(@ModelAttribute("BoardDto") BoardDto bDto,
-			MultipartHttpServletRequest mReq) {
+//	@ResponseBody // !!!!!!!!!!!! 비동기 응답 
+	@PutMapping(value = "/update.do", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public HashMap<String, Object> update(@ModelAttribute("BoardDto") BoardDto bDto, @RequestPart(value="attFiles", required=false) MultipartHttpServletRequest mReq) {
 		
+		List<MultipartFile> fileList = new ArrayList<>();
+		if(mReq != null) {			
+			if(mReq.getFiles("file").get(0).getSize() != 0){
+				fileList = mReq.getFiles("file");
+			}
+		}
+//		int boardSeq = bDto.getBoardSeq();
+		
+		System.out.println("BoardSEQ      " + bDto);
+		System.out.println("BoardSEQ      " + mReq);
+		System.out.println("UPDATE REST CONTROLLER   " + bDto.getBoardSeq());
+		
+
 		if(bDto.getTypeSeq() == 0) {
 			bDto.setTypeSeq(Integer.parseInt(this.typeSeq));
 			
@@ -180,13 +197,13 @@ public class BoardRestController {
 		
 		System.out.println("BDTO FDSDSFDS! " + bDto);
 		
-		int result = bService.update(bDto, mReq.getFiles("attFiles"));
+		int result = bService.update(bDto);
 
 		HashMap<String, Object> map = new HashMap<String , Object>();
 		
 		map.put("cnt", result);
 		map.put("msg", result==1?"게시물 업데이트 완료!!!":"게시물 업데이트 실패!!!");
-//		map.put("nextPage", result==1?"/board/list.do?page=" + bDto.getPage() : "/board/list.do?page=" + bDto.getPage() );
+		map.put("nextPage", result==1?"/board/list.do?page=" + bDto.getPage() : "/board/list.do?page=" + bDto.getPage() );
 		
 		return map;
 	}
