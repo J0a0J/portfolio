@@ -5,7 +5,7 @@
 <html>
 <head>
 
-<jsp:include page="./common-template.jsp" />
+<jsp:include page="../common-template.jsp" />
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -221,5 +221,5 @@ function search() {
 	</section>
 	<!-- / -->
 </body>
-<jsp:include page="./common-template-footer.jsp" />
+<jsp:include page="../common-template-footer.jsp" />
 </html>

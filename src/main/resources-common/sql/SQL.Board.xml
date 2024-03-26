@@ -58,6 +58,18 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		FROM S_J0a0J.board_attach
 		WHERE file_idx = #{fildIdx};
 	</select>
+	
+	<insert id="writeComment" parameterType="com.j0a0j.dto.CommentDto">
+		INSERT INTO S_J0a0J.reply
+		(type_seq, board_seq, reply_content, member_idx, member_nick, create_dtm)
+		VALUES(#{typeSeq}, #{boardSeq}, #{replyContent}, #{memberIdx}, #{memberNick}, DATE_SUB(NOW(), INTERVAL 4 MINUTE));
+	</insert>
+	
+	<select id="readComment" resultType="com.j0a0j.dto.CommentDto">
+		SELECT reply_seq, type_seq, board_seq, reply_content, member_idx, member_nick, create_dtm
+		FROM S_J0a0J.reply
+		where board_seq =#{boardSeq};
+	</select>
 
 	<update id="updateHits" parameterType="HashMap" >
 		UPDATE S_J0a0J.board

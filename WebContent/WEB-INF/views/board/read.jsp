@@ -13,17 +13,17 @@
     width: 500px; /* 폼 너비 조절 */
 }
 
-/* 각 입력 필드를 가로로 일렬로 정렬 */
+
 .form-group {
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-right: 10px; /* 각 입력 필드 사이의 간격 조절 */
+    margin-right: 10px;
 }
 
-/* 레이블 스타일 */
+
 label {
-    margin-right: 10px; /* 레이블과 입력 필드 사이의 간격 조절 */
+    margin-right: 10px; 
     font-weight: bold;
 }
 
@@ -34,6 +34,25 @@ textarea {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
+#commentForm textarea,
+#commentForm button {
+	vertical-align: top;
+    height: 60px; 
+}
+span.comment-nick {
+	display: inline-block;
+    width: 200px; 
+    
+}
+.comment-container > span {
+	margin-right: 5%;
+}
+.comment-date {
+    float: right;
+}
+
+
 </style>
 <jsp:include page="../common-template.jsp" />
 
@@ -41,23 +60,53 @@ textarea {
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+	
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 <script src="<c:url value='/resources/js/scripts.js'/>"></script>
 
 <script type="text/javascript">
-
-	var ctx = "${pageContext.request.contextPath}";
 	
-	// 로그인 하지 않고 댓글 작성하려고 하면 로그인 페이지로 이동 
-	function redirectToLogin() {
-		console.log("ayo");
-		window.location.href = ctx + "/member/goLoginPage.do";
-	}
+	var currentUrl = window.location.href;
+	var ctx = "${pageContext.request.contextPath}";
 	
 
 	$(document).ready(	function() {
 		var url = ctx + '/board/read.do?page=' + ${page} + '&boardSeq=' + ${boardSeq};
 		history.pushState({}, '', url);
+		
+		// 댓글 시간 계산 
+		function calculateTimeDifference(postTime) {
+			  // 날짜 형식 변환 (예: YYYY-MM-DD HH:MM:SS)
+			  const date = moment(postTime, "YYYY-MM-DD HH:mm");
+			  console.log("data   " + date);
+
+			  // 현재 시간과의 차이 계산
+			  const now = moment();
+			  const timeDiff = now.diff(date, "minutes");
+
+			  // 분 단위로 표시
+			  if (timeDiff < 60) {
+			    return timeDiff + "분 전";
+			  } else if (timeDiff < 1440) { // 24시간(하루) 이내인 경우
+			    return Math.floor(timeDiff / 60) + "시간 전";
+			  } else { // 하루 이상인 경우
+			    return Math.floor(timeDiff / 1440) + "일 전";
+			  }
+			}
+		// 댓글 작성 시간 불러오기 
+		const comments = document.querySelectorAll('.comment-date');
+		// 댓글 시간 변경 
+		for (const comment of comments) {
+		  const postTime = comment.getAttribute("data-post-time");
+		  const timeDiff = calculateTimeDifference(postTime); // 시간 차이 계산
+		  // 시간 차이를 해당 요소에 표시
+	      comment.textContent = timeDiff;
+		}
+		
+		// 로그인 하지 않고 댓글 작성하려고 하면 로그인 페이지로 이동 
+		$('#noComment').on('click', function() {
+			window.location.href = ctx + "/member/goLoginPage.do";
+		})
 
 		$('#btnUpdate').on('click', function() {
 			var frm = document.readForm;
@@ -77,13 +126,15 @@ textarea {
 		$('#btnReply').on('click', function() {
 		    // commentContent의 값을 가져와서 변수에 저장
 		    var comment = $('#commentContent').val();
-		    // 가져온 값 콘솔에 출력
-		    console.log("댓글 내용: " + comment);
-		    console.log(${sessionScope.memberIdx});
-		    console.log(${boardSeq});
+		    
+		    // sessionScope 가 존재하지 않는 경우를 위해 스트링으로.
+		    var memberIdxStr = "${sessionScope.memberIdx}";
+		    // 존재한다면 다시 정수 타입으로 변환. 
+		    var memberIdx = memberIdxStr !== "" ? parseInt(memberIdxStr) : null;
 		    var commentInfo = {
-		        "comment": comment,
-		        "memberIdx": ${sessionScope.memberIdx},
+		        "replyContent": comment,
+		        "memberIdx": memberIdx,
+		        "memberNick": "${sessionScope.memberNick}",
 		        "boardSeq": ${boardSeq}
 		    };
 
@@ -94,7 +145,8 @@ textarea {
 		        dataType: "json",
 		        contentType: "application/json",
 		        success: function(result, textStatus, XMLHttpRequest) {
-		            
+		            movePage(url);
+		            location.reload();
 		        },
 		        error: function(XMLHttpRequest, textStatus, errorThrown) {
 		            alert("작성 에러\n관리자에게 문의바랍니다.");
@@ -118,9 +170,6 @@ textarea {
 			contentType : false,
 			success : function(result, textStatus, XMLHttpRequest) {
 				var data = $.parseJSON(result);
-
-				console.log('data' + data);
-				console.log('boardSeq' + data.boardSeq);
 
 				alert(data.msg);
 				var boardSeq = data.boardSeq;
@@ -217,11 +266,26 @@ textarea {
 								<button type="button" class="btn btn-primary" id="btnReply">댓글 작성</button>
 							</c:if>
 							<c:if test="${empty sessionScope.memberNick}">
-								<textarea id="commentContent" name="commentContent" rows="4" onclick="redirectToLogin()"
+								<textarea id="noComment" name="commentContent" rows="4" 
 									placeholder="로그인 후 댓글 작성 가능합니다. " cols="50" required></textarea>
 
 							</c:if>
 							</form>
+						</div>
+						<div>
+							<c:if test="${not empty comments }">
+								<div class="comment-container">
+									<c:forEach items="${comments }" var="comment">
+										<div class="comment-info">
+											<hr/>
+											<span class="commnet-nick"><b>${comment.memberNick }</b></span>
+											<span class="comment-content">${comment.replyContent }</span>
+											<span class="comment-date" data-post-time="${comment.createDtm }"></span>
+										</div>
+									</c:forEach>
+								</div>
+								<hr/>
+							</c:if>
 						</div>
 						<div class="row">
 							<div class="col-md-12 text-right">
