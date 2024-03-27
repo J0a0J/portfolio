@@ -43,63 +43,63 @@ public class MemberController {
 
 	@RequestMapping("/member/checkId.do")
 	@ResponseBody
-	public HashMap<String, Object> checkId(@RequestParam HashMap<String, String> params){
+	public HashMap<String, Object> checkId(@RequestParam HashMap<String, String> params) {
 		int cnt = 0;
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		// 아이디 중복 체크 
+		// 아이디 중복 체크
 		cnt = mService.checkId(params);
 		map.put("cnt", cnt);
-		map.put("msg", cnt==1? "중복된 ID 입니다.":"중복 ㄴ");
+		map.put("msg", cnt == 1 ? "중복된 ID 입니다." : "중복 ㄴ");
 
 		return map;
 	}
 
 	@RequestMapping("/member/join.do")
 	@ResponseBody
-	public HashMap<String, Object> join(@ModelAttribute("MemberDto") MemberDto mDto){		
+	public HashMap<String, Object> join(@ModelAttribute("MemberDto") MemberDto mDto) {
 		System.out.println("This is MDTO          " + mDto);
 		int cnt = 0;
 		cnt = mService.join(mDto);
-		
+
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("cnt", cnt);
-		map.put("msg", cnt==1?"회원 가입 완료!":"회원 가입 실패!");
-		map.put("nextPage", cnt==1?"/member/goLoginPage.do" : "/member/goRegisterPage.do");
-		
+		map.put("msg", cnt == 1 ? "회원 가입 완료!" : "회원 가입 실패!");
+		map.put("nextPage", cnt == 1 ? "/member/goLoginPage.do" : "/member/goRegisterPage.do");
+
 		return map;
 	}
 
 	@RequestMapping("/member/logout.do")
-	public ModelAndView logout(HttpSession session){
+	public ModelAndView logout(HttpSession session) {
 		// 세션 삭
 		session.removeAttribute("memberId");
 		session.invalidate();
-		
+
 		ModelAndView mv = new ModelAndView();
-		RedirectView rv = new RedirectView("/haha/index.do");
-		mv.setView(rv);		
+		RedirectView rv = new RedirectView(ctx + "/index.do");
+		mv.setView(rv);
 		return mv;
 	}
 
 	@RequestMapping("/member/login.do")
 	@ResponseBody
-	public HashMap<String, Object> login(@ModelAttribute("MemberDto") MemberDto mDto, HttpSession session){
+	public HashMap<String, Object> login(@ModelAttribute("MemberDto") MemberDto mDto, HttpSession session) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		try {
-			MemberDto m = mService.login(mDto);	
-			System.out.println("MEMBER LOGIN 				"+m);
+			MemberDto m = mService.login(mDto);
+			System.out.println("MEMBER LOGIN 				" + m);
 
-			// 입력한 아이디가 없거나 비밀번호가 일치하지 않으면 에러 처리 
+			// 입력한 아이디가 없거나 비밀번호가 일치하지 않으면 에러 처리
 			if (mDto == null) {
 				throw new Exception();
 			}
-			
-			// 세션 설정 
+
+			// 세션 설정
 			session.setAttribute("memberId", m.getMemberId());
 			session.setAttribute("memberNick", m.getMemberNick());
 			session.setAttribute("memberIdx", m.getMemberIdx());
 			session.setMaxInactiveInterval(60 * 60 * 24);
-			
+
 			map.put("nextPage", "/index.do");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -111,20 +111,20 @@ public class MemberController {
 	}
 
 	@RequestMapping("/admin/memberList.do")
-	@ResponseBody //비동기식 호출
+	@ResponseBody // 비동기식 호출
 	public HashMap<String, Object> memberList(@RequestParam HashMap<String, Object> params) {
 		// 페이징
 		// 모든 회원 가져오기
-		List<HashMap<String,Object>> memberList = new ArrayList<HashMap<String,Object>>();
-		
-		//go to  JSP 
+		List<HashMap<String, Object>> memberList = new ArrayList<HashMap<String, Object>>();
 
-		HashMap<String,Object> result = new HashMap<String,Object>();
-		//정해진  키 이름으로 넘겨주기.. 
-		result.put("page", params.get("page")); //현재 페이지 
-		result.put("rows", memberList); // 불러온 회원목록 
-		result.put("total", 1);// 전체 페이지 
-		result.put("records", 10); //전체 회원수 
+		// go to JSP
+
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		// 정해진 키 이름으로 넘겨주기..
+		result.put("page", params.get("page")); // 현재 페이지
+		result.put("rows", memberList); // 불러온 회원목록
+		result.put("total", 1);// 전체 페이지
+		result.put("records", 10); // 전체 회원수
 
 		return result;
 
@@ -132,11 +132,11 @@ public class MemberController {
 
 	@RequestMapping("/member/delMember.do")
 	@ResponseBody
-	public HashMap<String,Object> delMember(@RequestParam HashMap<String, Object> params){
+	public HashMap<String, Object> delMember(@RequestParam HashMap<String, Object> params) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		int result = 0;
-		map.put("msg", (result == 1) ? "삭제되었습니다.":"삭제 실패!");
-		map.put("result",result);
+		map.put("msg", (result == 1) ? "삭제되었습니다." : "삭제 실패!");
+		map.put("result", result);
 		return map;
 
 	}

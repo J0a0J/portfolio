@@ -26,7 +26,7 @@
 						<!-- SLIDE --> 
 						<li data-transition="random" data-slotamount="1" data-masterspeed="1000" data-saveperformance="off" data-title="Slide 1">
 
-							<img data-lazyload="resources/demo_files/images/index/index-min.jpg" alt="" data-bgfit="cover" data-bgposition="center bottom" data-bgrepeat="no-repeat" />
+							<img data-lazyload="resources/demo_files/images/index-min.jpg" alt="" data-bgfit="cover" data-bgposition="center bottom" data-bgrepeat="no-repeat" />
 
 							<div class="tp-caption customin ltl tp-resizeme text_white"
 								data-x="center"
@@ -42,7 +42,7 @@
 								data-endspeed="1000"
 								data-endeasing="Power4.easeIn" style="z-index: 10; font-size:20px;">
 								<span class="fw-300"> 잘 오셨습니다.
-								<b style="font-size:20px">아무개</b>의 포트폴리오 사이트 입니다. :) </span>
+								<b style="font-size:20px">김지원</b>의 포트폴리오 사이트 입니다. :) </span>
 							</div>
 
 							<div class="tp-caption customin ltl tp-resizeme large_bold_white"

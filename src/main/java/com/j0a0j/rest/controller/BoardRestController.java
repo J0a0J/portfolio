@@ -117,7 +117,7 @@ public class BoardRestController {
 		mv.addObject("boardSeq", bDto.getBoardSeq());
 		// 댓글 정보
 		mv.addObject("comments", comments);
-		mv.setViewName("/board/read");
+		mv.setViewName("board/read");
 		return mv;
 	}
 

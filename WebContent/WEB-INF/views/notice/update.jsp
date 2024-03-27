@@ -4,11 +4,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<jsp:include page="../common-template.jsp" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="<c:url value='/resources/js/scripts.js'/>"></script>
 <script type="text/javascript">
 
 	//jQuery event(click) 처리 
 	$(document).ready(function(){
+		
 		/** Summernote HTML Editor
 		<textarea class="summernote form-control" data-height="200"></textarea>
 		 ***************************** **/
@@ -45,74 +49,125 @@
 				}
 			});
 		}
-					
-		$('#btnUpdate').on('click', function(){ 
-			// 온클릭시 굳이 function doWrite() 펑션 선언,호출하지 말고 바로 종속시켜 기능 먹인다. 
-			// 여기서 바로 기능 구현. --> function의 선언을 줄인다.  
-			//따로 function 만들게 되면 해당 기능 수행하는 연결점 찾기 어렵다.. (펑션이름 일일이 검색해야함) 
-			//여기서는 id= btnWrite 를 onClick 시 이 기능을 수행한다. 라고 바로 연결지어 확인가능.. 
-
-			//jQuery  #[id]
-			var title = $('#title').val();
-
-			if(title.length == 0){
-				alert("제목을 입력하세요.");
-				$('#title').focus();
-				
-				return;		
-			}
-			//ck editor 가 textarea 위에 씌워져있어서 ck editor 불러와야함. 
-			var content = _summernote.code();
-			if(content.length < 0 ){
-				alert("내용을 입력하세요.");
-				_summernote.focus();
-				return;		
-			}
-			$('#content').val(content);
-			
-			customAjax("<c:url value='/notice/update.do' />", "/notice/read.do?boardSeq=${boardInfo.board_seq}");
 		
-		}); //#btnUpdate end 		
-}); //ready End 
+	    $('#btnUpdate').click(function(event) {
+	        event.preventDefault();
+	        
+	        var title = $('#title').val();
+	        
+	        var content = $('textarea.summernote').code();
+
+	        if(title.length == 0) {
+	            alert("제목을 입력하세요.");
+	            $('#title').focus();
+	            return;		
+	        }
+
+	        if(content.length == 0) {
+	            alert("내용을 입력하세요.");
+	            _summernote.focus();
+	            return;		
+	        }
+
+	        $('#content').val(content);
+	        
+	       
+
+			var moveUrl = '<c:url value="/notice/update.do?" />';
+			
+			console.log("moveUrl      " + moveUrl);
+			
+			var comebackUrl = '<c:url value="/notice/read.do" />';
+			customAjax(moveUrl, comebackUrl);
+
+	});
+
+}) 
 
 function customAjax(url, responseUrl) {
-  var frm = document.updateForm;
-  var formData = new FormData(frm);
+		
+	 	var frm = document.updateForm;
+		var formData = new FormData(frm);
+		var newForm = new FormData();
+		
+	
+		// 폼 데이터 채우기 (게시글 정보)
+		formData.forEach(function(value, key) {
+			newForm.append(key, value);
+		}); 
+
+	
+		// 파일 정보 추가
+		const fileInputs = document.querySelectorAll('input[type="file"]');
+		const selectedFiles = Array.from(fileInputs)
+		    .map(input => input.files[0]) // 파일 입력 요소에서 파일 가져오기
+		    .filter(file => file !== undefined); // undefined 값 제외
+	
+		selectedFiles.forEach(file => {
+			// 파일정보 form 에 추가 
+			newForm.append("attFiles", file)
+		});
+	
+
+
+ 
      $.ajax({
+    	 anyne: true,
          url : url,
-         data : formData,
-         type : 'POST',
-         dataType : "text",
+         type : 'PUT',
+         data : newForm,
          processData : false,
          contentType : false,
+         enctype : 'multipart/form-data',
          success : function (result, textStatus, XMLHttpRequest) {
-             var data = $.parseJSON(result);
-             
-             console.log('data' + data);
-             console.log('boardSeq' + data.boardSeq);
-             
-             alert(data.msg);
-             var boardSeq = data.boardSeq;
-             if(data.result == 1){
-                movePage(this, responseUrl);
-             } else {
-               window.location.href="<c:url value='/index.do'/>";
-             }
+            console.log("sSibal   	" + result);
+                movePage(responseUrl);
+           
          },
          error : function (XMLHttpRequest, textStatus, errorThrown) {
-               alert("작성 에러\n관리자에게 문의바랍니다.");
+               /* alert("작성 에러\n관리자에게 문의바랍니다."); */
              console.log("작성 에러\n" + XMLHttpRequest.responseText);
          }
 	});
 } // func customAjax End 
 
-function deleteFile(fileIdx, boardSeq){
-	  if("${sessionScope.memberId}" != null) {
-       	 if(confirm("첨부파일을 삭제하시겠습니까?")){
-        	// code here
-       	}	       
-  	}
-}//func deletefile
+
+function deleteFile(fileIdx, boardSeq, title, content, memberNick) {
+	console.log(fileIdx, boardSeq, title);
+	
+	if ("${sessionScope.memberId}" != null) {
+	    if(confirm("첨부파일을 삭제하시겠습니까?")) {
+	        let deleteLink = '/notice/deleteAttFile.do?fileIdx='+ fileIdx + '&boardSeq=' + boardSeq;
+	        let updateLink = '/notice/goToUpdate.do?boardSeq=' +
+	            boardSeq + '&title=' + title + 
+	            '&content=' + content + 
+	            '&memberNick=' + memberNick + 
+	            '&hasFile=Y' 
+	            '&currentPage=' + 1;
+	        /* movePage(deleteLink, updateLink); */
+	        
+	        $.ajax({
+	            url: deleteLink,
+	            type: 'POST',
+	            data: {
+	                fileIdx: fileIdx,
+	                boardSeq: boardSeq
+	            },
+	            success: function(response) {
+	                console.log('File deleted successfully');
+	                // 필요한 경우 추가 작업 수행
+	                // 예: 삭제된 파일에 대한 UI 업데이트 등
+	                // 페이지 이동 없이 그대로 유지
+	            },
+	            error: function(xhr, status, error) {
+	            	console.log("Request Headers: ", JSON.stringify(xhr.getAllResponseHeaders()));
+	                console.error('Error deleting file:', error);
+	            }
+	        });
+	    }
+	}
+}
+//func deletefile
 
 </script>
 
@@ -127,15 +182,15 @@ function deleteFile(fileIdx, boardSeq){
 					<!-- Useful Elements -->
 					<div class="card card-default">
 						<div class="card-heading card-heading-transparent">
-							<h2 class="card-title">공지 글 수정</h2>
+							<h2 class="card-title">게시글 수정</h2>
 						</div>
 						<div class="card-block">
-							<form name="updateForm" class="validate" method="post" enctype="multipart/form-data" data-success="Sent! Thank you!" data-toastr-position="top-right">
+							<form name="updateForm" class="validate" data-success="Sent! Thank you!" data-toastr-position="top-right">
 								<input type="hidden" name="memberId" value="${ sessionScope.memberId }"/>
 								<input type="hidden" name="memberIdx" value="${ sessionScope.memberIdx }"/>
-								<input type="hidden" name="typeSeq" value="${ boardInfo.type_seq}"/>
-								<input type="hidden" name="boardSeq" value="${ boardInfo.board_seq }"/>
-								<input type="hidden" name="hasFile" value="${ boardInfo.has_file }"/>
+								<input type="hidden" name="typeSeq" value="${ boardMember.typeSeq}"/>
+								<input type="hidden" name="boardSeq" value="${ boardMember.boardSeq }"/>
+								<input type="hidden" name="hasFile" value="${ boardMember.hasFile }"/>
 									
 								<fieldset>
 									<!-- required [php action request] -->
@@ -143,12 +198,13 @@ function deleteFile(fileIdx, boardSeq){
 									<div class="row">
 										<div class="col-md-8 col-sm-8">
 											<label>제목</label>
-											<input type="text" name="title" id="title" value="타이틀" class="form-control required">
+											<c:if test="${not empty boardMember}">
+											    <input type="text" name="title" id="title" value="${boardMember.title}" class="form-control required">
 										</div>
 										
 										<div class="col-md-4 col-sm-4">
 											<label>작성자</label>
-											<input type="text" id="memberNick" name="memberNick" value="작성자" 
+											<input type="text" id="memberNick" name="memberNick" value="${boardMember.memberNick }" 
 											class="form-control" readonly="readonly">
 										</div>
 										
@@ -158,8 +214,9 @@ function deleteFile(fileIdx, boardSeq){
 										<div class="col-md-12 col-sm-12">
 											<label>내용</label>
 											<textarea class="summernote form-control" data-height="200" data-lang="en-US" name="content" id="content" rows="4">
-												내용내용내용내용내용내용내용
+												${ boardMember.content}
 											</textarea>
+											</c:if>
 									
 										</div>
 									</div>
@@ -171,36 +228,47 @@ function deleteFile(fileIdx, boardSeq){
 											</label>
 
 											<!-- custom file upload -->												
-		<c:if test="${empty attFiles}"> <!-- 첨부파일없으면  -->
+											<!-- 첨부파일없으면  -->
+											<c:if test="${empty attFiles}"> 
 											<div class="fancy-file-upload fancy-file-primary">
 												<i class="fa fa-upload"></i>
-												<input type="file" class="form-control" name="attFiles" onchange="jQuery(this).next('input').val(this.value);" />
+												<input type="file" class="form-control" onchange="jQuery(this).next('input').val(this.value);" />
 												<input type="text" class="form-control" placeholder="no file selected" readonly="" />
 												<span class="button">Choose File</span>
 											</div>
 											<div class="fancy-file-upload fancy-file-primary">
 												<i class="fa fa-upload"></i>
-												<input type="file" class="form-control" name="attFiles" onchange="jQuery(this).next('input').val(this.value);" />
+												<input type="file" class="form-control" onchange="jQuery(this).next('input').val(this.value);" />
 												<input type="text" class="form-control" placeholder="no file selected" readonly="" />
 												<span class="button">Choose File</span>
 											</div>
 											<small class="text-muted block">Max file size: 10Mb (zip/pdf/jpg/png)</small>
-		</c:if>
-	<!-- 파일있으면  -->	
-	<c:forEach items="${attFiles}" var="file" varStatus ="f" > 
+											</c:if>
+										<!-- 파일있으면  -->	
+										<c:forEach items="${attFiles}" var="file" varStatus ="f" > 
 											<div class="row">	
 												<div class="col-md-8 col-sm-8">
 													<div class="fancy-file-upload fancy-file-primary" >
 														<i class="fa fa-upload"></i>
 														
-														<input type="text" class="form-control" placeholder="${file.file_name} (${file.file_size} bytes)" readonly="" />
+														<input type="text" id="fileInfo" class="form-control" placeholder="${file.fileName} (${file.fileSize} bytes)" readonly="" />
+														<!-- 파일 정보를 가져오게 하기 위해서 설정. -->
+														<div style="display: none;">
+														    <input type="text" name="attFiles" id="fileName" value="${file}" readonly="" />
+														    <input type="text" id="fileSize" value="${file.fileSize}" readonly="" />
+														</div>
+														
 													</div>
 	
 												</div>
 												<div class="col-md-4 col-sm-4">	
-													<button type="button" class="btn btn-primary" onclick="deleteFile(${file.file_idx} , ${file.board_seq});">
+													<%-- <a href="javascript:movePage('/board/deleteAttFile.do?fileIdx=${file.fileIdx }&boardSeq=${file.boardSeq }')"> --%>
+													<button type="button" class="btn btn-primary" onclick="deleteFile(${file.fileIdx} , ${file.boardSeq}, '${boardMember.title }', 
+													'${boardMember.content }', '${boardMember.memberNick }');">
 														첨부파일 삭제
 													</button>
+													
+													</a>
 												</div>					
 											</div>
 	</c:forEach>
@@ -210,14 +278,16 @@ function deleteFile(fileIdx, boardSeq){
 
 								<div class="row">
 									<div class="col-md-12 text-right">
-										<a href="javascript:movePage('/notice/list.do?')">
+										<a href="<c:url value='/notice/list.do?page=${currentPage }' />">
 											<button type="button" class="btn btn-primary">
-												목록 
+												목록
 											</button>
 										</a>
+										
 										<button type="button" class="btn btn-primary" id="btnUpdate">
 											수정
 										</button>
+										
 									</div>
 								</div>
 							</form>
@@ -232,4 +302,5 @@ function deleteFile(fileIdx, boardSeq){
 	<!-- / -->
 
 </body>
+<jsp:include page="../common-template-footer.jsp" />
 </html>

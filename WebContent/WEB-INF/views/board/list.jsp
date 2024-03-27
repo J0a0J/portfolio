@@ -9,10 +9,11 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
 </head>
+
 <script>
-var ctx = '/haha';
+
+var ctx = "${pageContext.request.contextPath}";
 
 function getBoardData(pageNumber) {
 	// RestController url - 데이터를 받아올 곳 
@@ -25,7 +26,6 @@ function getBoardData(pageNumber) {
     $.ajax({
         url: url,
         type: 'GET',
-        /* dataType: 'json', */
         success: function(data) {
             // 성공적으로 데이터를 받아온 경우 처리 로직
             var boardList = data.boardInfo;

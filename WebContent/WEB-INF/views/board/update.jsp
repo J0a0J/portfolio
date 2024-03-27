@@ -4,7 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<jsp:include page="./common-template.jsp" />
+<jsp:include page="../common-template.jsp" />
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="<c:url value='/resources/js/scripts.js'/>"></script>
@@ -250,7 +250,13 @@ function deleteFile(fileIdx, boardSeq, title, content, memberNick) {
 													<div class="fancy-file-upload fancy-file-primary" >
 														<i class="fa fa-upload"></i>
 														
-														<input type="text" class="form-control" placeholder="${file.fileName} (${file.fileSize} bytes)" readonly="" />
+														<input type="text" id="fileInfo" class="form-control" placeholder="${file.fileName} (${file.fileSize} bytes)" readonly="" />
+														<!-- 파일 정보를 가져오게 하기 위해서 설정. -->
+														<div style="display: none;">
+														    <input type="text" name="attFiles" id="fileName" value="${file}" readonly="" />
+														    <input type="text" id="fileSize" value="${file.fileSize}" readonly="" />
+														</div>
+														
 													</div>
 	
 												</div>
@@ -295,5 +301,5 @@ function deleteFile(fileIdx, boardSeq, title, content, memberNick) {
 	<!-- / -->
 
 </body>
-<jsp:include page="./common-template-footer.jsp" />
+<jsp:include page="../common-template-footer.jsp" />
 </html>

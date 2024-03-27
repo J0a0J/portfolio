@@ -31,7 +31,7 @@
 
     <!-- PAGE LEVEL SCRIPTS -->
     <link href="<c:url value='/resources/css/header-1.css'/>" rel="stylesheet" type="text/css" />
-    <link href="<c:url value='/resources/css/color_scheme/green.css'/>" rel="stylesheet" type="text/css" id="color_scheme" />
+    <link href="<c:url value='/resources/css/color_scheme/blue.css'/>" rel="stylesheet" type="text/css" id="color_scheme" />
     
     <!-- JAVASCRIPT FILES -->
     <script>var plugin_path = "<c:url value='/resources/plugins/'/>";</script>

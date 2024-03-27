@@ -31,7 +31,7 @@
 
 	<!-- PAGE LEVEL SCRIPTS -->
 	<link href="<c:url value='/resources/css/header-1.css'/>" rel="stylesheet" type="text/css" />
-	<link href="<c:url value='/resources/css/color_scheme/green.css'/>" rel="stylesheet" type="text/css" id="color_scheme" />
+	<link href="<c:url value='/resources/css/color_scheme/blue.css'/>" rel="stylesheet" type="text/css" id="color_scheme" />
 	
 	<!-- JAVASCRIPT FILES -->
 	<script>var plugin_path = "<c:url value='/resources/plugins/'/>";</script>
@@ -83,7 +83,7 @@
 								<li><a tabindex="-1" href="<c:url value='/member/logout.do'/>"><i class="glyphicon glyphicon-off"></i> LOGOUT</a></li>
 	                    	</c:when>
 	                    	<c:otherwise>
-								<li><a tabindex="-1" href="javascript:movePage('/member/goLoginPage.do')">LOGIN</a></li>
+								<li><a tabindex="-1" href="<c:url value='/member/goLoginPage.do' />">LOGIN</a></li>
 	                    	</c:otherwise>
 	                    </c:choose>
 					</ul>
@@ -124,7 +124,7 @@
 											SPRING BOARD
 										</a>
 										<ul class="dropdown-menu">
-											<li><a href="javascript:movePage('/notice/list.do?page=1')">공지사항</a></li>
+											<li><a href="<c:url value='/notice/list.do' />">공지사항</a></li>
 											<!-- <li><a href="javascript:movePage('/board/list.do')">자유게시판</a></li> -->
 											<li><a href="<c:url value='/board/list.do' />">자유게시판</a></li>
 										</ul>
@@ -265,7 +265,7 @@
 									data-endeasing="Power4.easeIn">
 									Happiness is an accident of nature,<br/>
 									a beautiful and flawless aberration.<br/>
-									<span style="font-size:24px;font-weight:400;">&ndash; Hyesue Lee</span>
+									<span style="font-size:24px;font-weight:400;">&ndash; Jiweon Kim</span>
 								</div>
 							</li>
 						</ul>
