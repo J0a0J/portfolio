@@ -111,7 +111,7 @@ public class BoardRestController {
 		ArrayList<CommentDto> comments = bService.readComment(boardSeq);
 
 		// 게시글에서 목록 누르면 같은 페이지의 목록으로 이동하기 위해 추가
-		mv.addObject("page", bDto.getPage());
+		mv.addObject("currentPage", bDto.getPage());
 		// 게시글 정보
 		mv.addObject("boardList", boardList);
 		mv.addObject("boardSeq", bDto.getBoardSeq());
@@ -198,10 +198,7 @@ public class BoardRestController {
 				fileList = mReq.getFiles("file");
 			}
 		}
-//		int boardSeq = bDto.getBoardSeq();
 
-		System.out.println("BoardSEQ      " + bDto);
-		System.out.println("BoardSEQ      " + mReq);
 		System.out.println("UPDATE REST CONTROLLER   " + bDto.getBoardSeq());
 
 		if (bDto.getTypeSeq() == 0) {
@@ -209,16 +206,12 @@ public class BoardRestController {
 
 		}
 
-		System.out.println("BDTO FDSDSFDS! " + bDto);
-
 		int result = bService.update(bDto);
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		map.put("cnt", result);
-		map.put("msg", result == 1 ? "게시물 업데이트 완료!!!" : "게시물 업데이트 실패!!!");
-		map.put("nextPage",
-				result == 1 ? "/board/list.do?page=" + bDto.getPage() : "/board/list.do?page=" + bDto.getPage());
+		map.put("msg", result == 1 ? "게시물 수정했습니다." : "게시물 수정 실패했습니다.");
 
 		return map;
 	}
@@ -231,14 +224,20 @@ public class BoardRestController {
 		if (bDto.getTypeSeq() == 0) {
 			bDto.setTypeSeq(Integer.parseInt(this.typeSeq));
 		}
-		int result = bService.delete(bDto);
+
+		// 글 삭제 전 댓글부터 삭제
+		int result = bService.deleteComment(bDto.getBoardSeq());
+		if (result > 0) {
+			System.out.println("Comment delete successfully");
+		}
+
+		// 게시글 삭제
+		result = bService.delete(bDto);
 		System.out.println("RESULT IS HERE " + result);
 
-		// /board/list.do?page=1
-		String link = "/board/list.do?page=" + bDto.getPage();
 		HashMap<String, Object> map = new HashMap<>();
-		System.out.println("THIS IS LINK!!!!! " + link);
-//		map.put("nextPage", result==1?"/board/list.do?page=" + bDto.getPage() : "/board/list.do?page=" + bDto.getPage() );
+		map.put("msg", result == 1 ? "게시물 삭제했습니다." : "게시물 삭제 실패했습니다.");
+
 		return map;
 	}
 

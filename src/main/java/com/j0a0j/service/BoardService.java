@@ -93,6 +93,8 @@ public interface BoardService {
 	 */
 	public int delete(BoardDto bDto);
 
+	public int deleteComment(int boardSeq);
+
 	/**
 	 * 글 검색
 	 * 

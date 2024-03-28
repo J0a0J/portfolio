@@ -71,13 +71,9 @@
 
 	        $('#content').val(content);
 	        
-	       
-
 			var moveUrl = '<c:url value="/board/update.do?" />';
+			var comebackUrl = '<c:url value="/board/read.do?page=' + ${currentPage} + '&boardSeq=' + '${ boardMember.boardSeq }" />';
 			
-			console.log("moveUrl      " + moveUrl);
-			
-			var comebackUrl = '<c:url value="/board/read.do" />';
 			customAjax(moveUrl, comebackUrl);
 
 	});
@@ -120,8 +116,7 @@ function customAjax(url, responseUrl) {
          contentType : false,
          enctype : 'multipart/form-data',
          success : function (result, textStatus, XMLHttpRequest) {
-            console.log("sSibal   	" + result);
-                movePage(responseUrl);
+                window.location.href = (responseUrl);
            
          },
          error : function (XMLHttpRequest, textStatus, errorThrown) {
@@ -160,6 +155,7 @@ function deleteFile(fileIdx, boardSeq, title, content, memberNick) {
 	                // 페이지 이동 없이 그대로 유지
 	            },
 	            error: function(xhr, status, error) {
+	            	console.log("Request Headers: ", JSON.stringify(xhr.getAllResponseHeaders()));
 	                console.error('Error deleting file:', error);
 	            }
 	        });

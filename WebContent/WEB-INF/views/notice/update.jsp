@@ -70,14 +70,10 @@
 	        }
 
 	        $('#content').val(content);
-	        
-	       
 
-			var moveUrl = '<c:url value="/notice/update.do?" />';
+			var moveUrl = ctx + "/notice/update.do";
 			
-			console.log("moveUrl      " + moveUrl);
-			
-			var comebackUrl = '<c:url value="/notice/read.do" />';
+			var comebackUrl = '<c:url value="/notice/read.do?page=' + ${currentPage} + '&boardSeq=' + '${ boardMember.boardSeq }" />';
 			customAjax(moveUrl, comebackUrl);
 
 	});
@@ -120,8 +116,7 @@ function customAjax(url, responseUrl) {
          contentType : false,
          enctype : 'multipart/form-data',
          success : function (result, textStatus, XMLHttpRequest) {
-            console.log("sSibal   	" + result);
-                movePage(responseUrl);
+                window.location.href = responseUrl;
            
          },
          error : function (XMLHttpRequest, textStatus, errorThrown) {
@@ -133,7 +128,6 @@ function customAjax(url, responseUrl) {
 
 
 function deleteFile(fileIdx, boardSeq, title, content, memberNick) {
-	console.log(fileIdx, boardSeq, title);
 	
 	if ("${sessionScope.memberId}" != null) {
 	    if(confirm("첨부파일을 삭제하시겠습니까?")) {
@@ -303,4 +297,4 @@ function deleteFile(fileIdx, boardSeq, title, content, memberNick) {
 
 </body>
 <jsp:include page="../common-template-footer.jsp" />
-</html>
+</html>;

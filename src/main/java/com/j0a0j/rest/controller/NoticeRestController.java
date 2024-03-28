@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,6 +21,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriUtils;
 
 import com.j0a0j.dto.BoardDto;
+import com.j0a0j.dto.CommentDto;
 import com.j0a0j.dto.FileDto;
 import com.j0a0j.response.dto.BoardResponseDto;
 import com.j0a0j.service.BoardService;
@@ -89,6 +93,17 @@ public class NoticeRestController {
 		return bInfo;
 	}
 
+	@PostMapping("/comment.do")
+	public int writeComment(@RequestBody CommentDto cDto) {
+		if (cDto.getTypeSeq() == 0) {
+			cDto.setTypeSeq(Integer.parseInt(this.typeSeq));
+		}
+
+		int result = bService.writeComment(cDto);
+
+		return result;
+	}
+
 	@RequestMapping("/downloadFile.do")
 	@ResponseBody
 	public byte[] downloadFile(@RequestParam int fileIdx, HttpServletResponse rep) {
@@ -117,7 +132,7 @@ public class NoticeRestController {
 		return fileByte;
 	}
 
-	@RequestMapping("/write.do")
+	@PostMapping("/write.do")
 	@ResponseBody
 	public HashMap<String, Object> write(@ModelAttribute("BoardDto") BoardDto bDto, MultipartHttpServletRequest mReq) {
 		int boardType = bDto.getTypeSeq();
@@ -136,10 +151,11 @@ public class NoticeRestController {
 
 		map.put("result", result);
 		map.put("nextPage", result == 1 ? link : "/notice/list.do");
+		map.put("msg", result == 1 ? "게시물 작성 성공했습니다." : "게시물 작성 실패했습니다.");
 		return map;
 	}
 
-	@RequestMapping("/update.do")
+	@PutMapping("/update.do")
 	@ResponseBody // !!!!!!!!!!!! 비동기 응답
 	public HashMap<String, Object> update(@ModelAttribute("BoardDto") BoardDto bDto, MultipartHttpServletRequest mReq) {
 
@@ -150,12 +166,12 @@ public class NoticeRestController {
 
 		System.out.println("BDTO FDSDSFDS! " + bDto);
 
-//		int result = bService.update(bDto, mReq.getFiles("attFiles"));
+		int result = bService.update(bDto);
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
-//		map.put("cnt", result);
-//		map.put("msg", result == 1 ? "게시물 업데이트 완료!!!" : "게시물 업데이트 실패!!!");
+		map.put("cnt", result);
+		map.put("msg", result == 1 ? "게시물 수정했습니다." : "게시물 수정 실패했습니다.");
 
 		return map;
 	}
@@ -170,21 +186,18 @@ public class NoticeRestController {
 		// 비동기 리턴해줄 맵 생성
 //		HashMap<String, Object> map = new HashMap<String, Object>();
 
-		int result = bService.delete(bDto);
-		System.out.println("RESULT IS HERE " + result);
-
-		String link = "/notice/list.do?page=";
-
-		if (bDto.getPage() == 0) {
-			link += 1;
-		} else {
-			link += bDto.getPage();
+		// 글 삭제 전 댓글부터 삭제
+		int result = bService.deleteComment(bDto.getBoardSeq());
+		if (result > 0) {
+			System.out.println("Comment delete successfully");
 		}
 
+		// 게시글 삭제
+		result = bService.delete(bDto);
+
 		HashMap<String, Object> map = new HashMap<>();
-		System.out.println("THIS IS LINK!!!!! " + link);
-		map.put("nextPage",
-				result == 1 ? "/notice/list.do?page=" + bDto.getPage() : "/notice/list.do?page=" + bDto.getPage());
+
+		map.put("msg", result == 1 ? "게시물 삭제 완료했습니다." : "게시물 삭제 실패했습니다.");
 		return map;
 
 	}

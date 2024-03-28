@@ -92,6 +92,11 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
 		WHERE board_seq=#{boardSeq};
 	</delete>
 	
+	<delete id="deleteComment" parameterType="int">
+		DELETE FROM S_J0a0J.reply
+		WHERE board_seq=#{boardSeq};
+	</delete>
+	
 	<!-- public int deleteFile(HashMap<String, Object> params); -->
 	<delete id="deleteFile" parameterType="com.j0a0j.dto.BoardDto">
 		DELETE FROM S_J0a0J.board_attach

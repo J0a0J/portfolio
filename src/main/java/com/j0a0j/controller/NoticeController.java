@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.j0a0j.dto.BoardDto;
+import com.j0a0j.dto.CommentDto;
 import com.j0a0j.dto.FileDto;
 import com.j0a0j.service.BoardService;
 import com.j0a0j.util.FileUtil;
@@ -71,10 +72,13 @@ public class NoticeController {
 			ArrayList<FileDto> fDto = bService.readFile(bDto);
 			mv.addObject("attFiles", fDto);
 		}
+		// 댓글 불러오기
+		ArrayList<CommentDto> comments = bService.readComment(boardSeq);
 		// 게시글에서 목록 누르면 같은 페이지의 목록으로 이동하기 위해 추가
 		mv.addObject("currentPage", bDto.getPage());
 		mv.addObject("boardList", boardList);
 		mv.addObject("boardSeq", bDto.getBoardSeq());
+		mv.addObject("comments", comments);
 		mv.setViewName("notice/read");
 		return mv;
 	}
@@ -98,7 +102,7 @@ public class NoticeController {
 		mv.addObject("attFiles", attFiles);
 		mv.addObject("currentPage", bDto.getPage());
 
-		mv.setViewName("notice/update");
+		mv.setViewName("/notice/update");
 
 		return mv;
 

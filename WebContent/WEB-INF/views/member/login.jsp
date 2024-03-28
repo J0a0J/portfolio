@@ -108,7 +108,7 @@
 					</div>
 					
 					<div class="mt-30 text-center">
-						<a href="javascript:movePage('/member/goRegisterPage.do')"><strong>Create Account</strong></a>
+						<a href="<c:url value='/member/goRegisterPage.do' />"><strong>Create Account</strong></a>
 					</div>
 	
 				</div>

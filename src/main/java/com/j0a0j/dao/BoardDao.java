@@ -98,6 +98,14 @@ public interface BoardDao {
 	public int delete(BoardDto bDto);
 
 	/**
+	 * 게시글 삭제할 때 댓글도 delete
+	 * 
+	 * @param boardSeq
+	 * @return
+	 */
+	public int deleteComment(int boardSeq);
+
+	/**
 	 * 게시글 삭제할 때 파일 통째로 삭제
 	 * 
 	 * @param bDto

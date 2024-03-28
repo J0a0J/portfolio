@@ -72,7 +72,7 @@
 				return;		
 			}
 			$('#content').val(content);
-			customAjax("<c:url value='/notice/write.do' />", "/notice/list.do");
+			customAjax("<c:url value='/notice/write.do' />", ctx + "/notice/list.do");
 	});
 });
 
@@ -91,7 +91,7 @@ function customAjax(url, responseUrl) {
              alert(data.msg);
              var boardSeq = data.boardSeq;
              if(data.result == 1){
-                movePage(this, responseUrl);
+                window.location.href = responseUrl;
              } else {
                window.location.href="<c:url value='/index.do'/>";
              }

@@ -71,42 +71,9 @@ span.comment-nick {
 	
 
 	$(document).ready(	function() {
-		var url = ctx + '/board/read.do?page=' + ${page} + '&boardSeq=' + ${boardSeq};
+		var url = ctx + '/board/read.do?page=' + ${currentPage} + '&boardSeq=' + ${boardSeq};
 		history.pushState({}, '', url);
 		
-		// 댓글 시간 계산 
-		function calculateTimeDifference(postTime) {
-			  // 날짜 형식 변환 (예: YYYY-MM-DD HH:MM:SS)
-			  const date = moment(postTime, "YYYY-MM-DD HH:mm");
-			  console.log("data   " + date);
-
-			  // 현재 시간과의 차이 계산
-			  const now = moment();
-			  const timeDiff = now.diff(date, "minutes");
-
-			  // 분 단위로 표시
-			  if (timeDiff < 60) {
-			    return timeDiff + "분 전";
-			  } else if (timeDiff < 1440) { // 24시간(하루) 이내인 경우
-			    return Math.floor(timeDiff / 60) + "시간 전";
-			  } else { // 하루 이상인 경우
-			    return Math.floor(timeDiff / 1440) + "일 전";
-			  }
-			}
-		// 댓글 작성 시간 불러오기 
-		const comments = document.querySelectorAll('.comment-date');
-		// 댓글 시간 변경 
-		for (const comment of comments) {
-		  const postTime = comment.getAttribute("data-post-time");
-		  const timeDiff = calculateTimeDifference(postTime); // 시간 차이 계산
-		  // 시간 차이를 해당 요소에 표시
-	      comment.textContent = timeDiff;
-		}
-		
-		// 로그인 하지 않고 댓글 작성하려고 하면 로그인 페이지로 이동 
-		$('#noComment').on('click', function() {
-			window.location.href = ctx + "/member/goLoginPage.do";
-		})
 
 		$('#btnUpdate').on('click', function() {
 			var frm = document.readForm;
@@ -118,9 +85,14 @@ span.comment-nick {
 			if (confirm("삭제하시겠습니까?")) {
 				customAjax(
 						"<c:url value='/board/delete.do?boardSeq=${boardSeq}' />",
-						"/board/list.do?page=${currentPage}");
+						"<c:url value='/board/list.do?page=${currentPage}' />");
 			}
 		});
+		
+		// 로그인 하지 않고 댓글 작성하려고 하면 로그인 페이지로 이동 
+		$('#noComment').on('click', function() {
+			window.location.href = ctx + "/member/goLoginPage.do";
+		})
 		
 		// 댓글 작성 버튼 클릭 시 
 		$('#btnReply').on('click', function() {
@@ -155,6 +127,35 @@ span.comment-nick {
 		    });
 		});
 		
+		// 댓글 시간 계산 
+		function calculateTimeDifference(postTime) {
+			  // 날짜 형식 변환 (예: YYYY-MM-DD HH:MM:SS)
+			  const date = moment(postTime, "YYYY-MM-DD HH:mm");
+
+			  // 현재 시간과의 차이 계산
+			  const now = moment();
+			  const timeDiff = now.diff(date, "minutes");
+
+			  // 분 단위로 표시
+			  if (timeDiff < 60) {
+			    return timeDiff + "분 전";
+			  } else if (timeDiff < 1440) { // 24시간(하루) 이내인 경우
+			    return Math.floor(timeDiff / 60) + "시간 전";
+			  } else { // 하루 이상인 경우
+			    return Math.floor(timeDiff / 1440) + "일 전";
+			  }
+			}
+		
+		// 댓글 작성 시간 불러오기 
+		const comments = document.querySelectorAll('.comment-date');
+		// 댓글 시간 변경 
+		for (const comment of comments) {
+		  const postTime = comment.getAttribute("data-post-time");
+		  const timeDiff = calculateTimeDifference(postTime); // 시간 차이 계산
+		  // 시간 차이를 해당 요소에 표시
+	      comment.textContent = timeDiff;
+		}
+		
 
 	});//ready
 
@@ -174,7 +175,7 @@ span.comment-nick {
 				alert(data.msg);
 				var boardSeq = data.boardSeq;
 
-				movePage(responseUrl);
+				window.location.href = responseUrl;
 
 			},
 			error : function(XMLHttpRequest, textStatus, errorThrown) {
@@ -213,8 +214,8 @@ span.comment-nick {
 						<div class="block-review-body">
 							<div class="block-review-avatar text-center">
 								<div class="push-bit">
-									<img src="resources/images/_smarty/avatar2.jpg" width="100"
-										alt="avatar">
+									<img src="${pageContext.request.contextPath}/resources/images/_smarty/avatar.jpg" width="100" alt="avatar">
+									
 									<!--  <i class="fa fa-user" style="font-size:30px"></i>-->
 								</div>
 								<small class="block">${boardList.memberNick }</small>
@@ -293,7 +294,7 @@ span.comment-nick {
 									<!-- Dao에서 read를 통해 수정을 했었는데 그러면 조회수가 2번 더해지기 때문에 -->
 									<!-- 값을 받아오는 걸로 변경. -->
 									<a
-										href="<c:url value='/board/goToUpdate.do?page=${page }&boardSeq=${boardList.boardSeq}&title=${boardList.title}&content=${boardList.content}&memberNick=${boardList.memberNick}&hasFile=${boardList.hasFile }' />">
+										href="<c:url value='/board/goToUpdate.do?page=${currentPage }&boardSeq=${boardList.boardSeq}&title=${boardList.title}&content=${boardList.content}&memberNick=${boardList.memberNick}&hasFile=${boardList.hasFile }' />">
 								</c:if>
 								<button type="button" class="btn btn-primary">
 									<i class="fa fa-pencil"></i> 수정

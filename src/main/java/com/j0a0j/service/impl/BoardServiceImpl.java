@@ -162,6 +162,11 @@ public class BoardServiceImpl implements BoardService {
 		return bDao.delete(bDto);
 	}
 
+	@Override
+	public int deleteComment(int boardSeq) {
+		return bDao.deleteComment(boardSeq);
+	}
+
 	// 게시글 수정할 때 파일만 삭제 시 사용
 	@Override
 	public int deleteAttFile(FileDto fDto) {
