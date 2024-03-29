@@ -115,7 +115,7 @@
 									</li>
 									
 									<li class="dropdown"><!-- PROFILE -->
-										<a class="dropdown-toggle noicon" href="javascript:movePage('/profile.do')">
+										<a class="dropdown-toggle noicon" href="<c:url value='/profile.do' />">
 											PROFILE
 										</a>
 									</li>
@@ -129,7 +129,7 @@
 										</ul>
 									</li>
 									<li class="dropdown"><!-- NOTES -->
-										<a class="dropdown-toggle noicon" href="javascript:movePage('/devNotes.do')">
+										<a class="dropdown-toggle noicon" href="<c:url value='/devNotes.do' />">
 											DEV-NOTES
 										</a>
 									</li>

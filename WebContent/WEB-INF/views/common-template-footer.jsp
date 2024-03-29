@@ -57,13 +57,13 @@
 							<ul class="list-unstyled">
 								<li class="footer-sprite address">
 									주소<br>
-									zip code ~~~<br>
+									<a href="https://github.com/J0a0J">Github</a><br>
 								</li>
 								<li class="footer-sprite phone">
-									010-cccc-3333
+									010-2340-2927
 								</li>
 								<li class="footer-sprite email">
-									<a href="mailto:#">your_email</a>
+									<a href="mailto:j0a0j@naver.com">j0a0j@naver.com</a>
 								</li>
 							</ul>
 						</address>
@@ -75,8 +75,8 @@
 						<h4 class="letter-spacing-1">MENU</h4>
 						<ul class="footer-links list-unstyled">
 							<li><a href="<c:url value='/index.do'/>">홈으로</a></li>
-							<li><a href="javascript:movePage('/profile.do')">프로필</a></li>
-							<li><a href="javascript:movePage('/board/list.do')">게시판(spring)</a></li>
+							<li><a href="<c:url value='/profile.do' />">프로필</a></li>
+							<li><a href="<c:url value='/board/list.do' />">게시판(spring)</a></li>
 						</ul>
 						<!-- /Links -->
 					</div>

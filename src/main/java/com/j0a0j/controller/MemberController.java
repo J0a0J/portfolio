@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
+@RequestMapping("/member")
 public class MemberController {
 
 	@Autowired
@@ -31,17 +33,17 @@ public class MemberController {
 	@Value("#{config['site.context.path']}")
 	String ctx;
 
-	@RequestMapping("/member/goLoginPage.do")
+	@RequestMapping("goLoginPage.do")
 	public String goLogin() {
 		return "member/login";
 	}
 
-	@RequestMapping("/member/goRegisterPage.do")
+	@RequestMapping("/goRegisterPage.do")
 	public String goRegisterPage() {
 		return "member/register";
 	}
 
-	@RequestMapping("/member/checkId.do")
+	@RequestMapping("/checkId.do")
 	@ResponseBody
 	public HashMap<String, Object> checkId(@RequestParam HashMap<String, String> params) {
 		int cnt = 0;
@@ -54,7 +56,7 @@ public class MemberController {
 		return map;
 	}
 
-	@RequestMapping("/member/join.do")
+	@RequestMapping("/join.do")
 	@ResponseBody
 	public HashMap<String, Object> join(@ModelAttribute("MemberDto") MemberDto mDto) {
 		System.out.println("This is MDTO          " + mDto);
@@ -69,7 +71,7 @@ public class MemberController {
 		return map;
 	}
 
-	@RequestMapping("/member/logout.do")
+	@RequestMapping("/logout.do")
 	public ModelAndView logout(HttpSession session) {
 		// 세션 삭
 		session.removeAttribute("memberId");
@@ -81,10 +83,11 @@ public class MemberController {
 		return mv;
 	}
 
-	@RequestMapping("/member/login.do")
+	@PostMapping("/login.do")
 	@ResponseBody
 	public HashMap<String, Object> login(@ModelAttribute("MemberDto") MemberDto mDto, HttpSession session) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		System.out.println("Hello!!!!!!! ");
 		try {
 			MemberDto m = mService.login(mDto);
 			System.out.println("MEMBER LOGIN 				" + m);
@@ -130,7 +133,7 @@ public class MemberController {
 
 	}
 
-	@RequestMapping("/member/delMember.do")
+	@RequestMapping("/delMember.do")
 	@ResponseBody
 	public HashMap<String, Object> delMember(@RequestParam HashMap<String, Object> params) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
