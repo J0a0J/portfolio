@@ -92,7 +92,47 @@ span.comment-nick {
 		// 로그인 하지 않고 댓글 작성하려고 하면 로그인 페이지로 이동 
 		$('#noComment').on('click', function() {
 			window.location.href = ctx + "/member/goLoginPage.do";
-		})
+		});
+		
+		// 댓글 수정할 때
+		$('#replyUpdate').on('click', function() {
+			console.log('update');
+
+			// commentContent의 값을 가져와서 변수에 저장
+		    var comment = $('#repliedContent').text();
+		    
+		    // sessionScope 가 존재하지 않는 경우를 위해 스트링으로.
+		    var memberIdxStr = "${sessionScope.memberIdx}";
+		    // 존재한다면 다시 정수 타입으로 변환. 
+		    var memberIdx = memberIdxStr !== "" ? parseInt(memberIdxStr) : null;
+		    var commentInfo = {
+		        "replyContent": comment,
+		        "memberIdx": memberIdx,
+		        "memberNick": "${sessionScope.memberNick}",
+		        "boardSeq": ${boardSeq}
+		    };
+		    
+		    // textarea로 교체
+		    var $textarea = $('<textarea></textarea>')
+		                        .attr('id', 'commentContent')
+		                        .attr('name', 'commentContent')
+		                        .attr('rows', '4')
+		                        .attr('cols', '50')
+		                        .attr('required', true)
+		                        .attr('type', 'text')
+		                        .text(comment); // 이전 내용을 textarea에 설정
+		    
+		    // 기존 comment-content 대신 textarea로 교체
+		    $('#repliedContent').replaceWith($textarea);
+		                        
+		    
+		    console.log(commentInfo);
+
+		});
+		
+		$('#replyConfirm').on('click', function() {
+			console.log('reply confirm btn clicked');
+		});
 		
 		// 댓글 작성 버튼 클릭 시 
 		$('#btnReply').on('click', function() {
@@ -280,8 +320,12 @@ span.comment-nick {
 										<div class="comment-info">
 											<hr/>
 											<span class="commnet-nick"><b>${comment.memberNick }</b></span>
-											<span class="comment-content">${comment.replyContent }</span>
+											<span class="comment-content" id="repliedContent">${comment.replyContent }</span>
 											<span class="comment-date" data-post-time="${comment.createDtm }"></span>
+											<div id="comment-buttons">
+							                	<button class="btn btn-primary" id="replyUpdate">수정</button>
+							                	<button class="btn btn-primary" id="replyDelete">삭제</button>
+						                	</div>
 										</div>
 									</c:forEach>
 								</div>
