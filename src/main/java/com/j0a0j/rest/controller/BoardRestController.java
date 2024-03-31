@@ -8,7 +8,6 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -33,18 +32,19 @@ import com.j0a0j.response.dto.BoardResponseDto;
 import com.j0a0j.service.BoardService;
 import com.j0a0j.util.FileUtil;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 @MultipartConfig
 @RequestMapping("/board")
 public class BoardRestController {
 
-	@Autowired
-	BoardService bService;
-	@Autowired
-	FileUtil fileUtil;
+	private final BoardService bService;
+
+	private final FileUtil fileUtil;
 
 	private String typeSeq = "2";
 

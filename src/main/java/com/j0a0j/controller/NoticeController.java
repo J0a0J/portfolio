@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,14 +18,16 @@ import com.j0a0j.dto.FileDto;
 import com.j0a0j.service.BoardService;
 import com.j0a0j.util.FileUtil;
 
+import lombok.RequiredArgsConstructor;
+
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/notice")
 public class NoticeController {
 
-	@Autowired
-	BoardService bService;
-	@Autowired
-	FileUtil fileUtil;
+	private final BoardService bService;
+
+	private final FileUtil fileUtil;
 
 	private String typeSeq = "1";
 
