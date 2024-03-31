@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,15 +19,16 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.j0a0j.dto.MemberDto;
 import com.j0a0j.service.MemberService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
 @RequestMapping("/member")
+@RequiredArgsConstructor
 public class MemberController {
 
-	@Autowired
-	MemberService mService;
+	private final MemberService mService;
 
 	@Value("#{config['site.context.path']}")
 	String ctx;

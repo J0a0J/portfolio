@@ -6,7 +6,6 @@ import java.util.HashMap;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,15 +26,17 @@ import com.j0a0j.response.dto.BoardResponseDto;
 import com.j0a0j.service.BoardService;
 import com.j0a0j.util.FileUtil;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/notice")
 public class NoticeRestController {
 
-	@Autowired
-	BoardService bService;
+	private final BoardService bService;
 //	@Autowired AttFileService attFileService;
-	@Autowired
-	FileUtil fileUtil;
+
+	private final FileUtil fileUtil;
 
 	private String typeSeq = "1";
 

@@ -3,7 +3,6 @@ package com.j0a0j.controller;
 import java.util.HashMap;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,11 +10,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.j0a0j.service.BoardService;
 
+import lombok.RequiredArgsConstructor;
+
 @Controller
+@RequiredArgsConstructor
 public class IndexController {
 
-
-	@Autowired BoardService bService;
+	private final BoardService bService;
 
 	Logger logger = Logger.getLogger(MemberController.class);
 
@@ -50,7 +51,6 @@ public class IndexController {
 		mv.setViewName("/admin/memberList");
 		return mv;
 	}
-
 
 	@RequestMapping("/devNotes.do")
 	public ModelAndView tables(@RequestParam HashMap<String, String> params) {

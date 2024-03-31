@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,15 +14,16 @@ import com.j0a0j.dto.BoardDto;
 import com.j0a0j.dto.FileDto;
 import com.j0a0j.service.BoardService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/board")
 public class BoardController {
 
-	@Autowired
-	BoardService bService;
+	private final BoardService bService;
 	private String typeSeq = "2";
 
 	@RequestMapping("/list.do")
