@@ -19,29 +19,34 @@
 				$('#msgDiv').html(msgTag).show();
 				return;
 			}
-			
 			// overlay 보이기
 			$("#loading-div-background").css({'z-index' : '9999'}).show();
-			var formData = new FormData(document.loginForm);
+			
+	        var userId = $('#memberId').val();
+	        var userPw = $('#memberPw').val();
+	        
+	        // JSON 데이터 생성
+	        var formData = {
+			    "memberId": userId,
+			    "memberPw": userPw
+			};
+			console.log("Json Data  ", formData);
 			$.ajax({
 				url: ctx + '/member/login.do',
 				type: "POST",
 				data: formData,
-				dataType:'TEXT',
-				cache: false,
-				processData: false,
-				contentType: false,
+				dataType: "text",
 				success: function(data, textStatus, jqXHR) {
-					data = $.parseJSON(data);
-					console.log(data);
+					data = $.parseJSON(data); 
+					console.log("data " + data + "nextPage " + data.nextPage);
 					if(data.msg != undefined && data.msg != ''){
 						var msgTag = $("<strong>").text(data.msg);
 						$('#msgDiv').html(msgTag).show();
 						$("#loading-div-background").hide();	// overlay 숨기기
 					}
 					else {
-						window.location.href = ctx + data.nextPage;
-					}
+						window.location.href = ctx + data.nextPage; 
+					} 
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
 					$("#loading-div-background").hide();	// overlay 숨기기					
