@@ -83,14 +83,13 @@ public class MemberController {
 		return mv;
 	}
 
-	@PostMapping("/login.do")
+	@PostMapping("login.do")
 	@ResponseBody
 	public HashMap<String, Object> login(@ModelAttribute("MemberDto") MemberDto mDto, HttpSession session) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		System.out.println("Hello!!!!!!! ");
+
 		try {
 			MemberDto m = mService.login(mDto);
-			System.out.println("MEMBER LOGIN 				" + m);
 
 			// 입력한 아이디가 없거나 비밀번호가 일치하지 않으면 에러 처리
 			if (mDto == null) {
@@ -107,7 +106,7 @@ public class MemberController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.error("", e);
-			map.put("nextPage", "/login.do");
+			map.put("nextPage", "/member/goLoginPage.do");
 			map.put("msg", "아이디 또는 비밀번호 입력을 잘못했습니다.");
 		}
 		return map;
