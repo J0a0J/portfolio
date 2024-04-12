@@ -58,41 +58,44 @@ public class BoardServiceImpl implements BoardService {
 	// 반복해서 사요하기에 파일만 따로 작성하는 부분 분리
 	public int writeFile(BoardDto bDto, List<MultipartFile> mFiles) {
 		int totalResult = 0;
-		for (MultipartFile mFile : mFiles) {
+		if (mFiles != null) {
+			for (MultipartFile mFile : mFiles) {
 //			TODO: smart_123.pdf -> (UUID).pdf
-			String origin = mFile.getOriginalFilename();
-			if (origin.length() > 0) {
-				bDto.setHasFile("Y");
-				int r = bDao.existFile(bDto);
+				String origin = mFile.getOriginalFilename();
+				if (origin.length() > 0) {
+					bDto.setHasFile("Y");
+					int r = bDao.existFile(bDto);
 
-				System.out.println("BOARD SEQ " + bDto);
+					System.out.println("BOARD SEQ " + bDto);
 
-				// 파일 확장자
-				String extension = origin.substring(origin.lastIndexOf("."));
-				String fakeName = UUID.randomUUID().toString().replaceAll("-", "");
-				// 변환한 이름에 확장자 붙여주기
-				fakeName += extension;
+					// 파일 확장자
+					String extension = origin.substring(origin.lastIndexOf("."));
+					String fakeName = UUID.randomUUID().toString().replaceAll("-", "");
+					// 변환한 이름에 확장자 붙여주기
+					fakeName += extension;
 
-				// 파일 테이블에 넣을 매개변수
-				FileDto fileInfo = new FileDto();
-				fileInfo.setBoardSeq(bDto.getBoardSeq());
-				fileInfo.setTypeSeq(bDto.getTypeSeq());
-				fileInfo.setFileSize((int) mFile.getSize());
-				fileInfo.setFileName(origin);
-				fileInfo.setFakeFileName(fakeName);
-				fileInfo.setFileType(extension);
-				fileInfo.setSaveLoc(saveLocation);
-				try {
-					// 파일 이름 변환
-					fileUtil.copyFile(mFile, fakeName);
-					int result = attFileDao.addAttFile(fileInfo);
-					totalResult += result;
-				} catch (Exception e) {
-					e.printStackTrace();
+					// 파일 테이블에 넣을 매개변수
+					FileDto fileInfo = new FileDto();
+					fileInfo.setBoardSeq(bDto.getBoardSeq());
+					fileInfo.setTypeSeq(bDto.getTypeSeq());
+					fileInfo.setFileSize((int) mFile.getSize());
+					fileInfo.setFileName(origin);
+					fileInfo.setFakeFileName(fakeName);
+					fileInfo.setFileType(extension);
+					fileInfo.setSaveLoc(saveLocation);
+					try {
+						// 파일 이름 변환
+						fileUtil.copyFile(mFile, fakeName);
+						int result = attFileDao.addAttFile(fileInfo);
+						totalResult += result;
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
+			return totalResult;
 		}
-		return totalResult;
+		return 0;
 	}
 
 	// 게시글 작성

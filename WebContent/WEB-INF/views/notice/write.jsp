@@ -77,15 +77,25 @@
 });
 
 function customAjax(url, responseUrl) {
-  var frm = document.writeForm;
-  var formData = new FormData(frm);
+  
+  var userId = $('#memberId').val();
+  var userNick = $('#memberNick').val();
+  var title = $('#title').val();
+  var content = $('#content').val();
+  
+  var formData = {
+		  "memberId": userId,
+		  "memberNick": userNick,
+		  "title": title,
+		  "content": content
+  };
+
+  console.log(formData);
      $.ajax({
          url : url,
          data : formData,
          type : 'POST',
-         dataType : "text",
-         processData : false,
-         contentType : false,
+         dataType : "text"
          success : function (result, textStatus, XMLHttpRequest) {
              var data = $.parseJSON(result);
              alert(data.msg);
@@ -124,7 +134,7 @@ function customAjax(url, responseUrl) {
 							<div class="card-block">
 
 								<form name="writeForm" class="validate" method="post" enctype="multipart/form-data" data-success="Sent! Thank you!" data-toastr-position="top-right">
-									<input type="hidden" name="memberId" value="${ sessionScope.memberId }"/>
+									<input type="hidden" name="memberId" id="memberId" value="${ sessionScope.memberId }"/>
 									<input type="hidden" name="memberIdx" value="${ sessionScope.memberIdx }"/>
 									<fieldset>
 										<!-- required [php action request] -->
