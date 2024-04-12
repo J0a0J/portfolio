@@ -133,15 +133,16 @@ public class NoticeRestController {
 		return fileByte;
 	}
 
-	@PostMapping("/write.do")
+	@PostMapping("write.do")
 	@ResponseBody
-	public HashMap<String, Object> write(@ModelAttribute("BoardDto") BoardDto bDto, MultipartHttpServletRequest mReq) {
+	public HashMap<String, Object> write(@ModelAttribute("BoardDto") BoardDto bDto) {
+
 		int boardType = bDto.getTypeSeq();
 		if (boardType == 0) {
 			bDto.setTypeSeq(Integer.parseInt(this.typeSeq));
 		}
 
-		int result = bService.write(bDto, mReq.getFiles("attFiles"));
+		int result = bService.write(bDto, null);
 
 		HashMap<String, Object> map = new HashMap<String, Object>();
 
