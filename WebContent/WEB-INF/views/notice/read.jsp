@@ -177,15 +177,10 @@ span.comment-nick {
 	});//ready
 
 	function customAjax(url, responseUrl) {
-		var frm = document.updateForm;
-		var formData = new FormData(frm);
 		$.ajax({
 			url : url,
-			data : formData,
 			type : 'POST',
 			dataType : "text",
-			processData : false,
-			contentType : false,
 			success : function(result, textStatus, XMLHttpRequest) {
 				var data = $.parseJSON(result);
 

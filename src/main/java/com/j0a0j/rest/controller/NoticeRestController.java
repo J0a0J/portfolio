@@ -178,15 +178,13 @@ public class NoticeRestController {
 		return map;
 	}
 
-	@RequestMapping("/delete.do")
+	@RequestMapping("delete.do")
 	@ResponseBody
 	public HashMap<String, Object> delete(@ModelAttribute("BoardDto") BoardDto bDto, HttpSession session) {
 
 		if (bDto.getTypeSeq() == 0) {
 			bDto.setTypeSeq(Integer.parseInt(this.typeSeq));
 		}
-		// 비동기 리턴해줄 맵 생성
-//		HashMap<String, Object> map = new HashMap<String, Object>();
 
 		// 글 삭제 전 댓글부터 삭제
 		int result = bService.deleteComment(bDto.getBoardSeq());
