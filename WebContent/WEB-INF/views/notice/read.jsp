@@ -84,9 +84,25 @@ span.comment-nick {
 
 		$('#btnDelete').on('click',function() {
 			if (confirm("삭제하시겠습니까?")) {
-				customAjax(
-						"<c:url value='/notice/delete.do?boardSeq=${boardSeq}' />",
-						"<c:url value='/notice/list.do?page=${currentPage}' />");
+				$.ajax({
+					url : "<c:url value='/notice/delete.do?boardSeq=${boardSeq}' />",
+					type : 'POST',
+					dataType : "text",
+					success : function(result, textStatus, XMLHttpRequest) {
+						var data = $.parseJSON(result);
+
+						alert(data.msg);
+						
+						var boardSeq = data.boardSeq;
+
+						window.location.href = "<c:url value='/notice/list.do?page=${currentPage}' />";
+
+					},
+					error : function(XMLHttpRequest, textStatus, errorThrown) {
+						alert("작성 에러\n관리자에게 문의바랍니다.");
+						console.log("작성 에러\n" + XMLHttpRequest.responseText);
+					}
+				});
 			}
 		});
 		
@@ -161,15 +177,10 @@ span.comment-nick {
 	});//ready
 
 	function customAjax(url, responseUrl) {
-		var frm = document.updateForm;
-		var formData = new FormData(frm);
 		$.ajax({
 			url : url,
-			data : formData,
 			type : 'POST',
 			dataType : "text",
-			processData : false,
-			contentType : false,
 			success : function(result, textStatus, XMLHttpRequest) {
 				var data = $.parseJSON(result);
 
