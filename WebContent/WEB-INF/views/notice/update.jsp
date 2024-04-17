@@ -49,15 +49,21 @@
 				}
 			});
 		}
-		
+	
 	    $('#btnUpdate').click(function(event) {
 	        event.preventDefault();
 	        
+	        var userNick = $('#memberNick').val();
 	        var title = $('#title').val();
-	        
-	        var content = $('textarea.summernote').code();
+	        var content = $('.note-editable').text();
+	        var formData = {
+	        	  "boardSeq": ${boardMember.boardSeq},
+	      		  "memberNick": userNick,
+	      		  "title": title,
+	      		  "content": content, 
+	        };
 
-	        if(title.length == 0) {
+			 if(title.length == 0) {
 	            alert("제목을 입력하세요.");
 	            $('#title').focus();
 	            return;		
@@ -69,13 +75,45 @@
 	            return;		
 	        }
 
-	        $('#content').val(content);
+			var url = ctx + "/notice/update.do?";
+			url += "boardSeq=" + formData.boardSeq;
+			url += "&title=" + formData.title;
+			url += "&content=" + formData.content;
+			console.log(url);
+			var responseUrl = '<c:url value="/notice/read.do?page=' + ${currentPage} + '&boardSeq=' + '${ boardMember.boardSeq }" />'; 
 
-			var moveUrl = ctx + "/notice/update.do";
-			
-			var comebackUrl = '<c:url value="/notice/read.do?page=' + ${currentPage} + '&boardSeq=' + '${ boardMember.boardSeq }" />';
-			customAjax(moveUrl, comebackUrl);
+			console.log(formData);
+		    $.ajax({
+		         url : url,
+		         type : 'PUT',
+		         /* data : formData, */
+		         dataType : "application/json",
+		         contentType: false, 
+		         success : function (result, textStatus, XMLHttpRequest) {
+		             var data = $.parseJSON(result);
+		             alert(data.msg);
+		             var boardSeq = data.boardSeq;
+		             if(data.result == 1){
+		                window.location.href = responseUrl;
+		             } else { // 수정 실패 시 
+		               location.reload();
+		             }
+		         },
+		         error : function (XMLHttpRequest, textStatus, errorThrown) {
 
+		        	 var tmp =  XMLHttpRequest.responseText;
+		        	 // 수정 성공해도 에러로 넘어와서 조건문으로 다시 한 번 수정 성공 여부 나눔.
+		        	 if (tmp.includes("1")){
+		        		 window.location.href = responseUrl;
+		        	 }
+		        	 else {
+			        	 alert("작성 에러\n관리자에게 문의바랍니다.");
+		        		 location.reload();
+		        	 }
+		        	 console.log("작성 에러\n" + XMLHttpRequest.responseText);
+					 // location.reload();
+		       	 }
+		 	});  
 	});
 
 }) 
@@ -83,18 +121,17 @@
 function customAjax(url, responseUrl) {
 		
 	 	var frm = document.updateForm;
-		var formData = new FormData(frm);
-		var newForm = new FormData();
+        var formData = new FormData(frm);
 		
 	
 		// 폼 데이터 채우기 (게시글 정보)
-		formData.forEach(function(value, key) {
+		/* formData.forEach(function(value, key) {
 			newForm.append(key, value);
-		}); 
+		});  */
 
 	
 		// 파일 정보 추가
-		const fileInputs = document.querySelectorAll('input[type="file"]');
+		/* const fileInputs = document.querySelectorAll('input[type="file"]');
 		const selectedFiles = Array.from(fileInputs)
 		    .map(input => input.files[0]) // 파일 입력 요소에서 파일 가져오기
 		    .filter(file => file !== undefined); // undefined 값 제외
@@ -102,19 +139,19 @@ function customAjax(url, responseUrl) {
 		selectedFiles.forEach(file => {
 			// 파일정보 form 에 추가 
 			newForm.append("attFiles", file)
-		});
+		}); */
 	
 
 
- 
+		for (const pair of formData.entries()) {
+		    console.log(pair[0] + ', ' + pair[1]);
+		} 
      $.ajax({
-    	 anyne: true,
          url : url,
          type : 'PUT',
-         data : newForm,
+         data : formData,
          processData : false,
          contentType : false,
-         enctype : 'multipart/form-data',
          success : function (result, textStatus, XMLHttpRequest) {
                 window.location.href = responseUrl;
            
@@ -179,7 +216,7 @@ function deleteFile(fileIdx, boardSeq, title, content, memberNick) {
 							<h2 class="card-title">게시글 수정</h2>
 						</div>
 						<div class="card-block">
-							<form name="updateForm" class="validate" data-success="Sent! Thank you!" data-toastr-position="top-right">
+							<form name="updateForm" class="validate" enctype="multipart/form-data" data-success="Sent! Thank you!" data-toastr-position="top-right">
 								<input type="hidden" name="memberId" value="${ sessionScope.memberId }"/>
 								<input type="hidden" name="memberIdx" value="${ sessionScope.memberIdx }"/>
 								<input type="hidden" name="typeSeq" value="${ boardMember.typeSeq}"/>
@@ -207,7 +244,7 @@ function deleteFile(fileIdx, boardSeq, title, content, memberNick) {
 									<div class="row">
 										<div class="col-md-12 col-sm-12">
 											<label>내용</label>
-											<textarea class="summernote form-control" data-height="200" data-lang="en-US" name="content" id="content" rows="4">
+											<textarea class="summernote form-control" data-height="200" data-lang="en-US" name="content" id="content" rows="4" value=>
 												${ boardMember.content}
 											</textarea>
 											</c:if>
@@ -297,4 +334,4 @@ function deleteFile(fileIdx, boardSeq, title, content, memberNick) {
 
 </body>
 <jsp:include page="../common-template-footer.jsp" />
-</html>;
+</html>
