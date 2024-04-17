@@ -157,16 +157,13 @@ public class NoticeRestController {
 		return map;
 	}
 
-	@PutMapping("/update.do")
-	@ResponseBody // !!!!!!!!!!!! 비동기 응답
-	public HashMap<String, Object> update(@ModelAttribute("BoardDto") BoardDto bDto, MultipartHttpServletRequest mReq) {
+	@PutMapping("update.do")
+	@ResponseBody
+	public HashMap<String, Object> update(BoardDto bDto) {
 
 		if (bDto.getTypeSeq() == 0) {
 			bDto.setTypeSeq(Integer.parseInt(this.typeSeq));
-
 		}
-
-		System.out.println("BDTO FDSDSFDS! " + bDto);
 
 		int result = bService.update(bDto);
 
