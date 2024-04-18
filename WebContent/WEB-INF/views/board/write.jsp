@@ -77,15 +77,26 @@
 });
 
 function customAjax(url, responseUrl) {
-  var frm = document.writeForm;
-  var formData = new FormData(frm);
+	
+	var userId = "${ sessionScope.memberId }";
+	  var userNick = $('#memberNick').val();
+	  var title = $('#title').val();
+	  var content = $('#content').val();
+	  
+	  var formData = {
+			  "memberId": userId,
+			  "memberNick": userNick,
+			  "title": title,
+			  "content": content
+	  };
+	  
+	  console.log(formData);
+	  
      $.ajax({
          url : url,
          data : formData,
          type : 'POST',
          dataType : "text",
-         processData : false,
-         contentType : false,
          success : function (result, textStatus, XMLHttpRequest) {
              var data = $.parseJSON(result);
              alert(data.msg);
