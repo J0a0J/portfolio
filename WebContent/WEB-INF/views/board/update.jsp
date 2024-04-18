@@ -53,9 +53,15 @@
 	    $('#btnUpdate').click(function(event) {
 	        event.preventDefault();
 	        
+	        var userNick = $('#memberNick').val();
 	        var title = $('#title').val();
-	        
-	        var content = $('textarea.summernote').code();
+	        var content = $('.note-editable').text();
+	        var formData = {
+	        	  "boardSeq": ${boardMember.boardSeq},
+	      		  "memberNick": userNick,
+	      		  "title": title,
+	      		  "content": content, 
+	        };
 
 	        if(title.length == 0) {
 	            alert("제목을 입력하세요.");
@@ -71,61 +77,48 @@
 
 	        $('#content').val(content);
 	        
-			var moveUrl = '<c:url value="/board/update.do?" />';
-			var comebackUrl = '<c:url value="/board/read.do?page=' + ${currentPage} + '&boardSeq=' + '${ boardMember.boardSeq }" />';
-			
-			customAjax(moveUrl, comebackUrl);
+	        var url = ctx + "/board/update.do?";
+			url += "boardSeq=" + formData.boardSeq;
+			url += "&title=" + formData.title;
+			url += "&content=" + formData.content;
+			console.log(url);
+			var responseUrl = '<c:url value="/board/read.do?page=' + ${currentPage} + '&boardSeq=' + '${ boardMember.boardSeq }" />'; 
+
+			console.log(formData);
+		    $.ajax({
+		         url : url,
+		         type : 'PUT',
+		         dataType : "application/json",
+		         contentType: false, 
+		         success : function (result, textStatus, XMLHttpRequest) {
+		             var data = $.parseJSON(result);
+		             alert(data.msg);
+		             var boardSeq = data.boardSeq;
+		             if(data.result == 1){
+		                window.location.href = responseUrl;
+		             } else { // 수정 실패 시 
+		               location.reload();
+		             }
+		         },
+		         error : function (XMLHttpRequest, textStatus, errorThrown) {
+
+		        	 var tmp =  XMLHttpRequest.responseText;
+		        	 // 수정 성공해도 에러로 넘어와서 조건문으로 다시 한 번 수정 성공 여부 나눔.
+		        	 if (tmp.includes("1")){
+		        		 window.location.href = responseUrl;
+		        	 }
+		        	 else {
+			        	 alert("작성 에러\n관리자에게 문의바랍니다.");
+		        		 location.reload();
+		        	 }
+		        	 console.log("작성 에러\n" + XMLHttpRequest.responseText);
+					 // location.reload();
+		       	 }
+		 	});
 
 	});
 
 }) 
-
-function customAjax(url, responseUrl) {
-		
-	 	var frm = document.updateForm;
-		var formData = new FormData(frm);
-		var newForm = new FormData();
-		
-	
-		// 폼 데이터 채우기 (게시글 정보)
-		formData.forEach(function(value, key) {
-			newForm.append(key, value);
-		}); 
-
-	
-		// 파일 정보 추가
-		const fileInputs = document.querySelectorAll('input[type="file"]');
-		const selectedFiles = Array.from(fileInputs)
-		    .map(input => input.files[0]) // 파일 입력 요소에서 파일 가져오기
-		    .filter(file => file !== undefined); // undefined 값 제외
-	
-		selectedFiles.forEach(file => {
-			// 파일정보 form 에 추가 
-			newForm.append("attFiles", file)
-		});
-	
-
-
- 
-     $.ajax({
-    	 anyne: true,
-         url : url,
-         type : 'PUT',
-         data : newForm,
-         processData : false,
-         contentType : false,
-         enctype : 'multipart/form-data',
-         success : function (result, textStatus, XMLHttpRequest) {
-                window.location.href = (responseUrl);
-           
-         },
-         error : function (XMLHttpRequest, textStatus, errorThrown) {
-               /* alert("작성 에러\n관리자에게 문의바랍니다."); */
-             console.log("작성 에러\n" + XMLHttpRequest.responseText);
-         }
-	});
-} // func customAjax End 
-
 
 function deleteFile(fileIdx, boardSeq, title, content, memberNick) {
 	console.log(fileIdx, boardSeq, title);
