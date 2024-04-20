@@ -36,17 +36,23 @@ $(document).ready(function(){
 					return;
 				}
 				else {
-					var formData = new FormData(document.regForm);
-// 					var formData = $("#registerForm").serialize();
-					console.log(formData);
+					// var formData = new FormData(document.regForm);
+ 					// var formData = $("#registerForm").serialize();
+					
+					var formData = {
+							"memberId": $('#memberId').val(),
+							"memberPw": $('#memberPw').val(),
+							"pwAgain": $('#pwAgain').val(),
+							"memberName": $('#memberName').val(),
+							"memberNick": $('#memberNick').val(),
+							"email": $('#email').val(),
+					}
+					console.log("member Id " + $('#memberId').val())
 					$.ajax({
 						url: '<c:url value="/member/join.do" />',
 						type: "POST",
 						data: formData,
 						dataType:'TEXT',
-						cache: false,
-						processData: false,
-						contentType: false,
 						success: function(data, textStatus, jqXHR) {
 							data = $.parseJSON(data);
 // 							console.log(data);
@@ -54,7 +60,7 @@ $(document).ready(function(){
 
 							$("#loading-div-background").hide();	// overlay 숨기기
 							
-							movePage(data.nextPage);
+							window.location.href = '<c:url value="/index.do" />'
 						},
 						error: function(jqXHR, textStatus, errorThrown) {
 							$("#loading-div-background").hide();	// overlay 숨기기

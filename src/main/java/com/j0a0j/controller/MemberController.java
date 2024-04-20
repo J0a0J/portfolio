@@ -56,7 +56,7 @@ public class MemberController {
 		return map;
 	}
 
-	@RequestMapping("/join.do")
+	@PostMapping("/join.do")
 	@ResponseBody
 	public HashMap<String, Object> join(@ModelAttribute("MemberDto") MemberDto mDto) {
 		System.out.println("This is MDTO          " + mDto);
