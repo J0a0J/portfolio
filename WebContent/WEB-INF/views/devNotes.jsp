@@ -22,20 +22,20 @@
 							<div class="box-icon box-icon-center box-icon-round box-icon-transparent box-icon-large box-icon-content" style="width:100%;
 	height:350px;">
 								<div class="box-icon-title">
-									<i class="b-0 fa fa-tablet"></i>
-									<h2>Fully Reposnive</h2>
+									<!-- <i class="b-0 fa fa-tablet"></i> -->
+									<h2>DB 관계도</h2>
 								</div>
-								<p>Nullam id dolor id nibh ultricies vehicula ut id elit. Integer posuere erat a ante venenatis dapibus posuere</p>
+								<p>게시판과 관련된 데이터베이스 테이블인 'board_attach', 'board_type', 'reply'와 회원과 관련된 테이블인 'member_type', 'email_auth' 등 각 테이블 간의 관계를 시각적으로 표현한 ERD입니다.</p>
 							
 								<button type="button" class="btn btn-default btn-lg lightbox" data-toggle="modal" data-target="#myModal">
 								DB &nbsp; Modeling &nbsp; &nbsp;(IMG)
 								</button> <br><br/>
 								
-								<a href="<c:url value='/file/downloadERD.do'/>">
+								<%-- <a href="<c:url value='/file/downloadERD.do'/>">
 									<button type="button" class="btn btn-default btn-lg lightbox" data-toggle="modal">
 										ERD Download (MWB)
 									</button>
-								</a>	
+								</a> --%>	
 								<br/>	
 							</div>
 
@@ -45,10 +45,10 @@
 
 							<div class="box-icon box-icon-center box-icon-round box-icon-transparent box-icon-large box-icon-content">
 								<div class="box-icon-title">
-									<i class="b-0 fa fa-random"></i>
-									<h2>Clean Design</h2>
+								<!-- 	<i class="b-0 fa fa-random"></i> -->
+									<h2>Github</h2>
 								</div>
-								<p>nteger posuere erat a ante venenatis dapibus posuere</p>
+								<a href="https://github.com/J0a0J"><p>깃허브 주소</p></a> 
 							</div>
 
 						</div>
@@ -57,10 +57,10 @@
 
 							<div class="box-icon box-icon-center box-icon-round box-icon-transparent box-icon-large box-icon-content">
 								<div class="box-icon-title">
-									<i class="b-0 fa fa-tint"></i>
-									<h2>Reusable Elements</h2>
+									<!-- <i class="b-0 fa fa-tint"></i> -->
+									<h2>구현 기능</h2>
 								</div>
-								<p>Nullam id dolor id nibh ultricies vehicula ut id elit. Integer posuere erat a ante venenatis dapibus posuere</p>
+								<p>회원가입 <br>로그인<br>이메일 발송<br>게시글 CRUD<br>로그인 시에만 댓글 작성 가능<br>페이징</p>
 							</div>
 
 						</div>
@@ -69,10 +69,10 @@
 
 							<div class="box-icon box-icon-center box-icon-round box-icon-transparent box-icon-large box-icon-content">
 								<div class="box-icon-title">
-									<i class="b-0 fa fa-cogs"></i>
-									<h2>Multipurpose</h2>
+									<!-- <i class="b-0 fa fa-cogs"></i> -->
+									<h2>미완료 기능</h2>
 								</div>
-								<p>Nullam id dolor id nibh ultricies vehicula ut id elit. Integer posuere erat a ante venenatis dapibus posuere</p>
+								<p>검색<br>파일 첨부 및 삭제<br>사용자 글만 수정 및 삭제<br>댓글 수정 및 삭제</p>
 							</div>
 
 						</div>
