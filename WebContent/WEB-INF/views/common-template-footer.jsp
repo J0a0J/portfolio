@@ -85,8 +85,7 @@
 					
 					<h4 class="letter-spacing-1">THANKS FOR VISITING</h4>
 					<p>제가 구현한 스프링 게시판의 주요기능 확인을 위해 회원가입을 해주세요. :) <br/>
-					이 게시판은 관리자 / 일반 모드를 구분하여 구현하였으며 회원가입시 일반회원 모드로 가입됩니다.<br/>
-					* 임의의 관리자 계정으로 로그인:  <h3> ID: admin123 / PW: admin12# </h3>
+					
 					</div>
 						
 					<div id="sidepanel" class="sidepanel-light">

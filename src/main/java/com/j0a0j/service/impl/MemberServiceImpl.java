@@ -84,7 +84,11 @@ public class MemberServiceImpl implements MemberService {
 		emailDto.setFrom("j0a0j@naver.com");
 		emailDto.setReceiver(mDto.getEmail());
 		emailDto.setSubject("회원가입을 환영합니다.");
-		String html = "<a href='https://github.com/J0a0J/portfolio'>인증하기</a>";
+		String html = "안녕하세요,<br>" + "<br>"
+				+ "저는 김지원이고 신입 개발자로 지원했습니다. 저의 이력서와 포트폴리오를 확인해 주시고, 회원으로 가입해 주셔서 감사드립니다.<br>" + "<br>"
+				+ "회원으로 가입하여 제 포트폴리오를 확인해 주셨기 때문에 더욱 감사합니다. 면접에서 더 자세히 소개하고, 제 역량과 열정을 전달할 기회를 얻기를 바랍니다.<br>" + "<br>"
+				+ "또한, 추가로 필요한 정보나 질문이 있으시면 언제든지 연락 주세요.<br>" + "<br>" + "감사합니다.<br>" + "<br>" + "좋은 하루 보내세요.<br>"
+				+ "<br>" + "고맙습니다,<br>" + "<br>" + "김지원";
 		emailDto.setText(html);
 
 		try {
