@@ -333,26 +333,26 @@
 									</a>
 								</li>
 								<li class="list-group-item">
-									<a href="javascript:movePage('/profile.do')">
-										<i class="ico-category et-happy"></i>  
+									<a href="<c:url value='/profile.do'/>">
+										<i class="ico-category et-happy"></i>
 										PROFILE
 									</a>
 								</li>
 								<li class="list-group-item">
-									<a href="javascript:movePage('/notice/list.do')">
-										<i class="ico-category et-happy"></i>  
+									<a href="<c:url value='/notice/list.do'/>">
+										<i class="ico-category et-happy"></i>
 										NOTICE
 									</a>
 								</li>
 								<li class="list-group-item">
-									<a href="javascript:movePage('/board/list.do')">
+									<a href="<c:url value='/board/list.do'/>">
 										<i class="ico-category et-happy"></i>  
 										FREE-BOARD
 									</a>
 								</li>
 							
 								<li class="list-group-item">
-									<a href="javascript:movePage('/tables.do')">
+									<a href="<c:url value='/devNotes.do'/>">
 										<i class="ico-category et-happy"></i>  
 										DEV-NOTES
 									</a>
