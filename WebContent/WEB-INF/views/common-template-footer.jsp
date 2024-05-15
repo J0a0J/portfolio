@@ -46,6 +46,46 @@
     <script src="<c:url value='/resources/plugins/slider.revolution/js/jquery.themepunch.tools.min.js'/>"></script>
     <script src="<c:url value='/resources/plugins/slider.revolution/js/jquery.themepunch.revolution.min.js'/>"></script>
     <script src="<c:url value='/resources/js/view/demo.revolution_slider.js'/>"></script>
+	<script>
+		// Slide Panel
+		jQuery("a#sidepanel_btn").bind("click", function(e) {
+			e.preventDefault();
+
+			_pos = "right";
+			if(jQuery("#sidepanel").hasClass('sidepanel-inverse')) {
+				_pos = "left";
+			}
+
+			if(jQuery("#sidepanel").is(":hidden")) {
+
+				jQuery("body").append('<span id="sidepanel_overlay"></span>');
+
+				if(_pos == "left") {
+					jQuery("#sidepanel").stop().show().animate({"left":"0px"}, 150);
+				} else {
+					jQuery("#sidepanel").stop().show().animate({"right":"0px"}, 150);
+				}
+
+			} else {
+
+				jQuery("#sidepanel_overlay").remove();
+
+				if(_pos == "left") {
+					jQuery("#sidepanel").stop().animate({"left":"-300px"}, 300);
+				} else {
+					jQuery("#sidepanel").stop().animate({"right":"-300px"}, 300);
+				}
+
+				setTimeout(function() {
+					jQuery("#sidepanel").hide();
+				}, 500);
+
+			}
+
+			_sidepanel_overlay();
+
+		});
+	</script>
 </head>
 <body>		
 			<footer id="footer" style="padding:0px 1px 1px 0px">
@@ -87,61 +127,54 @@
 					<p>제가 구현한 스프링 게시판의 주요기능 확인을 위해 회원가입을 해주세요. :) <br/>
 					
 					</div>
-						
+
+
 					<div id="sidepanel" class="sidepanel-light">
 						<a id="sidepanel_close" href="#"><!-- close -->
 							<i class="fa fa-remove"></i>
 						</a>
-			
+
 						<div class="sidepanel-content">
 							<h2 class="sidepanel-title">Jiweon's Portfolio</h2>
-			
+
 							<!-- SIDE NAV -->
 							<ul class="list-group">
-			
+
 								<li class="list-group-item">
 									<a href="<c:url value='/index.do'/>">
-										<i class="ico-category et-heart"></i>  
+										<i class="ico-category et-heart"></i>
 										HOME
 									</a>
 								</li>
 								<li class="list-group-item">
-									<a href="javascript:movePage('/profile.do')">
-										<i class="ico-category et-happy"></i>  
+									<a href="<c:url value='/profile.do'/>">
+										<i class="ico-category et-happy"></i>
 										PROFILE
 									</a>
 								</li>
 								<li class="list-group-item">
-									<a href="javascript:movePage('/notice/list.do')">
-										<i class="ico-category et-happy"></i>  
+									<a href="<c:url value='/notice/list.do'/>">
+										<i class="ico-category et-happy"></i>
 										NOTICE
 									</a>
 								</li>
 								<li class="list-group-item">
-									<a href="javascript:movePage('/board/list.do')">
-										<i class="ico-category et-happy"></i>  
+									<a href="<c:url value='/board/list.do'/>">
+										<i class="ico-category et-happy"></i>
 										FREE-BOARD
 									</a>
 								</li>
-							
+
 								<li class="list-group-item">
-									<a href="javascript:movePage('/tables.do')">
-										<i class="ico-category et-happy"></i>  
+									<a href="<c:url value='/devNotes.do'/>">
+										<i class="ico-category et-happy"></i>
 										DEV-NOTES
 									</a>
 								</li>
-								<li class="list-group-item">
-									<a href="#">
-										<i class="ico-category et-beaker"></i> 
-										LEARNING
-									</a>
-								</li>
-			
-			
+
+
 							</ul>
-	
-			
-							
+							<!-- /SIDE NAV -->
 						</div>
 					</div>
 				</div>
